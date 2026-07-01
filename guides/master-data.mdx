@@ -1,0 +1,233 @@
+---
+title: "Master Data"
+description: "How to sync Formulateds, Applicators, Machines, Units, and other master data required before creating Work Orders"
+---
+
+## Overview
+
+Master data are the shared catalogs that Work Orders reference — agrochemical products (formulateds), applicators, machines, units, and labour types. You must sync these before creating any Work Order, since each supply and labour line requires valid IDs from these catalogs.
+
+<Info>
+  Most master data is **read-only from third-party** — you query it from SIMA's global catalog and store the IDs locally. Applicators and Machines are the exception: they support full CRUD (create, update, delete).
+</Info>
+
+---
+
+## Master data map
+
+| Entity | CRUD | Scope | Required for |
+|---|---|---|---|
+| Formulateds | Read only | Global + society | Supply lines in OTs |
+| Active Ingredients | Read only | Global | Formulated metadata |
+| Units | Read only | Global | Formulated quantities |
+| Applicators | Full CRUD | Society | Labour lines in OTs |
+| Machines | Read only | Society | Labour lines in OTs |
+| Work Order Labour Types | Read only | Global | Labour type classification |
+| Work Order Labour Type Categories | Read only | Global | Labour type grouping |
+
+---
+
+## Formulateds
+
+Formulateds are agrochemical products (herbicides, fertilizers, fungicides, etc.). The catalog includes both SIMA's global products and your society's own records.
+
+### List
+
+```
+GET /api/v3/third_party/formulateds
+```
+
+**Key filters:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `name` | string | Search by commercial brand name |
+| `use_id` | int | Filter by formulate use (herbicide, fungicide, etc.) |
+| `active` | bool | Active records only |
+| `updated_at_from` | datetime | Detect catalog changes |
+
+**Response:**
+
+```json
+{
+  "items": [
+    {
+      "id": 8844,
+      "commercial_brand": "Glifosato 48 SL",
+      "formulation_type_id": 195,
+      "formulated_use_id": 15,
+      "formulated_unit_id": 3,
+      "active_ingredients": [
+        { "active_ingredient_id": 15, "concentration": "48.000" }
+      ],
+      "external_code": null,
+      "active": true
+    }
+  ],
+  "current_page": 1,
+  "next_page": 2,
+  "total_pages": 6061,
+  "total_items": 36364
+}
+```
+
+<Warning>
+  The formulateds catalog is large (30,000+ records). Always filter by `active=true` and use `updated_at_from` on subsequent syncs rather than pulling the full catalog every time.
+</Warning>
+
+### Matching with your system's products
+
+If your ERP has its own product catalog, use `external_code` or `external_reference` to store your product ID on the SIMA record. This allows reliable lookups without name-matching.
+
+### Related endpoints
+
+- `GET /api/v3/third_party/active_ingredients` — ingredient catalog
+- `GET /api/v3/third_party/formulate_uses` — use categories (herbicide, fungicide, etc.)
+- `GET /api/v3/third_party/formulation_types` — formulation types (SC, WG, EC, etc.)
+
+---
+
+## Applicators
+
+Applicators are the people or contractor companies that execute field operations. Unlike formulateds, applicators are **society-scoped** and support full CRUD.
+
+### List
+
+```
+GET /api/v3/third_party/applicators
+```
+
+**Response:**
+
+```json
+{
+  "items": [
+    {
+      "id": 596,
+      "name": "Sanchez Ricardo",
+      "address": "Colón 56",
+      "phone_number": "03444-15501565",
+      "email": null,
+      "machines": [640, 1081],
+      "own": false,
+      "external_code": null,
+      "active": true
+    }
+  ]
+}
+```
+
+Note: `machines` is an array of machine IDs associated to this applicator.
+
+### Create
+
+```
+POST /api/v3/third_party/applicators
+```
+
+```json
+{
+  "name": "Juan Rodríguez",
+  "address": "Av. San Martín 123",
+  "phone_number": "03492-123456",
+  "email": "juan@example.com",
+  "external_code": "YOUR-ERP-APPLICATOR-ID"
+}
+```
+
+### Update
+
+```
+PATCH /api/v3/third_party/applicators/{id}
+```
+
+### Delete
+
+```
+DELETE /api/v3/third_party/applicators/{id}
+```
+
+---
+
+## Machines
+
+Machines represent equipment used in field operations (sprayers, tractors, etc.). They are society-scoped and can be associated to applicators.
+
+### List
+
+```
+GET /api/v3/third_party/machines
+```
+
+**Key filters:** `name`, `active`, `updated_at_from`
+
+---
+
+## Units
+
+Units are measurement units used in formulated quantities (liters, kilograms, etc.).
+
+### List
+
+```
+GET /api/v3/third_party/units
+```
+
+Units are a global catalog — query once and cache locally. They rarely change.
+
+---
+
+## Work Order Labour Types
+
+Labour types classify the kind of work in a labour line (spraying, seeding, harvest, etc.).
+
+### List (v3 — recommended)
+
+```
+GET /api/v3/third_party/application_order_labour_types
+```
+
+**Key filters:** `active`, `updated_at_from`
+
+### List (v2 — legacy)
+
+```
+GET /api/v2/third_party/application_order_labour_types
+```
+
+<Info>
+  Labour types have a `wo_labour_type_category_id` field that groups them. Query `GET /api/v3/third_party/work_order_labour_type_categories` for the category list.
+</Info>
+
+---
+
+## Recommended sync strategy
+
+For initial setup and ongoing maintenance:
+
+<Steps>
+  <Step title="Initial full sync">
+    Pull the full catalog once for each entity. For large catalogs like formulateds, paginate through all pages. Store `id` values mapped to your own product IDs using `external_code`.
+  </Step>
+  <Step title="Incremental sync">
+    On subsequent runs, use `updated_at_from` set to your last sync timestamp. Only pull records that changed since then.
+  </Step>
+  <Step title="Detect deletions">
+    Use `deleted_at_from` with your last sync timestamp to find soft-deleted records and mark them inactive in your system.
+  </Step>
+</Steps>
+
+For the full details on audit filters, see the [Sync Strategy guide](/guides/sync-strategy).
+
+---
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">
+    Now that master data is ready, create your first Work Order
+  </Card>
+  <Card title="Sync Strategy" icon="arrows-rotate" href="/guides/sync-strategy">
+    How to efficiently keep master data up to date
+  </Card>
+</CardGroup>

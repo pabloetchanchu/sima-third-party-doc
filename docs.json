@@ -1,0 +1,55 @@
+{
+  "name": "SIMA Developer Docs",
+  "logo": {
+    "light": "/logo/sima-light.svg",
+    "dark": "/logo/sima-dark.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#1a6b3c",
+    "light": "#2d9c5a",
+    "dark": "#0f4a29"
+  },
+  "topbarLinks": [
+    {
+      "name": "Postman Collection",
+      "url": "https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Contact Support",
+    "url": "mailto:soporte@sima.ag"
+  },
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": ["introduction", "quickstart", "authentication"]
+    },
+    {
+      "group": "Integration Guides",
+      "pages": [
+        "guides/work-orders",
+        "guides/hierarchy-setup",
+        "guides/master-data",
+        "guides/scouting",
+        "guides/sync-strategy",
+        "guides/farmers",
+        "guides/warehouses",
+        "guides/silobags",
+        "guides/progress-reports",
+        "guides/iot-weather"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": ["api-reference/overview"]
+    },
+    {
+      "group": "SDKs",
+      "pages": ["sdks/php", "sdks/python"]
+    }
+  ],
+  "footerSocials": {
+    "website": "https://sima.ag"
+  }
+}

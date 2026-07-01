@@ -1,0 +1,92 @@
+---
+title: "Warehouses"
+description: "How to query Warehouses — storage locations referenced in Work Order supply lines"
+---
+
+## Overview
+
+Warehouses are storage locations (depósitos) where agrochemical inputs are stored. They can be referenced in Work Order supply lines to track which depot a product was drawn from.
+
+<Info>
+  Warehouses are **read-only** from the Third-Party API. They are created and managed in SIMA directly. If your system needs warehouses to exist in SIMA, they must be created via the web app first.
+</Info>
+
+---
+
+## Endpoints
+
+### List Warehouses
+
+```
+GET /api/v2/third_party/warehouses
+```
+
+**Filters:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `search` | string | Search by name |
+| `id` | int | Filter by specific warehouse ID |
+| `updated_from` | datetime | Change detection (note: v2 uses `updated_from`, not `updated_at_from`) |
+| `page` / `size` | int | Pagination |
+
+**Response:**
+
+```json
+{
+  "items": [
+    {
+      "id": 6342,
+      "name": "El Galpón",
+      "description": null,
+      "date_modified": "2022-04-08T15:35:48-03:00"
+    }
+  ],
+  "current_page": 1,
+  "next_page": null,
+  "total_pages": 1,
+  "total_items": 1
+}
+```
+
+### Get Warehouse detail
+
+```
+GET /api/v2/third_party/warehouses/{id}
+```
+
+Returns a single warehouse by ID.
+
+---
+
+## Using warehouses in Work Orders
+
+When creating a Work Order supply line, you can optionally reference a warehouse:
+
+```json
+"supplies": [
+  {
+    "cultivation": { "local_id": 243405 },
+    "formulated": { "local_id": 8844 },
+    "total_applied": 59.999,
+    "area_applied": 37,
+    "warehouse": { "local_id": 6342 }
+  }
+]
+```
+
+If no warehouse applies, set `"warehouse": null`.
+
+---
+
+## Sync recommendation
+
+Warehouses change infrequently. Sync them once on startup and refresh weekly using `updated_from`.
+
+---
+
+## Next steps
+
+<Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">
+  Reference warehouse IDs in Work Order supply lines
+</Card>

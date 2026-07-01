@@ -1,0 +1,192 @@
+---
+title: "Sync Strategy"
+description: "How to efficiently detect and pull changes from SIMA using audit filters — without re-fetching everything every time"
+---
+
+## Overview
+
+SIMA's Third-Party API is designed for incremental synchronization. Every list endpoint supports audit filters (`updated_at_from`, `deleted_at_from`, `active`) that let you pull only what changed since your last sync, rather than downloading the full dataset on every run.
+
+---
+
+## The audit filter pattern
+
+All v3 list endpoints (and most v2 endpoints) share the same set of audit parameters:
+
+| Parameter | Type | Description |
+|---|---|---|
+| `updated_at_from` | datetime (ISO8601) | Records modified on or after this timestamp |
+| `updated_at_to` | datetime (ISO8601) | Records modified before this timestamp |
+| `created_at_from` | datetime (ISO8601) | Records created on or after this timestamp |
+| `created_at_to` | datetime (ISO8601) | Records created before this timestamp |
+| `deleted_at_from` | datetime (ISO8601) | Soft-deleted records deleted on or after this timestamp |
+| `deleted_at_to` | datetime (ISO8601) | Soft-deleted records deleted before this timestamp |
+| `active` | bool | Filter by active flag (`true` / `false`) |
+
+**Datetime format:** `2024-01-01T00:00:00-03:00` (ISO8601 with timezone offset)
+
+<Warning>
+  **v2 vs v3 parameter names differ.** v3 uses `updated_at_from`; some v2 endpoints use `updated_from`. Always check the specific endpoint docs or Postman collection for exact names.
+</Warning>
+
+---
+
+## Default soft-delete behavior
+
+By default, when you don't pass any `deleted_at_*` parameter, the API **automatically excludes** soft-deleted records. You get only active (non-deleted) rows.
+
+```
+# Returns only non-deleted establishments
+GET /api/v3/third_party/establishments?page=1
+```
+
+To **include** soft-deleted records (e.g. to detect deletions), pass a `deleted_at_from` range:
+
+```
+# Returns establishments deleted after Jan 1, 2024
+GET /api/v3/third_party/establishments?deleted_at_from=2024-01-01T00:00:00-03:00
+```
+
+---
+
+## Recommended sync flow
+
+### Initial sync (first time)
+
+Pull the full dataset for each entity. Paginate through all pages.
+
+```python
+page = 1
+while True:
+    response = requests.get(
+        f"{BASE_URL}/api/v3/third_party/formulateds",
+        headers=headers,
+        params={"page": page, "size": 100, "active": "true"},
+    )
+    data = response.json()
+    store_locally(data["items"])
+
+    if data["next_page"] is None:
+        break
+    page += 1
+
+save_sync_timestamp(datetime.now())
+```
+
+### Incremental sync (subsequent runs)
+
+Use `updated_at_from` set to your last sync timestamp. Only records that changed come back.
+
+```python
+last_sync = load_last_sync_timestamp()  # e.g. "2024-06-01T00:00:00-03:00"
+
+response = requests.get(
+    f"{BASE_URL}/api/v3/third_party/formulateds",
+    headers=headers,
+    params={"updated_at_from": last_sync, "page": 1, "size": 100},
+)
+# Process and upsert changed records
+save_sync_timestamp(datetime.now())
+```
+
+### Detecting deletions
+
+Run a separate query with `deleted_at_from` to find soft-deleted records and mark them inactive in your system:
+
+```python
+response = requests.get(
+    f"{BASE_URL}/api/v3/third_party/establishments",
+    headers=headers,
+    params={"deleted_at_from": last_sync},
+)
+for item in response.json()["items"]:
+    mark_as_deleted_locally(item["id"])
+```
+
+---
+
+## Per-entity sync frequency
+
+Not all entities change at the same rate. Adapt your sync cadence accordingly:
+
+| Entity | Change frequency | Recommended sync |
+|---|---|---|
+| Work Orders | High — created/updated constantly | Every 15–30 min or on demand |
+| Establishments / Plots | Medium — change when client modifies structure | Daily |
+| Campaigns / Cultivations | Medium — change at season start/end | Daily |
+| Applicators / Machines | Low — added when new contractors onboard | Daily or weekly |
+| Formulateds | Very low — global catalog | Weekly |
+| Units / Labour Types | Rarely change | Weekly or on startup |
+
+---
+
+## Pagination
+
+All list endpoints are paginated. Use `page` and `size` parameters:
+
+```
+GET /api/v3/third_party/work_orders?page=1&size=50
+```
+
+The response includes:
+
+```json
+{
+  "current_page": 1,
+  "next_page": 2,
+  "total_pages": 19,
+  "total_items": 57
+}
+```
+
+When `next_page` is `null`, you've reached the last page.
+
+<Info>
+  Default `size` is 10 for most endpoints. For bulk initial syncs, increase to 100 to reduce the number of requests.
+</Info>
+
+---
+
+## Storing the ID mapping
+
+Every entity in SIMA has a `local_id` (SIMA's internal ID) and an optional `external_code` or `external_id` (your system's ID). Maintain a mapping table in your database:
+
+```
+your_products table:
+  erp_id        → your internal product ID
+  sima_local_id → SIMA's local_id for the same product
+  last_synced   → timestamp of last sync for this record
+```
+
+Use `external_code` when creating or updating records in SIMA to store your ID:
+
+```json
+{
+  "name": "Juan Rodríguez",
+  "external_code": "ERP-APPLICATOR-0042"
+}
+```
+
+---
+
+## Common mistakes
+
+| Mistake | Correct approach |
+|---|---|
+| Passing `deleted_at_from=null` to get active records | Omit `deleted_at_*` entirely — active records are the default |
+| Using `active=true` to filter soft-deletes | `active` and `deleted_at` are separate flags — use both if needed |
+| Re-fetching the full catalog on every run | Store a `last_sync` timestamp and use `updated_at_from` |
+| Using v3 param names on v2 endpoints | Check each endpoint — v2 may use `updated_from` instead of `updated_at_from` |
+
+---
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">
+    Apply sync strategy to Work Orders
+  </Card>
+  <Card title="Scouting" icon="magnifying-glass" href="/guides/scouting">
+    Sync field observations and adversities
+  </Card>
+</CardGroup>

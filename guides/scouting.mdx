@@ -1,0 +1,177 @@
+---
+title: "Scouting & Monitoring"
+description: "How to sync field observations, adversities, and scouting reports via the SIMA Third-Party API"
+---
+
+## Overview
+
+SIMA's scouting module lets third-party apps register and retrieve field observations — pests, diseases, weeds, and other adversities detected during crop monitoring. The data flows from external scouting tools (sensors, mobile apps, drones) into SIMA, where agronomists can review and act on it.
+
+---
+
+## Entity map
+
+```
+Adversity Kind (Insectos, Enfermedades, Malezas...)
+  └── Adversity Category
+        └── Adversity (specific pest or disease)
+              └── Scouting (field observation session)
+                    └── linked to a Campaign
+```
+
+---
+
+## Step 1 — Sync the adversity catalog
+
+Before registering observations, sync the adversity catalog (read-only, global). These are the reference entities your observations will point to.
+
+### Adversity Kinds
+
+Top-level classification: Insects, Diseases, Weeds, etc.
+
+```
+GET /api/v2/third_party/adversityKind
+```
+
+**Filters:** `name`, `modified_at_from`, `modified_at_to`, `deleted_at_from`
+
+**Response:**
+
+```json
+{
+  "items": [
+    { "id": 2, "name": "Insectos", "modified_at": "2023-12-07T19:36:31-03:00", "deleted_at": null },
+    { "id": 3, "name": "Enfermedades", "modified_at": "2023-12-07T19:36:31-03:00", "deleted_at": null },
+    { "id": 4, "name": "Medidas", "modified_at": "2023-12-07T19:36:31-03:00", "deleted_at": null }
+  ]
+}
+```
+
+### Adversity Categories
+
+Sub-classification within each kind.
+
+```
+GET /api/v2/third_party/adversityCategories
+```
+
+### Adversities
+
+Specific pests, diseases, or weeds with scientific names and descriptions.
+
+```
+GET /api/v2/third_party/adversity
+```
+
+**Filters:** `name`, `scientific_name`, `adv_category_id`, `modified_at_from`
+
+**Response:**
+
+```json
+{
+  "items": [
+    {
+      "id": 12,
+      "adv_category_id": 3,
+      "name": "Bicho bolita",
+      "scientific_name": "Armadillium vulgare",
+      "description": "Soil pest that attacks seedlings at hypocotyl level...",
+      "modified_at": "2021-06-25T00:00:00-03:00"
+    }
+  ]
+}
+```
+
+<Info>
+  The adversity catalog changes infrequently. Sync it weekly or on startup, using `modified_at_from` for incremental updates.
+</Info>
+
+---
+
+## Step 2 — Register and retrieve scouting sessions
+
+A scouting session represents a field visit or monitoring event for a specific campaign. It references one or more adversity IDs observed during that visit.
+
+### List Scouting sessions
+
+```
+GET /api/v2/third_party/scouting
+```
+
+**Filters:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `campaign_id` | int | Filter by campaign |
+| `modified_at_from` | datetime | Change detection |
+| `modified_at_to` | datetime | Upper bound |
+| `deleted_at_from` | datetime | Detect deletions |
+| `page` / `size` | int | Pagination |
+
+**Response:**
+
+```json
+{
+  "items": [
+    {
+      "id": 293087,
+      "campaign_id": 85973,
+      "date_created": "2024-04-01T11:02:34-03:00",
+      "date_modified": "2024-04-01T11:02:34-03:00",
+      "deleted_at": null,
+      "observations": "High aphid pressure detected in NE sector",
+      "adversity_ids": [9, 24, 26, 84, 119, 135, 258, 491]
+    }
+  ],
+  "current_page": 1,
+  "next_page": null,
+  "total_pages": 1,
+  "total_items": 1
+}
+```
+
+Each `adversity_id` in the array maps to a specific pest or disease from the adversity catalog. An ID can appear multiple times if multiple occurrences were recorded at different locations in the same session.
+
+---
+
+## Typical integration patterns
+
+### Scouting app → SIMA
+
+Your app detects adversities in the field and pushes observations to SIMA:
+
+1. Map your app's pest/disease catalog to SIMA adversity IDs (using `name` or `scientific_name` matching)
+2. Create a scouting session via POST, including the `campaign_id` and the list of `adversity_ids` observed
+3. Store SIMA's returned `id` for future reference or deletion
+
+### SIMA → external analytics platform
+
+Pull scouting data from SIMA for analysis or reporting:
+
+1. List campaigns for the establishments of interest
+2. Query `GET /api/v2/third_party/scouting?campaign_id={id}&modified_at_from={last_sync}` for each campaign
+3. Enrich with adversity details by cross-referencing `adversity_ids` against your local adversity catalog cache
+
+---
+
+## Sync cadence
+
+| Entity | Recommended sync |
+|---|---|
+| Adversity Kinds | Weekly or on startup |
+| Adversity Categories | Weekly or on startup |
+| Adversities | Weekly or on startup |
+| Scouting sessions | Every 30–60 min during active crop season |
+
+---
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Sync Strategy" icon="arrows-rotate" href="/guides/sync-strategy">
+    Apply audit filters to keep scouting data current
+  </Card>
+  <Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">
+    Create treatment orders based on scouting findings
+  </Card>
+</CardGroup>

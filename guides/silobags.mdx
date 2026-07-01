@@ -1,0 +1,110 @@
+---
+title: "Silobags"
+description: "How to query Silobags (silobolsas) — grain storage bags with GPS coordinates and status monitoring"
+---
+
+## Overview
+
+Silobags (silobolsas) are grain storage bags used widely in South American agriculture. SIMA tracks their location, status, and monitoring history. Third-party systems — particularly grain management platforms and logistics systems — can query silobag data to integrate with SIMA's storage tracking.
+
+---
+
+## Endpoints
+
+### Get Silobag detail
+
+```
+GET /api/v2/third_party/silobags/{id}
+```
+
+Returns a single silobag by ID including GPS coordinates and current status.
+
+**Response:**
+
+```json
+{
+  "id": 8,
+  "code": "766code",
+  "date_extracted": "2024-05-13T12:18:41-03:00",
+  "silobag_longitude": "55.000",
+  "rebagged": false,
+  "semaphore": 3,
+  "latitude": "-32.93489339",
+  "longitude": "-60.65658509",
+  "observations": null,
+  "created_at": "2024-05-06T15:56:09-03:00",
+  "modified_at": "2024-05-06T15:56:08-03:00",
+  "deleted_at": null,
+  "active": true
+}
+```
+
+### List Silobags
+
+```
+GET /api/v3/third_party/silobags
+```
+
+**Filters:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `code` | string | Search by silobag code |
+| `semaphore` | int | Filter by status: `1` (green), `2` (yellow), `3` (red) |
+| `rebagged` | int | Filter re-bagged silobags: `1` (yes), `0` (no) |
+| `active` | int | Filter active: `1` (active), `0` (inactive) |
+| `date_extracted_from` / `date_extracted_to` | datetime | Filter by extraction date |
+| `updated_at_from` / `updated_at_to` | datetime | Change detection |
+| `deleted_at_from` | datetime | Detect deleted silobags |
+| `page` / `size` | int | Pagination |
+
+---
+
+## Semaphore values
+
+The `semaphore` field represents the monitoring status of the silobag:
+
+| Value | Meaning |
+|---|---|
+| `1` | 🟢 Green — OK, no issues detected |
+| `2` | 🟡 Yellow — attention required |
+| `3` | 🔴 Red — critical issue, immediate action needed |
+
+Use `semaphore=3` to pull only bags in critical state:
+
+```bash
+GET /api/v3/third_party/silobags?semaphore=3&active=1
+```
+
+---
+
+## Key fields
+
+| Field | Description |
+|---|---|
+| `code` | Your reference code for the silobag |
+| `silobag_longitude` | Length of the bag in meters |
+| `latitude` / `longitude` | GPS coordinates of the bag's location |
+| `date_extracted` | Date the grain was extracted (null if still in use) |
+| `rebagged` | Whether the grain was transferred to a new bag |
+| `semaphore` | Current monitoring status (1/2/3) |
+
+---
+
+## Sync recommendation
+
+For active integrations monitoring storage status:
+
+- **During harvest / storage season**: query every few hours filtering by `updated_at_from`
+- **Off-season**: daily sync is sufficient
+- Always use `semaphore=3` alerts for priority notifications
+
+---
+
+## Limitations
+
+The current Third-Party API provides **read access only** for silobags. Creating or updating silobags must be done via the SIMA web app or mobile app. If your use case requires write access, contact [soporte@sima.ag](mailto:soporte@sima.ag).
+
+<Info>
+  Silobag monitoring data (temperature sensors, CO2 readings) is available via the IoT endpoints. Contact support for access details.
+</Info>

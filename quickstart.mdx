@@ -1,0 +1,163 @@
+---
+title: "Quickstart"
+description: "Make your first SIMA API call in under 5 minutes"
+---
+
+## What you'll need
+
+- An API account (use the [demo account](#demo-account) to get started immediately)
+- A REST client — [Postman](https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh) or `curl`
+
+---
+
+## Step 1 — Authenticate
+
+All API calls require a valid `access_token`. Get one by calling the login endpoint.
+
+<CodeGroup>
+```bash curl
+curl -X POST https://api.qa.sima.ag/api/v2/login \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -H "X-SIMA-SYSTEM-ID: 8" \
+  -d '{
+    "email": "demo@sima.ag",
+    "password": "demo_sima"
+  }'
+```
+
+```php PHP
+$response = $client->post('/api/v2/login', [
+    'headers' => [
+        'Accept'           => 'application/json',
+        'Content-Type'     => 'application/json',
+        'X-SIMA-SYSTEM-ID' => '8',
+    ],
+    'json' => [
+        'email'    => 'demo@sima.ag',
+        'password' => 'demo_sima',
+    ],
+]);
+$token = json_decode($response->getBody())->access_token;
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://api.qa.sima.ag/api/v2/login",
+    headers={
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "X-SIMA-SYSTEM-ID": "8",
+    },
+    json={"email": "demo@sima.ag", "password": "demo_sima"},
+)
+token = response.json()["access_token"]
+```
+</CodeGroup>
+
+**Successful response (HTTP 200):**
+
+```json
+{
+  "access_token": "aff6ac1d-b48c-4ea4-aba2-a2753bf2abf5",
+  "refresh_token": "20626ffd-1288-4106-ac10-dc5a5f3487bc",
+  "expiration_datetime": "2024-06-16T17:38:58-03:00",
+  "society": {
+    "id": 34,
+    "legalName": "Demo Society"
+  }
+}
+```
+
+<Warning>
+  Save your `access_token` — you'll need it in every subsequent request. Note that it has an expiration time; use the `refresh_token` to renew it without logging in again.
+</Warning>
+
+---
+
+## Step 2 — Make your first request
+
+With the token, query the list of Establishments to verify everything is working:
+
+<CodeGroup>
+```bash curl
+curl -X GET https://api.qa.sima.ag/api/v3/establishments \
+  -H "Accept: application/json" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "X-SIMA-SYSTEM-ID: 8"
+```
+
+```php PHP
+$response = $client->get('/api/v3/establishments', [
+    'headers' => [
+        'Accept'           => 'application/json',
+        'Authorization'    => 'Bearer ' . $token,
+        'X-SIMA-SYSTEM-ID' => '8',
+    ],
+]);
+```
+
+```python Python
+response = requests.get(
+    "https://api.qa.sima.ag/api/v3/establishments",
+    headers={
+        "Accept": "application/json",
+        "Authorization": f"Bearer {token}",
+        "X-SIMA-SYSTEM-ID": "8",
+    },
+)
+```
+</CodeGroup>
+
+If you receive a list of establishments (even an empty array `[]`), your integration is working correctly.
+
+---
+
+## Step 3 — Explore the Postman collection
+
+The Postman collection includes all available endpoints with pre-configured examples for every resource.
+
+<Card title="Open Postman Collection" icon="arrow-up-right-from-square" href="https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh">
+  Explore and test all SIMA Third-Party API endpoints
+</Card>
+
+---
+
+## Demo account
+
+Use these credentials to test against the QA environment at no cost:
+
+| | Value |
+|---|---|
+| **API email** | `demo@sima.ag` |
+| **API password** | `demo_sima` |
+| **Web URL** | [https://env.qa.sima.ag](https://env.qa.sima.ag) |
+| **Web user (ES)** | `demo-web@sima.ag` |
+| **Web user (PT)** | `demo-web-pt@sima.ag` |
+
+<Info>
+  The QA environment resets periodically. Any data you create there may be cleared during resets.
+</Info>
+
+---
+
+## Next steps
+
+Now that you're authenticated, follow the integration guides based on your use case:
+
+<CardGroup cols={2}>
+  <Card title="Integrate Work Orders" icon="clipboard-list" href="/guides/work-orders">
+    The full guide to creating and syncing OTs
+  </Card>
+  <Card title="Set up the Hierarchy" icon="sitemap" href="/guides/hierarchy-setup">
+    Societies, Establishments, Campaigns, and Plots
+  </Card>
+  <Card title="Sync Master Data" icon="database" href="/guides/master-data">
+    Applicators, Machines, Formulateds, and Units
+  </Card>
+  <Card title="Scouting & Monitoring" icon="magnifying-glass" href="/guides/scouting">
+    Register adversities and field observations
+  </Card>
+</CardGroup>

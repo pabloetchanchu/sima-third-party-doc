@@ -1,0 +1,126 @@
+---
+title: "Authentication"
+description: "How to authenticate and manage tokens in the SIMA Third-Party API"
+---
+
+## Overview
+
+SIMA uses token-based authentication. Every request must include a valid `access_token` obtained via the login endpoint. Tokens have an expiration time and can be renewed using a `refresh_token` without requiring a new login.
+
+---
+
+## Login endpoint
+
+<ParamField path="POST" type="string">/api/v2/login</ParamField>
+
+### Required headers
+
+| Header | Value | Description |
+|---|---|---|
+| `Accept` | `application/json` | Required on all requests |
+| `Content-Type` | `application/json` | Required on all requests |
+| `X-SIMA-SYSTEM-ID` | `8` | Identifies your system as a Third-Party integrator |
+
+<Info>
+  The `X-SIMA-SYSTEM-ID: 8` header is required on **every** API call, not just login. Without it, requests will be rejected.
+</Info>
+
+### Request body
+
+```json
+{
+  "email": "your-api-user@example.com",
+  "password": "your-password"
+}
+```
+
+### Response
+
+```json
+{
+  "access_token": "aff6ac1d-b48c-4ea4-aba2-a2753bf2abf5",
+  "refresh_token": "20626ffd-1288-4106-ac10-dc5a5f3487bc",
+  "expiration_datetime": "2024-06-16T17:38:58-03:00",
+  "society": {
+    "id": 34,
+    "legalName": "Your Society Name",
+    "syncCheck": "user@example.com3293547"
+  }
+}
+```
+
+Save both `access_token` and `refresh_token` — you'll need them for ongoing sessions.
+
+---
+
+## Using the token
+
+Include the `access_token` as a Bearer token in the `Authorization` header of every request:
+
+```bash
+Authorization: Bearer aff6ac1d-b48c-4ea4-aba2-a2753bf2abf5
+```
+
+**Full example:**
+
+```bash
+curl -X GET https://api.qa.sima.ag/api/v3/establishments \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer aff6ac1d-b48c-4ea4-aba2-a2753bf2abf5" \
+  -H "X-SIMA-SYSTEM-ID: 8"
+```
+
+---
+
+## Token expiration and refresh
+
+Tokens expire after a period defined by the `expiration_datetime` field. When a token expires, you have two options:
+
+**Option A — Re-login:** Call `/api/v2/login` again with your credentials.
+
+**Option B — Refresh:** Use the `refresh_token` to get a new `access_token` without sending credentials again (recommended for production integrations).
+
+---
+
+## User requirements
+
+The user account used for API access must have the `api_integrated` role assigned in SIMA. If authentication fails with a valid email/password, contact [soporte@sima.ag](mailto:soporte@sima.ag) to verify the role is configured.
+
+---
+
+## Error responses
+
+| HTTP Status | Meaning |
+|---|---|
+| `401 Unauthorized` | Invalid or expired token |
+| `403 Forbidden` | Valid token but insufficient permissions |
+| `400 Bad Request` | Missing or malformed request body |
+
+**Example error response:**
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "Invalid credentials or token expired"
+}
+```
+
+---
+
+## Summary
+
+<Steps>
+  <Step title="Call POST /api/v2/login">
+    Include `X-SIMA-SYSTEM-ID: 8` header and your credentials in the body.
+  </Step>
+  <Step title="Save the access_token">
+    Store it securely — you'll use it in every subsequent request.
+  </Step>
+  <Step title="Add Authorization header">
+    Include `Authorization: Bearer YOUR_TOKEN` and `X-SIMA-SYSTEM-ID: 8` on every request.
+  </Step>
+  <Step title="Handle expiration">
+    Monitor `expiration_datetime` and refresh proactively to avoid interruptions.
+  </Step>
+</Steps>

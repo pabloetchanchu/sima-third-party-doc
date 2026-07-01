@@ -1,0 +1,257 @@
+---
+title: "Integrating Work Orders"
+description: "Step-by-step guide to creating, syncing, and managing Work Orders (OTs) via the SIMA Third-Party API"
+---
+
+## Overview
+
+Work Orders (OTs) are the core entity in SIMA. They represent field operations — applications, labour tasks, scouting, and more. Third-party systems can create, read, update, and delete Work Orders bidirectionally.
+
+<Warning>
+  Before creating any Work Order, you must have the **hierarchical structure** (Establishments, Campaigns, Plots) and **master data** (Formulateds, Machines, Applicators) already set up in SIMA. If those don't exist yet, start with the [Hierarchy Setup](/guides/hierarchy-setup) guide.
+</Warning>
+
+---
+
+## Work Order structure
+
+Every Work Order has three sections:
+
+| Section | Description |
+|---|---|
+| `header` | General info: name, date, state, company, voucher type |
+| `supplies` | Agrochemical applications — formulated, area, quantity per cultivation |
+| `labours` | Labour tasks — applicators, contractors, machines per cultivation |
+
+Each supply or labour line is linked to a **cultivation** (`cultivation.local_id`), which ties the operation to a specific plot + campaign + crop combination.
+
+---
+
+## Prerequisites checklist
+
+Before creating a Work Order, confirm you have IDs for:
+
+<Steps>
+  <Step title="Company">
+    The society context. Get it from the login response (`society.id`) or via `GET /api/v3/third_party/companies`.
+  </Step>
+  <Step title="Cultivation">
+    The plot + campaign + crop combination the operation targets. Get it via `GET /api/v3/third_party/cultivations`. Each supply and labour line needs a `cultivation_id`.
+  </Step>
+  <Step title="Formulateds (for supplies)">
+    The agrochemical product. Get IDs from `GET /api/v3/third_party/formulateds`.
+  </Step>
+  <Step title="Applicators / Contractors / Machines (for labours)">
+    Optional but common. Get from their respective master data endpoints.
+  </Step>
+</Steps>
+
+---
+
+## Endpoints
+
+### List Work Orders
+
+```
+GET /api/v3/third_party/work_orders
+```
+
+**Key filters:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `updated_at_from` | datetime | Detect changes since last sync |
+| `updated_at_to` | datetime | Upper bound for change detection |
+| `state` | string | `confirmed` or `pending` |
+| `cultivation_id` | int | Filter by cultivation |
+| `formulated_id` | int | Filter by formulated used |
+| `page` / `size` | int | Pagination (default size: 10) |
+
+<CodeGroup>
+```bash curl
+curl -X GET "https://api.qa.sima.ag/api/v3/third_party/work_orders?updated_at_from=2024-01-01T00:00:00-03:00&page=1" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "X-SIMA-SYSTEM-ID: 8" \
+  -H "Accept: application/json"
+```
+
+```python Python
+response = requests.get(
+    "https://api.qa.sima.ag/api/v3/third_party/work_orders",
+    headers={"Authorization": f"Bearer {token}", "X-SIMA-SYSTEM-ID": "8"},
+    params={"updated_at_from": "2024-01-01T00:00:00-03:00", "page": 1},
+)
+```
+</CodeGroup>
+
+**Response structure:**
+
+```json
+{
+  "items": [
+    {
+      "header": {
+        "local_id": 38812,
+        "external_id": null,
+        "name": "OT-14-05-2024",
+        "state": { "pending": false, "executed": true, "confirmed": false },
+        "extra_fields": {
+          "company": { "local_id": 11076 },
+          "voucher_type": { "local_id": 17 }
+        }
+      },
+      "supplies": [...],
+      "labours": [...]
+    }
+  ],
+  "current_page": 1,
+  "next_page": 2,
+  "total_pages": 19,
+  "total_items": 57
+}
+```
+
+---
+
+### Create a Work Order
+
+```
+POST /integration/api/v1/workOrders
+```
+
+<CodeGroup>
+```bash curl
+curl -X POST https://api.qa.sima.ag/integration/api/v1/workOrders \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "X-SIMA-SYSTEM-ID: 8" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "header": {
+      "system_id": "third_party",
+      "name": "Herbicide Application - Field L1",
+      "date": "2024-07-04T17:03:14-03:00",
+      "voucher_date": "2024-07-04T00:00:00-03:00",
+      "state": { "pending": true, "executed": false, "confirmed": false },
+      "extra_fields": {
+        "company": { "local_id": 32 },
+        "voucher_type": { "local_id": 7 }
+      }
+    },
+    "supplies": [
+      {
+        "cultivation": { "local_id": 243405 },
+        "date": "2024-07-04T17:03:14-03:00",
+        "area_applied": 37,
+        "formulated": { "local_id": 8844 },
+        "total_applied": 59.999,
+        "state": { "pending": true, "executed": false, "confirmed": false },
+        "extra_fields": { "voucher_type": { "local_id": 7 } }
+      }
+    ],
+    "labours": [
+      {
+        "cultivation": { "local_id": 243405 },
+        "date": "2024-07-04T00:00:00-03:00",
+        "area_applied": 37,
+        "contractors": [{ "local_id": 3056 }],
+        "machines": [{ "local_id": 4419 }],
+        "state": { "pending": true, "executed": false, "confirmed": false },
+        "extra_fields": { "voucher_type": { "local_id": 7 } }
+      }
+    ]
+  }'
+```
+</CodeGroup>
+
+A successful response returns the created Work Order with SIMA-assigned `local_id` in the header. **Store this ID** to link future updates or deletions.
+
+---
+
+### Update a Work Order
+
+```
+PATCH /integration/api/v1/workOrders/{localId}
+```
+
+Send the full Work Order structure (same as creation) with modified fields. SIMA replaces the existing supplies and labours with what you send.
+
+---
+
+### Delete a Work Order
+
+```
+DELETE /integration/api/v1/workOrders/{localId}
+```
+
+Returns `HTTP 204 No Content` on success.
+
+**Bulk delete** (multiple IDs at once):
+
+```
+DELETE /integration/api/v1/workOrdersGroup
+```
+
+```json
+{ "data": [473229, 473228] }
+```
+
+---
+
+### Add additional info to a Work Order
+
+Use this to attach custom metadata from your system to an existing Work Order:
+
+```
+POST /api/v3/third_party/{wo_id}/additional_info
+```
+
+```json
+{
+  "origin_system": "your-erp-name",
+  "data": { "erp_reference": "OT-2024-0042", "cost_center": "FARM-01" }
+}
+```
+
+---
+
+## Work Order states
+
+| State | Meaning |
+|---|---|
+| `pending: true` | Created but not yet executed in the field |
+| `executed: true` | Field operation completed |
+| `confirmed: true` | Reviewed and confirmed in SIMA |
+
+<Info>
+  Work Orders with `is_read_only: true` cannot be modified. Check this field before attempting an update.
+</Info>
+
+---
+
+## ID mapping between systems
+
+Every entity in SIMA has both a `local_id` (SIMA's ID) and an `external_id` (your system's ID). When creating a Work Order from your system, you can pass your own ID as `external_id` to use it in future lookups:
+
+```json
+"header": {
+  "system_id": "third_party",
+  "local_id": null,
+  "external_id": "your-erp-id-here"
+}
+```
+
+---
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Hierarchy Setup" icon="sitemap" href="/guides/hierarchy-setup">
+    Set up Establishments, Campaigns, and Plots before creating OTs
+  </Card>
+  <Card title="Master Data" icon="database" href="/guides/master-data">
+    Sync Formulateds, Machines, and Applicators
+  </Card>
+  <Card title="Sync Strategy" icon="arrows-rotate" href="/guides/sync-strategy">
+    How to detect and pull changes efficiently
+  </Card>
+</CardGroup>

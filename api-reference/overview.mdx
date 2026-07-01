@@ -1,0 +1,60 @@
+---
+title: "API Reference"
+description: "Complete reference for all SIMA Third-Party API endpoints"
+---
+
+## Overview
+
+The interactive API reference is generated automatically from the OpenAPI specification exported from the SIMA Postman collection. It includes all 137 endpoints grouped by domain, with request/response schemas and a live playground to test calls directly from the browser.
+
+<Info>
+  The API reference is coming soon. While it's being set up, use the [Postman collection](https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh) as the authoritative endpoint reference.
+</Info>
+
+---
+
+## Endpoint domains
+
+| Domain | Endpoints | Versions |
+|---|---|---|
+| Authentication | 2 | v2, v3 |
+| Work Orders | 22 | v1, v2, v3 |
+| Hierarchy | 30 | v2, v3 |
+| Master Data | 33 | v2, v3 |
+| Scouting | 14 | v2, v3 |
+| Progress Reports | 6 | v3 |
+| Silobags | 4 | v3 |
+| IoT / Weather | 16 | v3 |
+| Campaign Import | 3 | v2 |
+
+---
+
+## Base URLs
+
+| Environment | URL |
+|---|---|
+| Test (QA) | `https://api.qa.sima.ag` |
+| Production | `https://api.sima.ag` |
+
+---
+
+## Required headers
+
+Every request must include:
+
+```
+Authorization: Bearer {access_token}
+X-SIMA-SYSTEM-ID: 8
+Accept: application/json
+Content-Type: application/json
+```
+
+---
+
+## Postman collection
+
+The Postman collection is the most complete and up-to-date reference for all endpoints, including examples and environment variables:
+
+<Card title="Open Postman Collection" icon="arrow-up-right-from-square" href="https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh">
+  All SIMA Third-Party API endpoints with examples
+</Card>

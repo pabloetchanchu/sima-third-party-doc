@@ -1,0 +1,217 @@
+---
+title: "IoT & Weather"
+description: "How to register devices, send sensor readings, and query weather data via the SIMA Third-Party API"
+---
+
+## Overview
+
+SIMA's IoT module allows third-party hardware providers and weather station integrators to push sensor data directly into SIMA. Registered devices can report rainfall, temperature, wind, and other climatic events, which are then available to agronomists alongside field operation data.
+
+**Typical use cases:**
+- Weather station networks sending daily or hourly readings
+- Soil moisture sensors reporting to SIMA campaigns
+- Automatic rain gauges (pluviometers) registering daily accumulation
+
+<Warning>
+  Some IoT/Weather endpoints may return `403` if the routes haven't been whitelisted in the RoutesMap for your specific system ID. If you encounter authentication errors on these endpoints despite having a valid token, contact [soporte@sima.ag](mailto:soporte@sima.ag) to verify your access is configured.
+</Warning>
+
+---
+
+## Concepts
+
+The IoT module is built around three core entities:
+
+```
+Device (physical sensor or station)
+  └── Device Event (a recording session)
+        └── Device Event Protocol Results (individual measurements)
+              └── Device Event Sample (the actual value)
+```
+
+Each event type is identified by a `table_code_id` — a numeric code that tells SIMA what kind of data is being reported.
+
+**Common table_code_id values:**
+
+| Value | Description |
+|---|---|
+| `53` | Weather station device |
+| `56` | Weather scouting event |
+| `57` | Weather event protocol |
+| `62` | Weather scouting protocol result |
+
+---
+
+## Step 1 — Register a device
+
+If you're integrating a new sensor or station, create it first:
+
+```
+POST /api/v3/third_party/devices
+```
+
+```json
+{
+  "name": "Rain Gauge - La Correntina N",
+  "external_code": "RG-STATION-001",
+  "is_automatic": true,
+  "latitude": -32.93489339,
+  "longitude": -60.65658509,
+  "table_code_id": 53
+}
+```
+
+Store the returned `id` — you'll use it when submitting events.
+
+### List existing devices
+
+```
+GET /api/v3/third_party/devices
+```
+
+---
+
+## Step 2 — Get climatic factors and protocols
+
+Before submitting readings, identify the correct factor and protocol IDs for your measurement type.
+
+### List climatic factors
+
+```
+GET /api/v3/third_party/climatic_factors
+```
+
+Key factors:
+
+| ID | Name |
+|---|---|
+| `1` | Lluvia (rainfall) |
+| Other IDs | Temperature, wind, humidity, etc. |
+
+### List device event protocols
+
+```
+GET /api/v3/third_party/device_event_protocols?table_code_id=57
+```
+
+For rainfall: Protocol ID `1`, name `"Lluvia"`, procedure: daily water accumulation recording.
+
+### List measure thresholds
+
+```
+GET /api/v3/third_party/device_event_measure_thresholds
+```
+
+Thresholds define the valid measurement ranges for each protocol.
+
+---
+
+## Step 3 — Submit sensor readings
+
+Create a device event with the measured values:
+
+```
+POST /api/v3/third_party/device_events
+```
+
+**Rainfall example (4mm recorded):**
+
+```json
+{
+  "device_id": 17,
+  "date": "2024-07-04T08:00:00-03:00",
+  "table_code_id": 56,
+  "suitable_for_scouting": true,
+  "observations": "Automatic daily reading",
+  "semaphore": 1,
+  "device_event_sample_group": {
+    "observations": "Daily accumulation group"
+  },
+  "device_event_protocol_results": [
+    {
+      "device_event_measure_threshold_id": 1,
+      "semaphore": 1,
+      "table_code_id": 62,
+      "device_event_sample": {
+        "value": 4
+      }
+    }
+  ]
+}
+```
+
+### List device events
+
+```
+GET /api/v3/third_party/device_events?table_code_id=56
+```
+
+---
+
+## Weather anomalies
+
+Weather anomalies are significant climate events (frost, hail, strong winds) that can be registered and tracked independently.
+
+### List anomaly types
+
+```
+GET /api/v3/third_party/weather_anomaly_types
+```
+
+### List anomalies
+
+```
+GET /api/v3/third_party/weather_anomaly
+```
+
+### Create an anomaly
+
+```
+POST /api/v3/third_party/weather_anomaly
+```
+
+---
+
+## Additional IoT endpoints
+
+| Endpoint | Description |
+|---|---|
+| `GET /api/v3/third_party/device_event_sample_groups` | Sample groups list |
+| `GET /api/v3/third_party/device_event_samples` | Individual samples |
+| `GET /api/v3/third_party/device_event_protocol_results` | Protocol results |
+| `GET /api/v3/third_party/device_event_measure_thresholds` | Measure thresholds catalog |
+
+---
+
+## Units for IoT measurements
+
+For rainfall and other measurements, query the units endpoint with the appropriate category:
+
+```
+GET /api/v1/units?category=pluvio
+```
+
+This returns units like `mm` for rainfall accumulation.
+
+---
+
+## Sync recommendation
+
+For automatic sensors sending readings continuously:
+
+- **Push model** (recommended): POST a new device event each time a reading is taken
+- **Pull model**: use `updated_at_from` on `device_events` to detect new readings from other systems
+- For daily rain gauges: one POST per day per device, at the end of the measurement period
+
+---
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Scouting" icon="magnifying-glass" href="/guides/scouting">
+    Combine IoT data with field observations
+  </Card>
+  <Card title="Sync Strategy" icon="arrows-rotate" href="/guides/sync-strategy">
+    Efficiently sync historical device data
+  </Card>
+</CardGroup>

@@ -1,0 +1,58 @@
+---
+title: "Introduction"
+description: "SIMA Third-Party API — integrate your system with the SIMA Agricultural Management Platform"
+---
+
+## What is SIMA?
+
+SIMA is an agricultural management platform that centralizes field operations across farms, campaigns, and crops. The Third-Party API allows external systems to read and write SIMA data securely, enabling real-time synchronization between your platform and your clients' operations.
+
+## Who is this API for?
+
+This API is designed for:
+
+- **ERP / agricultural software providers** that need to sync Work Orders with SIMA
+- **Scouting and monitoring apps** that register field observations in real time
+- **Data analytics platforms** consuming structured campaign and productivity data
+- **Cooperatives and agro-holdings** managing centralized data exchange across multiple producers
+
+## What can you do with it?
+
+<CardGroup cols={2}>
+  <Card title="Work Orders" icon="clipboard-list">
+    Create, update, and sync field operations (OTs) between your system and SIMA bidirectionally.
+  </Card>
+  <Card title="Hierarchical Structure" icon="sitemap">
+    Query and manage the entity hierarchy: Societies → Establishments → Campaigns → Plots.
+  </Card>
+  <Card title="Master Data" icon="database">
+    Access and sync Applicators, Machines, Formulateds, Units, and more — required before creating Work Orders.
+  </Card>
+  <Card title="Scouting & Monitoring" icon="magnifying-glass">
+    Register field observations and adversities, enabling early issue detection from third-party sensors and apps.
+  </Card>
+</CardGroup>
+
+## Technical overview
+
+- **Protocol:** REST — standard HTTP verbs (GET, POST, PUT, DELETE)
+- **Format:** JSON for all requests and responses
+- **Authentication:** Token-based via `POST /api/v2/login`
+- **Versioning:** Endpoints available in `v1`, `v2`, and `v3` — always use the latest available
+
+## Environments
+
+| Environment | Base URL |
+|---|---|
+| Test (QA) | `https://api.qa.sima.ag` |
+| Production | `https://api.sima.ag` |
+
+<Info>
+  The QA environment resets every 15 days. Use it freely during development and testing.
+</Info>
+
+## Before you start
+
+1. Request API credentials from [soporte@sima.ag](mailto:soporte@sima.ag) or use the [demo account](/quickstart#demo-account) for testing
+2. Download the [Postman collection](https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh) to explore all available endpoints
+3. Follow the [Quickstart](/quickstart) to make your first API call in under 5 minutes

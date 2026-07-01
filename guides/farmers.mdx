@@ -1,0 +1,107 @@
+---
+title: "Farmers"
+description: "How to query Farmers (producers) — the root entity of SIMA's hierarchy"
+---
+
+## Overview
+
+A **Farmer** (Productor) is the top-level entity in SIMA's hierarchy. Every Establishment belongs to a Farmer, and every Farmer belongs to a Society. When setting up a new client integration, you start here to get the `farmer_id` required to create Establishments.
+
+```
+Society
+  └── Farmer (Productor)
+        └── Establishment
+              └── Plot → Campaign → Cultivation → Work Order
+```
+
+<Info>
+  Farmers are **read-only** from the Third-Party API. They are created and managed in SIMA directly. Use these endpoints to list existing farmers and retrieve their IDs.
+</Info>
+
+---
+
+## Endpoints
+
+### List Farmers
+
+```
+GET /api/v2/third_party/farmers
+```
+
+**Filters:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `name` | string | Filter by first name |
+| `last_name` | string | Filter by last name |
+| `area_from` / `area_to` | int | Filter by total area (hectares) |
+| `modified_at_from` | datetime | Change detection |
+| `deleted_at_from` | datetime | Detect deleted farmers |
+| `page` / `size` | int | Pagination |
+
+**Response:**
+
+```json
+{
+  "items": [
+    {
+      "id": 40,
+      "name": "Juan",
+      "lastname": "Rodríguez",
+      "cuit": "20-12345678-9",
+      "observations": null,
+      "email": "juan@example.com",
+      "phone_number": "011-1234-5678",
+      "area": 850,
+      "external_code": null,
+      "date_created": "2015-06-20T16:45:46-03:00",
+      "date_modified": "2024-01-15T10:30:00-03:00",
+      "deleted_at": null
+    }
+  ],
+  "current_page": 1,
+  "next_page": null,
+  "total_pages": 1,
+  "total_items": 1
+}
+```
+
+### Get Farmer detail
+
+```
+GET /api/v2/third_party/farmers/{id}
+```
+
+Returns a single farmer by ID. Same fields as the list response.
+
+---
+
+## Finding the right farmer_id
+
+When setting up a new client:
+
+1. List all farmers: `GET /api/v2/third_party/farmers`
+2. Match by `name` + `lastname` or `cuit` to identify the producer
+3. Store the `id` — you'll use it as `farmer_id` when creating Establishments
+
+If the farmer doesn't exist yet, they need to be created in SIMA by the client or a SIMA admin before the integration can proceed.
+
+---
+
+## External code mapping
+
+Use `external_code` to store your system's producer ID on the SIMA farmer record. This allows reliable lookups without depending on name matching:
+
+```
+GET /api/v2/third_party/farmers?external_code=YOUR-ERP-PRODUCER-001
+```
+
+Contact [soporte@sima.ag](mailto:soporte@sima.ag) to set `external_code` on existing farmers if needed.
+
+---
+
+## Next steps
+
+<Card title="Hierarchy Setup" icon="sitemap" href="/guides/hierarchy-setup">
+  Use farmer_id to create Establishments and complete the hierarchy
+</Card>

@@ -1,0 +1,205 @@
+---
+title: "Progress Reports"
+description: "How to query crop progress data — planting, harvest, fertilization, and plant stand reports via the SIMA Third-Party API"
+---
+
+## Overview
+
+Progress Reports track the real-time advancement of field operations campaign by campaign. They consolidate data from planting progress, harvest control, fertilization control, and plant stand into a unified endpoint, replacing older legacy endpoints.
+
+This is particularly useful for:
+- **Machinery platforms** tracking daily planting or harvest progress in hectares
+- **ERP systems** that need yield and completion data per campaign
+- **Analytics platforms** consuming crop advancement timelines
+
+---
+
+## Progress types
+
+Each progress record has a `progressType` that identifies what kind of operation it tracks:
+
+| progressType | Operation |
+|---|---|
+| `11` | Harvest progress |
+| `13` | Planting progress |
+| `15` | Fertilization control |
+| `17` | Plant stand control |
+
+---
+
+## Endpoints
+
+All Progress Report endpoints are available under v3:
+
+| Method | URI | Description |
+|---|---|---|
+| GET | `/api/v3/third_party/progress_report` | List all progress records |
+| GET | `/api/v3/third_party/harvest_progress` | Harvest progress only |
+| GET | `/api/v3/third_party/planting_progress` | Planting progress only |
+| GET | `/api/v3/third_party/planting_control` | Planting control records |
+| GET | `/api/v3/third_party/plant_stand_control` | Plant stand control |
+| GET | `/api/v3/third_party/fertilization_control` | Fertilization control |
+
+For most integrations, `progress_report` is the recommended single endpoint since it returns all types filterable by `progressType`.
+
+---
+
+## Key response fields
+
+```json
+{
+  "id": 402345,
+  "date": "2025-12-16T08:18:00-03:00",
+  "status": 4,
+  "campaign": 506362,
+  "progressType": 13,
+  "hydricState": 5,
+  "baselineHa": 50,
+  "progressHaDaily": 5,
+  "progressHaTotal": 45,
+  "remainingHaTotal": 5,
+  "plantedPercent": 90,
+  "harvestedPercent": null,
+  "progressTnDaily": null,
+  "progressTnTotal": null,
+  "yieldTnHaPartial": null,
+  "yieldTnHaFinal": null,
+  "isLast": true,
+  "finished": false,
+  "machineSamples": [],
+  "created_by": "operator@example.com",
+  "system_id": 4
+}
+```
+
+**Key fields explained:**
+
+| Field | Description |
+|---|---|
+| `progressType` | Operation type (11=harvest, 13=planting, 15=fertilization, 17=plant stand) |
+| `baselineHa` | Total planned hectares for the campaign |
+| `progressHaDaily` | Hectares worked on this specific date |
+| `progressHaTotal` | Cumulative hectares worked to date |
+| `remainingHaTotal` | Hectares still pending |
+| `plantedPercent` | Planting completion % (only for type 13) |
+| `harvestedPercent` | Harvest completion % (only for type 11) |
+| `yieldTnHaPartial` | Partial yield in Tn/Ha (harvest) |
+| `yieldTnHaFinal` | Final yield in Tn/Ha (harvest, when finished) |
+| `isLast` | Whether this is the most recent record for this campaign |
+| `finished` | Whether the operation is fully complete |
+| `hydricState` | Soil/crop hydric condition at time of report |
+
+---
+
+## Filtering
+
+Use standard audit filters for incremental sync:
+
+```bash
+GET /api/v3/third_party/progress_report?campaign_id=506362&updated_at_from=2025-01-01T00:00:00-03:00
+```
+
+**Common filters:**
+
+| Parameter | Description |
+|---|---|
+| `campaign_id` | Filter by specific campaign |
+| `updated_at_from` | Change detection since last sync |
+| `cycle_id` | Filter by master campaign cycle |
+| `page` / `size` | Pagination |
+
+---
+
+## Updating objective yield on campaigns
+
+If your system tracks planned yields per campaign, you can push that data back to SIMA asynchronously:
+
+### Submit update (async)
+
+```
+POST /api/v2/third_party/campaigns/update_objective_yield
+```
+
+```json
+[
+  {
+    "campaign_id": 506362,
+    "external_code": "YOUR-ERP-CAMP-001",
+    "objective_yield_kg_ha": 4500.0
+  },
+  {
+    "campaign_id": 506363,
+    "external_code": "YOUR-ERP-CAMP-002",
+    "objective_yield_kg_ha": 3800.0
+  }
+]
+```
+
+**Response — job queued:**
+
+```json
+{
+  "status": true,
+  "data": {
+    "request_id": "fec770b9-ae3b-42af-aec7-bb030c767d03",
+    "status": "RECEIVED"
+  }
+}
+```
+
+### Check job status
+
+```
+GET /api/v2/third_party/campaigns/update_objective_yield/jobs
+```
+
+```json
+{
+  "data": [
+    {
+      "request_id": "fec770b9-ae3b-42af-aec7-bb030c767d03",
+      "status": "DONE",
+      "total_records": 6,
+      "processed_records": 6,
+      "error_records": 0,
+      "created_at": "2026-05-07T12:43:48-03:00",
+      "updated_at": "2026-05-07T12:43:53-03:00"
+    }
+  ]
+}
+```
+
+### Check specific job
+
+```
+GET /api/v2/third_party/campaigns/update_objective_yield/status/{request_id}
+```
+
+**Job statuses:** `RECEIVED` → `PROCESSING` → `DONE` / `ERROR`
+
+<Info>
+  The objective yield import is asynchronous. Submit the job, then poll the status endpoint every few seconds until `status` is `DONE` or `ERROR`. Check `error_records` to detect partial failures.
+</Info>
+
+---
+
+## Sync recommendation
+
+Progress reports change frequently during active seasons. Recommended cadence:
+
+- **During planting/harvest season**: sync every 15–30 minutes per campaign using `updated_at_from`
+- **Off-season**: daily sync or on-demand
+- Always filter by `campaign_id` to avoid pulling the full dataset on each run
+
+---
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">
+    Connect progress data to the operations that generated it
+  </Card>
+  <Card title="Sync Strategy" icon="arrows-rotate" href="/guides/sync-strategy">
+    Apply efficient incremental sync to progress data
+  </Card>
+</CardGroup>
