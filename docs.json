@@ -16,31 +16,43 @@
     "name": "Contact Support",
     "url": "mailto:soporte@sima.ag"
   },
-  "navigation": [
-    {
-      "group": "Get Started",
-      "pages": ["introduction", "quickstart", "authentication"]
-    },
-    {
-      "group": "Integration Guides",
-      "pages": [
-        "guides/work-orders",
-        "guides/hierarchy-setup",
-        "guides/master-data",
-        "guides/scouting",
-        "guides/sync-strategy",
-        "guides/farmers",
-        "guides/warehouses",
-        "guides/silobags",
-        "guides/progress-reports",
-        "guides/iot-weather"
-      ]
-    },
-    {
-      "group": "API Reference",
-      "pages": ["api-reference/overview"]
-    }
-  ],
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["introduction", "quickstart", "authentication"]
+          },
+          {
+            "group": "Integration Guides",
+            "pages": [
+              "guides/work-orders",
+              "guides/hierarchy-setup",
+              "guides/master-data",
+              "guides/scouting",
+              "guides/sync-strategy",
+              "guides/farmers",
+              "guides/warehouses",
+              "guides/silobags",
+              "guides/progress-reports",
+              "guides/iot-weather"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Reference",
+            "pages": ["api-reference/overview"]
+          }
+        ]
+      }
+    ]
+  },
   "footerSocials": {
     "website": "https://sima.ag"
   }
