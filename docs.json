@@ -1,10 +1,6 @@
 {
   "name": "SIMA Developer Docs",
-  "logo": {
-    "light": "/logo/sima-light.svg",
-    "dark": "/logo/sima-dark.svg"
-  },
-  "favicon": "/favicon.svg",
+  "theme": "mint",
   "colors": {
     "primary": "#1a6b3c",
     "light": "#2d9c5a",
@@ -43,10 +39,6 @@
     {
       "group": "API Reference",
       "pages": ["api-reference/overview"]
-    },
-    {
-      "group": "SDKs",
-      "pages": ["sdks/php", "sdks/python"]
     }
   ],
   "footerSocials": {
