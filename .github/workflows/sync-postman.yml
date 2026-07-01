@@ -16,26 +16,29 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-
-      - name: Install dependencies
-        run: npm install -g postman-to-openapi
+          node-version: "24"
 
       - name: Download Postman collection
         run: |
           curl -s \
             -H "X-Api-Key: ${{ secrets.POSTMAN_API_KEY }}" \
             "https://api.getpostman.com/collections/${{ secrets.POSTMAN_COLLECTION_ID }}" \
-            -o postman-collection.json
+            | jq '.collection' > postman-collection.json
+          echo "Collection downloaded:"
+          cat postman-collection.json | jq '.info.name'
 
       - name: Convert to OpenAPI spec
         run: |
-          postman-to-openapi postman-collection.json -o openapi.yaml --defaultTag "SIMA Third-Party API"
+          npx --yes postman-to-openapi postman-collection.json -o openapi.yaml --defaultTag "SIMA Third-Party API"
 
       - name: Check for changes
         id: diff
         run: |
-          git diff --quiet openapi.yaml || echo "changed=true" >> $GITHUB_OUTPUT
+          if git diff --quiet openapi.yaml 2>/dev/null || [ ! -f openapi.yaml ]; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Commit and push if changed
         if: steps.diff.outputs.changed == 'true'
