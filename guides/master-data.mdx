@@ -1,9 +1,9 @@
 ---
-title: "Master Data"
-description: "How to sync Formulateds, Applicators, Machines, Units, and other master data required before creating Work Orders"
+title: "Datos Maestros"
+description: "Cómo sincronizar Formulados, Aplicadores, Máquinas, Unidades y otros datos maestros requeridos antes de crear Órdenes de Trabajo"
 ---
 
-## Overview
+## Resumen
 
 Master data are the shared catalogs that Work Orders reference — agrochemical products (formulateds), applicators, machines, units, and labour types. You must sync these before creating any Work Order, since each supply and labour line requires valid IDs from these catalogs.
 
@@ -13,7 +13,7 @@ Master data are the shared catalogs that Work Orders reference — agrochemical 
 
 ---
 
-## Master data map
+## Mapa de datos maestros
 
 | Entity | CRUD | Scope | Required for |
 |---|---|---|---|
@@ -201,7 +201,7 @@ GET /api/v2/third_party/application_order_labour_types
 
 ---
 
-## Recommended sync strategy
+## Estrategia de sincronización recomendada
 
 For initial setup and ongoing maintenance:
 
@@ -221,7 +221,7 @@ For the full details on audit filters, see the [Sync Strategy guide](/guides/syn
 
 ---
 
-## Next steps
+## Próximos pasos
 
 <CardGroup cols={2}>
   <Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">

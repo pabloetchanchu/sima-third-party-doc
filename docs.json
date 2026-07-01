@@ -1,5 +1,5 @@
 {
-  "name": "SIMA Developer Docs",
+  "name": "SIMA Docs para Desarrolladores",
   "theme": "mint",
   "colors": {
     "primary": "#1a6b3c",
@@ -19,14 +19,18 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Guías",
         "groups": [
           {
-            "group": "Get Started",
-            "pages": ["introduction", "quickstart", "authentication"]
+            "group": "Empezar",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "authentication"
+            ]
           },
           {
-            "group": "Integration Guides",
+            "group": "Guías de Integración",
             "pages": [
               "guides/work-orders",
               "guides/hierarchy-setup",
@@ -43,11 +47,13 @@
         ]
       },
       {
-        "tab": "API Reference",
+        "tab": "Referencia de API",
         "groups": [
           {
-            "group": "Reference",
-            "pages": ["api-reference/overview"]
+            "group": "Referencia",
+            "pages": [
+              "api-reference/overview"
+            ]
           }
         ]
       }

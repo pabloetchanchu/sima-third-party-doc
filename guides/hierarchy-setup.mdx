@@ -1,54 +1,54 @@
 ---
-title: "Hierarchy Setup"
-description: "How to set up the entity hierarchy in SIMA — Societies, Establishments, Campaigns, Plots, and Cultivations — required before creating Work Orders"
+title: "Configuración de Jerarquía"
+description: "Cómo configurar la jerarquía de entidades en SIMA — Sociedades, Establecimientos, Campañas, Lotes y Cultivos — requerida antes de crear Órdenes de Trabajo"
 ---
 
-## Overview
+## Resumen
 
-SIMA organizes agricultural data in a strict hierarchy. Every Work Order ultimately ties to a **cultivation**, which is the combination of a plot, a campaign, and a crop. You need to set up this hierarchy before any field operations can be registered.
+SIMA organiza los datos agropecuarios en una jerarquía estricta. Cada OT se vincula en última instancia a un **cultivo**, que es la combinación de un lote, una campaña y un cultivo. Debés configurar esta jerarquía antes de poder registrar operaciones de campo.
 
 ```
-Society (Farmer)
-  └── Establishment (Farm/Field)
-        └── Plot (Lote)
-              └── Master Campaign → Campaign
-                    └── Cultivation (Plot + Campaign + Crop)
-                          └── Work Order
+Sociedad (Productor)
+  └── Establecimiento
+        └── Lote
+              └── Campaña Madre → Campaña
+                    └── Cultivo (Lote + Campaña + Especie)
+                          └── Orden de Trabajo
 ```
 
 <Info>
-  If your system already has establishments and plots, create them in SIMA and link them using the `external_code` field to map between your IDs and SIMA's `local_id`.
+  Si tu sistema ya tiene establecimientos y lotes, creálos en SIMA y vinculálos usando el campo `external_code` para mapear entre tus IDs y el `local_id` de SIMA.
 </Info>
 
 ---
 
-## Setup order
+## Orden de configuración
 
-The order matters — each level depends on the one above it.
+El orden importa — cada nivel depende del anterior.
 
 <Steps>
-  <Step title="Verify your Society (Farmer)">
-    Your society context is returned in the login response as `society.id`. This is the root of all your data. You don't create societies via API — they are provisioned by SIMA during onboarding.
+  <Step title="Verificar tu Sociedad (Productor)">
+    El contexto de tu sociedad se devuelve en la respuesta del login como `society.id`. Es la raíz de todos tus datos. Las sociedades no se crean via API — son aprovisionadas por SIMA durante el onboarding.
   </Step>
-  <Step title="Create Establishments">
-    An establishment is a farm or field group belonging to a farmer. Requires a `farmer_id`.
+  <Step title="Crear Establecimientos">
+    Un establecimiento es un campo o grupo de campos perteneciente a un productor. Requiere un `farmer_id`.
   </Step>
-  <Step title="Create Plots">
-    A plot (lote) is a specific parcel of land within an establishment. Requires an `establishment_id`.
+  <Step title="Crear Lotes">
+    Un lote es una parcela específica dentro de un establecimiento. Requiere un `establishment_id`.
   </Step>
-  <Step title="Create Master Campaigns and Campaigns">
-    A master campaign is a crop season (e.g. "2024/25"). A campaign is a specific crop within that season on a set of plots.
+  <Step title="Crear Campañas Madre y Campañas">
+    Una campaña madre es una temporada agrícola (ej: "2024/25"). Una campaña es el cultivo específico dentro de esa temporada en un conjunto de lotes.
   </Step>
-  <Step title="Create Cultivations">
-    A cultivation links a plot to a campaign and a specific crop. This is the entity referenced in every Work Order line.
+  <Step title="Crear Cultivos">
+    Un cultivo vincula un lote a una campaña y una especie. Esta es la entidad referenciada en cada línea de OT.
   </Step>
 </Steps>
 
 ---
 
-## Establishments
+## Establecimientos
 
-### Create
+### Crear
 
 ```
 POST /api/v3/third_party/establishments
@@ -58,57 +58,57 @@ POST /api/v3/third_party/establishments
 {
   "farmer_id": 13873,
   "name": "La Correntina",
-  "observations": "Northern sector, irrigated"
+  "observations": "Sector norte, bajo riego"
 }
 ```
 
-**Response:**
+**Respuesta:**
 
 ```json
 {
   "id": 118422,
   "farmer_id": 13873,
   "name": "La Correntina",
-  "observations": "Northern sector, irrigated",
+  "observations": "Sector norte, bajo riego",
   "location": null,
   "created_at": "2024-08-30T18:03:13-03:00",
   "active": true
 }
 ```
 
-Store the returned `id` — you'll need it to create plots.
+Guardá el `id` devuelto — lo vas a necesitar para crear lotes.
 
-### Update
+### Actualizar
 
 ```
 PATCH /api/v3/third_party/establishments/{id}
 ```
 
-### Delete
+### Eliminar
 
 ```
 DELETE /api/v3/third_party/establishments/{id}
 ```
 
-### List
+### Listar
 
 ```
 GET /api/v3/third_party/establishments
 ```
 
-**Key filters:**
+**Filtros principales:**
 
-| Parameter | Type | Description |
+| Parámetro | Tipo | Descripción |
 |---|---|---|
-| `farmer_id` | int | Filter by farmer |
-| `updated_at_from` | datetime | Detect new or changed establishments |
-| `page` / `size` | int | Pagination |
+| `farmer_id` | int | Filtrar por productor |
+| `updated_at_from` | datetime | Detectar establecimientos nuevos o modificados |
+| `page` / `size` | int | Paginación |
 
 ---
 
-## Plots
+## Lotes
 
-### Create
+### Crear
 
 ```
 POST /api/v3/third_party/plots
@@ -122,55 +122,55 @@ POST /api/v3/third_party/plots
 }
 ```
 
-### List
+### Listar
 
 ```
 GET /api/v3/third_party/plots
 ```
 
-Plots can be filtered by `establishment_id` and `updated_at_from` for change detection.
+Los lotes se pueden filtrar por `establishment_id` y `updated_at_from` para detección de cambios.
 
 ---
 
-## Master Campaigns and Campaigns
+## Campañas Madre y Campañas
 
-A **Master Campaign** represents a crop season (e.g. "2024/25 Fine Grains"). A **Campaign** is the specific crop + period tied to a set of plots within that season.
+Una **Campaña Madre** representa una temporada agrícola (ej: "2024/25 Finos"). Una **Campaña** es el cultivo específico + período vinculado a un conjunto de lotes dentro de esa temporada.
 
-### List Master Campaigns
+### Listar Campañas Madre
 
 ```
 GET /api/v3/third_party/master_campaigns
 ```
 
-### List Campaigns
+### Listar Campañas
 
 ```
 GET /api/v3/third_party/campaigns
 ```
 
-**Key filters:**
+**Filtros principales:**
 
-| Parameter | Type | Description |
-|---|---|---|
-| `establishment_id` | int | Campaigns within an establishment |
-| `updated_at_from` | datetime | Change detection |
-| `active` | bool | Filter active campaigns only |
+| Parámetro | Descripción |
+|---|---|
+| `establishment_id` | Campañas dentro de un establecimiento |
+| `updated_at_from` | Detección de cambios |
+| `active` | Solo campañas activas |
 
 ---
 
-## Cultivations
+## Cultivos
 
-A cultivation links a **plot + campaign + crop**. Every supply and labour line in a Work Order references a `cultivation_id`.
+Un cultivo vincula un **lote + campaña + especie**. Cada línea de supply y labour en una OT referencia un `cultivation_id`.
 
-### List Cultivations
+### Listar Cultivos
 
 ```
 GET /api/v3/third_party/cultivations
 ```
 
-This is the endpoint you'll query most often — it returns the IDs you need for Work Order creation.
+Es el endpoint que vas a consultar con más frecuencia — devuelve los IDs que necesitás para crear OTs.
 
-**Typical query to get cultivations for a specific establishment:**
+**Consulta típica para obtener cultivos de un establecimiento:**
 
 ```bash
 GET /api/v3/third_party/cultivations?establishment_id=118422&active=true
@@ -178,40 +178,40 @@ GET /api/v3/third_party/cultivations?establishment_id=118422&active=true
 
 ---
 
-## Linking your IDs to SIMA IDs
+## Vincular tus IDs con los IDs de SIMA
 
-When your system has its own identifiers, use `external_code` to create a persistent mapping:
+Cuando tu sistema tiene sus propios identificadores, usá `external_code` para crear un mapeo persistente:
 
 ```json
 {
   "farmer_id": 13873,
   "name": "La Correntina",
-  "external_code": "YOUR-ERP-ESTAB-001"
+  "external_code": "TU-ERP-ESTAB-001"
 }
 ```
 
-You can then look up the entity by your own code: `GET /api/v3/third_party/establishments?external_code=YOUR-ERP-ESTAB-001`
+Luego podés buscar la entidad por tu propio código: `GET /api/v3/third_party/establishments?external_code=TU-ERP-ESTAB-001`
 
 ---
 
-## Handling existing entities
+## Manejo de entidades existentes
 
-If your client already has establishments and plots configured in SIMA (e.g. set up manually via the web app), don't recreate them. Instead:
+Si tu cliente ya tiene establecimientos y lotes configurados en SIMA (ej: cargados manualmente via la app web), no los recreés. En su lugar:
 
-1. List existing establishments: `GET /api/v3/third_party/establishments`
-2. Match by name or location to your own records
-3. Store SIMA's `local_id` mapped to your own ID
-4. Use `external_code` on future creates/updates to maintain the link
+1. Listá los establecimientos existentes: `GET /api/v3/third_party/establishments`
+2. Hacé el match por nombre o ubicación con tus propios registros
+3. Guardá el `local_id` de SIMA mapeado a tu propio ID
+4. Usá `external_code` en creaciones/actualizaciones futuras para mantener el vínculo
 
 ---
 
-## Next steps
+## Próximos pasos
 
 <CardGroup cols={2}>
-  <Card title="Master Data" icon="database" href="/guides/master-data">
-    Sync Formulateds, Applicators, and Machines
+  <Card title="Datos Maestros" icon="database" href="/guides/master-data">
+    Sincronizá Formulados, Aplicadores y Máquinas
   </Card>
-  <Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">
-    Create your first Work Order
+  <Card title="Órdenes de Trabajo" icon="clipboard-list" href="/guides/work-orders">
+    Creá tu primera Orden de Trabajo
   </Card>
 </CardGroup>

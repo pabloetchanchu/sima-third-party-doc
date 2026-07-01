@@ -1,18 +1,18 @@
 ---
-title: "Quickstart"
-description: "Make your first SIMA API call in under 5 minutes"
+title: "Inicio Rápido"
+description: "Hacé tu primera llamada a la API de SIMA en menos de 5 minutos"
 ---
 
-## What you'll need
+## Lo que necesitás
 
-- An API account (use the [demo account](#demo-account) to get started immediately)
-- A REST client — [Postman](https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh) or `curl`
+- Una cuenta API (usá la [cuenta demo](#cuenta-demo) para empezar de inmediato)
+- Un cliente REST — [Postman](https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh) o `curl`
 
 ---
 
-## Step 1 — Authenticate
+## Paso 1 — Autenticarte
 
-All API calls require a valid `access_token`. Get one by calling the login endpoint.
+Todas las llamadas a la API requieren un `access_token` válido. Obtenelo llamando al endpoint de login.
 
 <CodeGroup>
 ```bash curl
@@ -57,7 +57,7 @@ token = response.json()["access_token"]
 ```
 </CodeGroup>
 
-**Successful response (HTTP 200):**
+**Respuesta exitosa (HTTP 200):**
 
 ```json
 {
@@ -66,26 +66,26 @@ token = response.json()["access_token"]
   "expiration_datetime": "2024-06-16T17:38:58-03:00",
   "society": {
     "id": 34,
-    "legalName": "Demo Society"
+    "legalName": "Sociedad Demo"
   }
 }
 ```
 
 <Warning>
-  Save your `access_token` — you'll need it in every subsequent request. Note that it has an expiration time; use the `refresh_token` to renew it without logging in again.
+  Guardá tu `access_token` — lo vas a necesitar en cada llamada siguiente. Tiene fecha de expiración; usá el `refresh_token` para renovarlo sin volver a hacer login.
 </Warning>
 
 ---
 
-## Step 2 — Make your first request
+## Paso 2 — Tu primera solicitud
 
-With the token, query the list of Establishments to verify everything is working:
+Con el token, consultá la lista de Establecimientos para verificar que todo funciona:
 
 <CodeGroup>
 ```bash curl
 curl -X GET https://api.qa.sima.ag/api/v3/establishments \
   -H "Accept: application/json" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Authorization: Bearer TU_ACCESS_TOKEN" \
   -H "X-SIMA-SYSTEM-ID: 8"
 ```
 
@@ -111,53 +111,53 @@ response = requests.get(
 ```
 </CodeGroup>
 
-If you receive a list of establishments (even an empty array `[]`), your integration is working correctly.
+Si recibís una lista de establecimientos (aunque sea un array vacío `[]`), tu integración está funcionando correctamente.
 
 ---
 
-## Step 3 — Explore the Postman collection
+## Paso 3 — Explorá la colección de Postman
 
-The Postman collection includes all available endpoints with pre-configured examples for every resource.
+La colección de Postman incluye todos los endpoints disponibles con ejemplos preconfigurados para cada recurso.
 
-<Card title="Open Postman Collection" icon="arrow-up-right-from-square" href="https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh">
-  Explore and test all SIMA Third-Party API endpoints
+<Card title="Abrir colección de Postman" icon="arrow-up-right-from-square" href="https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh">
+  Explorá y probá todos los endpoints de la API de Terceros de SIMA
 </Card>
 
 ---
 
-## Demo account
+## Cuenta demo
 
-Use these credentials to test against the QA environment at no cost:
+Usá estas credenciales para probar contra el entorno de QA sin costo:
 
-| | Value |
+| | Valor |
 |---|---|
-| **API email** | `demo@sima.ag` |
-| **API password** | `demo_sima` |
-| **Web URL** | [https://env.qa.sima.ag](https://env.qa.sima.ag) |
-| **Web user (ES)** | `demo-web@sima.ag` |
-| **Web user (PT)** | `demo-web-pt@sima.ag` |
+| **Email API** | `demo@sima.ag` |
+| **Contraseña API** | `demo_sima` |
+| **URL Web** | [https://env.qa.sima.ag](https://env.qa.sima.ag) |
+| **Usuario web (ES)** | `demo-web@sima.ag` |
+| **Usuario web (PT)** | `demo-web-pt@sima.ag` |
 
 <Info>
-  The QA environment resets periodically. Any data you create there may be cleared during resets.
+  El entorno de QA se resetea periódicamente. Los datos que crees ahí pueden ser eliminados durante los resets.
 </Info>
 
 ---
 
-## Next steps
+## Próximos pasos
 
-Now that you're authenticated, follow the integration guides based on your use case:
+Ahora que estás autenticado, seguí las guías de integración según tu caso de uso:
 
 <CardGroup cols={2}>
-  <Card title="Integrate Work Orders" icon="clipboard-list" href="/guides/work-orders">
-    The full guide to creating and syncing OTs
+  <Card title="Integrar Órdenes de Trabajo" icon="clipboard-list" href="/guides/work-orders">
+    La guía completa para crear y sincronizar OTs
   </Card>
-  <Card title="Set up the Hierarchy" icon="sitemap" href="/guides/hierarchy-setup">
-    Societies, Establishments, Campaigns, and Plots
+  <Card title="Configurar la Jerarquía" icon="sitemap" href="/guides/hierarchy-setup">
+    Sociedades, Establecimientos, Campañas y Lotes
   </Card>
-  <Card title="Sync Master Data" icon="database" href="/guides/master-data">
-    Applicators, Machines, Formulateds, and Units
+  <Card title="Sincronizar Datos Maestros" icon="database" href="/guides/master-data">
+    Aplicadores, Máquinas, Formulados y Unidades
   </Card>
-  <Card title="Scouting & Monitoring" icon="magnifying-glass" href="/guides/scouting">
-    Register adversities and field observations
+  <Card title="Scouting y Monitoreo" icon="magnifying-glass" href="/guides/scouting">
+    Registrá adversidades y observaciones de campo
   </Card>
 </CardGroup>

@@ -1,9 +1,9 @@
 ---
-title: "Warehouses"
-description: "How to query Warehouses — storage locations referenced in Work Order supply lines"
+title: "Depósitos"
+description: "Cómo consultar Depósitos — ubicaciones de almacenamiento referenciadas en líneas de supply de OTs"
 ---
 
-## Overview
+## Resumen
 
 Warehouses are storage locations (depósitos) where agrochemical inputs are stored. They can be referenced in Work Order supply lines to track which depot a product was drawn from.
 
@@ -59,7 +59,7 @@ Returns a single warehouse by ID.
 
 ---
 
-## Using warehouses in Work Orders
+## Uso en Órdenes de Trabajo
 
 When creating a Work Order supply line, you can optionally reference a warehouse:
 
@@ -79,13 +79,13 @@ If no warehouse applies, set `"warehouse": null`.
 
 ---
 
-## Sync recommendation
+## Frecuencia de sincronización recomendada
 
 Warehouses change infrequently. Sync them once on startup and refresh weekly using `updated_from`.
 
 ---
 
-## Next steps
+## Próximos pasos
 
 <Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">
   Reference warehouse IDs in Work Order supply lines

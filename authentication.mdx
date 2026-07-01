@@ -1,40 +1,40 @@
 ---
-title: "Authentication"
-description: "How to authenticate and manage tokens in the SIMA Third-Party API"
+title: "Autenticación"
+description: "Cómo autenticarte y gestionar tokens en la API de Terceros de SIMA"
 ---
 
-## Overview
+## Resumen
 
-SIMA uses token-based authentication. Every request must include a valid `access_token` obtained via the login endpoint. Tokens have an expiration time and can be renewed using a `refresh_token` without requiring a new login.
+SIMA usa autenticación basada en tokens. Cada solicitud debe incluir un `access_token` válido obtenido via el endpoint de login. Los tokens tienen fecha de expiración y pueden renovarse con un `refresh_token` sin necesidad de hacer login nuevamente.
 
 ---
 
-## Login endpoint
+## Endpoint de login
 
 <ParamField path="POST" type="string">/api/v2/login</ParamField>
 
-### Required headers
+### Headers requeridos
 
-| Header | Value | Description |
+| Header | Valor | Descripción |
 |---|---|---|
-| `Accept` | `application/json` | Required on all requests |
-| `Content-Type` | `application/json` | Required on all requests |
-| `X-SIMA-SYSTEM-ID` | `8` | Identifies your system as a Third-Party integrator |
+| `Accept` | `application/json` | Requerido en todas las solicitudes |
+| `Content-Type` | `application/json` | Requerido en todas las solicitudes |
+| `X-SIMA-SYSTEM-ID` | `8` | Identifica tu sistema como integrador de Terceros |
 
 <Info>
-  The `X-SIMA-SYSTEM-ID: 8` header is required on **every** API call, not just login. Without it, requests will be rejected.
+  El header `X-SIMA-SYSTEM-ID: 8` es requerido en **todas** las llamadas a la API, no solo en el login. Sin él, las solicitudes serán rechazadas.
 </Info>
 
-### Request body
+### Cuerpo de la solicitud
 
 ```json
 {
-  "email": "your-api-user@example.com",
-  "password": "your-password"
+  "email": "tu-usuario-api@example.com",
+  "password": "tu-contraseña"
 }
 ```
 
-### Response
+### Respuesta
 
 ```json
 {
@@ -43,25 +43,25 @@ SIMA uses token-based authentication. Every request must include a valid `access
   "expiration_datetime": "2024-06-16T17:38:58-03:00",
   "society": {
     "id": 34,
-    "legalName": "Your Society Name",
-    "syncCheck": "user@example.com3293547"
+    "legalName": "Nombre de tu Sociedad",
+    "syncCheck": "usuario@example.com3293547"
   }
 }
 ```
 
-Save both `access_token` and `refresh_token` — you'll need them for ongoing sessions.
+Guardá tanto el `access_token` como el `refresh_token` — los vas a necesitar para sesiones continuas.
 
 ---
 
-## Using the token
+## Usar el token
 
-Include the `access_token` as a Bearer token in the `Authorization` header of every request:
+Incluí el `access_token` como Bearer token en el header `Authorization` de cada solicitud:
 
 ```bash
 Authorization: Bearer aff6ac1d-b48c-4ea4-aba2-a2753bf2abf5
 ```
 
-**Full example:**
+**Ejemplo completo:**
 
 ```bash
 curl -X GET https://api.qa.sima.ag/api/v3/establishments \
@@ -73,54 +73,45 @@ curl -X GET https://api.qa.sima.ag/api/v3/establishments \
 
 ---
 
-## Token expiration and refresh
+## Expiración y renovación del token
 
-Tokens expire after a period defined by the `expiration_datetime` field. When a token expires, you have two options:
+Los tokens expiran según la fecha indicada en `expiration_datetime`. Cuando un token expira, tenés dos opciones:
 
-**Option A — Re-login:** Call `/api/v2/login` again with your credentials.
+**Opción A — Re-login:** Llamá a `/api/v2/login` nuevamente con tus credenciales.
 
-**Option B — Refresh:** Use the `refresh_token` to get a new `access_token` without sending credentials again (recommended for production integrations).
-
----
-
-## User requirements
-
-The user account used for API access must have the `api_integrated` role assigned in SIMA. If authentication fails with a valid email/password, contact [soporte@sima.ag](mailto:soporte@sima.ag) to verify the role is configured.
+**Opción B — Refresh:** Usá el `refresh_token` para obtener un nuevo `access_token` sin enviar credenciales (recomendado para integraciones en producción).
 
 ---
 
-## Error responses
+## Requisitos del usuario
 
-| HTTP Status | Meaning |
+La cuenta utilizada para acceso API debe tener el rol `api_integrated` asignado en SIMA. Si la autenticación falla con email/contraseña válidos, contactá a [soporte@sima.ag](mailto:soporte@sima.ag) para verificar que el rol esté configurado.
+
+---
+
+## Respuestas de error
+
+| HTTP Status | Significado |
 |---|---|
-| `401 Unauthorized` | Invalid or expired token |
-| `403 Forbidden` | Valid token but insufficient permissions |
-| `400 Bad Request` | Missing or malformed request body |
-
-**Example error response:**
-
-```json
-{
-  "error": "Unauthorized",
-  "message": "Invalid credentials or token expired"
-}
-```
+| `401 Unauthorized` | Token inválido o expirado |
+| `403 Forbidden` | Token válido pero permisos insuficientes |
+| `400 Bad Request` | Cuerpo de la solicitud faltante o mal formado |
 
 ---
 
-## Summary
+## Resumen
 
 <Steps>
-  <Step title="Call POST /api/v2/login">
-    Include `X-SIMA-SYSTEM-ID: 8` header and your credentials in the body.
+  <Step title="Llamá a POST /api/v2/login">
+    Incluí el header `X-SIMA-SYSTEM-ID: 8` y tus credenciales en el cuerpo.
   </Step>
-  <Step title="Save the access_token">
-    Store it securely — you'll use it in every subsequent request.
+  <Step title="Guardá el access_token">
+    Almacenalo de forma segura — lo usarás en cada solicitud siguiente.
   </Step>
-  <Step title="Add Authorization header">
-    Include `Authorization: Bearer YOUR_TOKEN` and `X-SIMA-SYSTEM-ID: 8` on every request.
+  <Step title="Agregá el header Authorization">
+    Incluí `Authorization: Bearer TU_TOKEN` y `X-SIMA-SYSTEM-ID: 8` en cada solicitud.
   </Step>
-  <Step title="Handle expiration">
-    Monitor `expiration_datetime` and refresh proactively to avoid interruptions.
+  <Step title="Manejá la expiración">
+    Monitoreá `expiration_datetime` y renovalo proactivamente para evitar interrupciones.
   </Step>
 </Steps>

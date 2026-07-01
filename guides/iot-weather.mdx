@@ -1,9 +1,9 @@
 ---
-title: "IoT & Weather"
-description: "How to register devices, send sensor readings, and query weather data via the SIMA Third-Party API"
+title: "IoT y Clima"
+description: "Cómo registrar dispositivos, enviar lecturas de sensores y consultar datos climáticos via la API de Terceros de SIMA"
 ---
 
-## Overview
+## Resumen
 
 SIMA's IoT module allows third-party hardware providers and weather station integrators to push sensor data directly into SIMA. Registered devices can report rainfall, temperature, wind, and other climatic events, which are then available to agronomists alongside field operation data.
 
@@ -42,7 +42,7 @@ Each event type is identified by a `table_code_id` — a numeric code that tells
 
 ---
 
-## Step 1 — Register a device
+## Paso 1 — Register a device
 
 If you're integrating a new sensor or station, create it first:
 
@@ -71,7 +71,7 @@ GET /api/v3/third_party/devices
 
 ---
 
-## Step 2 — Get climatic factors and protocols
+## Paso 2 — Get climatic factors and protocols
 
 Before submitting readings, identify the correct factor and protocol IDs for your measurement type.
 
@@ -106,7 +106,7 @@ Thresholds define the valid measurement ranges for each protocol.
 
 ---
 
-## Step 3 — Submit sensor readings
+## Paso 3 — Submit sensor readings
 
 Create a device event with the measured values:
 
@@ -195,7 +195,7 @@ This returns units like `mm` for rainfall accumulation.
 
 ---
 
-## Sync recommendation
+## Frecuencia de sincronización recomendada
 
 For automatic sensors sending readings continuously:
 
@@ -205,7 +205,7 @@ For automatic sensors sending readings continuously:
 
 ---
 
-## Next steps
+## Próximos pasos
 
 <CardGroup cols={2}>
   <Card title="Scouting" icon="magnifying-glass" href="/guides/scouting">

@@ -1,9 +1,9 @@
 ---
-title: "Silobags"
-description: "How to query Silobags (silobolsas) — grain storage bags with GPS coordinates and status monitoring"
+title: "Silobolsas"
+description: "Cómo consultar Silobolsas — bolsas de almacenamiento de grano con coordenadas GPS y monitoreo de estado"
 ---
 
-## Overview
+## Resumen
 
 Silobags (silobolsas) are grain storage bags used widely in South American agriculture. SIMA tracks their location, status, and monitoring history. Third-party systems — particularly grain management platforms and logistics systems — can query silobag data to integrate with SIMA's storage tracking.
 
@@ -60,7 +60,7 @@ GET /api/v3/third_party/silobags
 
 ---
 
-## Semaphore values
+## Valores del semáforo
 
 The `semaphore` field represents the monitoring status of the silobag:
 
@@ -78,7 +78,7 @@ GET /api/v3/third_party/silobags?semaphore=3&active=1
 
 ---
 
-## Key fields
+## Campos principales
 
 | Field | Description |
 |---|---|
@@ -91,7 +91,7 @@ GET /api/v3/third_party/silobags?semaphore=3&active=1
 
 ---
 
-## Sync recommendation
+## Frecuencia de sincronización recomendada
 
 For active integrations monitoring storage status:
 
@@ -101,7 +101,7 @@ For active integrations monitoring storage status:
 
 ---
 
-## Limitations
+## Limitaciones
 
 The current Third-Party API provides **read access only** for silobags. Creating or updating silobags must be done via the SIMA web app or mobile app. If your use case requires write access, contact [soporte@sima.ag](mailto:soporte@sima.ag).
 

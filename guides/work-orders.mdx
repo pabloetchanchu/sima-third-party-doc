@@ -1,48 +1,48 @@
 ---
-title: "Integrating Work Orders"
-description: "Step-by-step guide to creating, syncing, and managing Work Orders (OTs) via the SIMA Third-Party API"
+title: "Integrar Órdenes de Trabajo"
+description: "Guía paso a paso para crear, sincronizar y gestionar Órdenes de Trabajo (OTs) via la API de Terceros de SIMA"
 ---
 
-## Overview
+## Resumen
 
-Work Orders (OTs) are the core entity in SIMA. They represent field operations — applications, labour tasks, scouting, and more. Third-party systems can create, read, update, and delete Work Orders bidirectionally.
+Las Órdenes de Trabajo (OTs) son la entidad central de SIMA. Representan operaciones de campo — aplicaciones, labores, scouting y más. Los sistemas de terceros pueden crear, leer, actualizar y eliminar OTs de forma bidireccional.
 
 <Warning>
-  Before creating any Work Order, you must have the **hierarchical structure** (Establishments, Campaigns, Plots) and **master data** (Formulateds, Machines, Applicators) already set up in SIMA. If those don't exist yet, start with the [Hierarchy Setup](/guides/hierarchy-setup) guide.
+  Antes de crear una OT, debés tener la **estructura jerárquica** (Establecimientos, Campañas, Lotes) y los **datos maestros** (Formulados, Máquinas, Aplicadores) ya configurados en SIMA. Si aún no los tenés, empezá con la guía de [Configuración de Jerarquía](/guides/hierarchy-setup).
 </Warning>
 
 ---
 
-## Work Order structure
+## Estructura de una OT
 
-Every Work Order has three sections:
+Cada Orden de Trabajo tiene tres secciones:
 
-| Section | Description |
+| Sección | Descripción |
 |---|---|
-| `header` | General info: name, date, state, company, voucher type |
-| `supplies` | Agrochemical applications — formulated, area, quantity per cultivation |
-| `labours` | Labour tasks — applicators, contractors, machines per cultivation |
+| `header` | Información general: nombre, fecha, estado, empresa, tipo de comprobante |
+| `supplies` | Aplicaciones de agroquímicos — formulado, área y cantidad por cultivo |
+| `labours` | Labores — aplicadores, contratistas, máquinas por cultivo |
 
-Each supply or labour line is linked to a **cultivation** (`cultivation.local_id`), which ties the operation to a specific plot + campaign + crop combination.
+Cada línea de supply o labour está vinculada a un **cultivo** (`cultivation.local_id`), que asocia la operación a una combinación específica de lote + campaña + cultivo.
 
 ---
 
-## Prerequisites checklist
+## Checklist de prerequisitos
 
-Before creating a Work Order, confirm you have IDs for:
+Antes de crear una OT, confirmá que tenés IDs para:
 
 <Steps>
-  <Step title="Company">
-    The society context. Get it from the login response (`society.id`) or via `GET /api/v3/third_party/companies`.
+  <Step title="Empresa">
+    El contexto de sociedad. Obtenelo de la respuesta del login (`society.id`) o via `GET /api/v3/third_party/companies`.
   </Step>
-  <Step title="Cultivation">
-    The plot + campaign + crop combination the operation targets. Get it via `GET /api/v3/third_party/cultivations`. Each supply and labour line needs a `cultivation_id`.
+  <Step title="Cultivo">
+    La combinación de lote + campaña + cultivo que es objetivo de la operación. Obtenelo via `GET /api/v3/third_party/cultivations`. Cada línea de supply y labour necesita un `cultivation_id`.
   </Step>
-  <Step title="Formulateds (for supplies)">
-    The agrochemical product. Get IDs from `GET /api/v3/third_party/formulateds`.
+  <Step title="Formulados (para supplies)">
+    El producto agroquímico. Obtenés los IDs de `GET /api/v3/third_party/formulateds`.
   </Step>
-  <Step title="Applicators / Contractors / Machines (for labours)">
-    Optional but common. Get from their respective master data endpoints.
+  <Step title="Aplicadores / Contratistas / Máquinas (para labours)">
+    Opcional pero frecuente. Obtenelos de sus respectivos endpoints de datos maestros.
   </Step>
 </Steps>
 
@@ -50,27 +50,27 @@ Before creating a Work Order, confirm you have IDs for:
 
 ## Endpoints
 
-### List Work Orders
+### Listar Órdenes de Trabajo
 
 ```
 GET /api/v3/third_party/work_orders
 ```
 
-**Key filters:**
+**Filtros principales:**
 
-| Parameter | Type | Description |
+| Parámetro | Tipo | Descripción |
 |---|---|---|
-| `updated_at_from` | datetime | Detect changes since last sync |
-| `updated_at_to` | datetime | Upper bound for change detection |
-| `state` | string | `confirmed` or `pending` |
-| `cultivation_id` | int | Filter by cultivation |
-| `formulated_id` | int | Filter by formulated used |
-| `page` / `size` | int | Pagination (default size: 10) |
+| `updated_at_from` | datetime | Detectar cambios desde la última sincronización |
+| `updated_at_to` | datetime | Límite superior para detección de cambios |
+| `state` | string | `confirmed` o `pending` |
+| `cultivation_id` | int | Filtrar por cultivo |
+| `formulated_id` | int | Filtrar por formulado utilizado |
+| `page` / `size` | int | Paginación (tamaño por defecto: 10) |
 
 <CodeGroup>
 ```bash curl
 curl -X GET "https://api.qa.sima.ag/api/v3/third_party/work_orders?updated_at_from=2024-01-01T00:00:00-03:00&page=1" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Authorization: Bearer TU_TOKEN" \
   -H "X-SIMA-SYSTEM-ID: 8" \
   -H "Accept: application/json"
 ```
@@ -84,36 +84,9 @@ response = requests.get(
 ```
 </CodeGroup>
 
-**Response structure:**
-
-```json
-{
-  "items": [
-    {
-      "header": {
-        "local_id": 38812,
-        "external_id": null,
-        "name": "OT-14-05-2024",
-        "state": { "pending": false, "executed": true, "confirmed": false },
-        "extra_fields": {
-          "company": { "local_id": 11076 },
-          "voucher_type": { "local_id": 17 }
-        }
-      },
-      "supplies": [...],
-      "labours": [...]
-    }
-  ],
-  "current_page": 1,
-  "next_page": 2,
-  "total_pages": 19,
-  "total_items": 57
-}
-```
-
 ---
 
-### Create a Work Order
+### Crear una Orden de Trabajo
 
 ```
 POST /integration/api/v1/workOrders
@@ -122,13 +95,13 @@ POST /integration/api/v1/workOrders
 <CodeGroup>
 ```bash curl
 curl -X POST https://api.qa.sima.ag/integration/api/v1/workOrders \
-  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Authorization: Bearer TU_TOKEN" \
   -H "X-SIMA-SYSTEM-ID: 8" \
   -H "Content-Type: application/json" \
   -d '{
     "header": {
       "system_id": "third_party",
-      "name": "Herbicide Application - Field L1",
+      "name": "Aplicación Herbicida - Lote L1",
       "date": "2024-07-04T17:03:14-03:00",
       "voucher_date": "2024-07-04T00:00:00-03:00",
       "state": { "pending": true, "executed": false, "confirmed": false },
@@ -163,29 +136,29 @@ curl -X POST https://api.qa.sima.ag/integration/api/v1/workOrders \
 ```
 </CodeGroup>
 
-A successful response returns the created Work Order with SIMA-assigned `local_id` in the header. **Store this ID** to link future updates or deletions.
+Una respuesta exitosa devuelve la OT creada con el `local_id` asignado por SIMA en el header. **Guardá este ID** para vincular futuras actualizaciones o eliminaciones.
 
 ---
 
-### Update a Work Order
+### Actualizar una OT
 
 ```
 PATCH /integration/api/v1/workOrders/{localId}
 ```
 
-Send the full Work Order structure (same as creation) with modified fields. SIMA replaces the existing supplies and labours with what you send.
+Enviá la estructura completa de la OT (igual que en la creación) con los campos modificados. SIMA reemplaza los supplies y labours existentes con lo que enviás.
 
 ---
 
-### Delete a Work Order
+### Eliminar una OT
 
 ```
 DELETE /integration/api/v1/workOrders/{localId}
 ```
 
-Returns `HTTP 204 No Content` on success.
+Devuelve `HTTP 204 No Content` si fue exitoso.
 
-**Bulk delete** (multiple IDs at once):
+**Eliminación masiva** (múltiples IDs a la vez):
 
 ```
 DELETE /integration/api/v1/workOrdersGroup
@@ -197,9 +170,9 @@ DELETE /integration/api/v1/workOrdersGroup
 
 ---
 
-### Add additional info to a Work Order
+### Agregar información adicional a una OT
 
-Use this to attach custom metadata from your system to an existing Work Order:
+Usá esto para adjuntar metadata personalizada de tu sistema a una OT existente:
 
 ```
 POST /api/v3/third_party/{wo_id}/additional_info
@@ -207,51 +180,51 @@ POST /api/v3/third_party/{wo_id}/additional_info
 
 ```json
 {
-  "origin_system": "your-erp-name",
-  "data": { "erp_reference": "OT-2024-0042", "cost_center": "FARM-01" }
+  "origin_system": "nombre-de-tu-erp",
+  "data": { "referencia_erp": "OT-2024-0042", "centro_costo": "CAMPO-01" }
 }
 ```
 
 ---
 
-## Work Order states
+## Estados de una OT
 
-| State | Meaning |
+| Estado | Significado |
 |---|---|
-| `pending: true` | Created but not yet executed in the field |
-| `executed: true` | Field operation completed |
-| `confirmed: true` | Reviewed and confirmed in SIMA |
+| `pending: true` | Creada pero aún no ejecutada en el campo |
+| `executed: true` | Operación de campo completada |
+| `confirmed: true` | Revisada y confirmada en SIMA |
 
 <Info>
-  Work Orders with `is_read_only: true` cannot be modified. Check this field before attempting an update.
+  Las OTs con `is_read_only: true` no pueden modificarse. Verificá este campo antes de intentar una actualización.
 </Info>
 
 ---
 
-## ID mapping between systems
+## Mapeo de IDs entre sistemas
 
-Every entity in SIMA has both a `local_id` (SIMA's ID) and an `external_id` (your system's ID). When creating a Work Order from your system, you can pass your own ID as `external_id` to use it in future lookups:
+Cada entidad en SIMA tiene un `local_id` (ID de SIMA) y un `external_id` (ID de tu sistema). Al crear una OT desde tu sistema, podés pasar tu propio ID como `external_id` para usarlo en búsquedas futuras:
 
 ```json
 "header": {
   "system_id": "third_party",
   "local_id": null,
-  "external_id": "your-erp-id-here"
+  "external_id": "tu-id-de-erp-aqui"
 }
 ```
 
 ---
 
-## Next steps
+## Próximos pasos
 
 <CardGroup cols={2}>
-  <Card title="Hierarchy Setup" icon="sitemap" href="/guides/hierarchy-setup">
-    Set up Establishments, Campaigns, and Plots before creating OTs
+  <Card title="Configurar la Jerarquía" icon="sitemap" href="/guides/hierarchy-setup">
+    Configurá Establecimientos, Campañas y Lotes antes de crear OTs
   </Card>
-  <Card title="Master Data" icon="database" href="/guides/master-data">
-    Sync Formulateds, Machines, and Applicators
+  <Card title="Datos Maestros" icon="database" href="/guides/master-data">
+    Sincronizá Formulados, Máquinas y Aplicadores
   </Card>
-  <Card title="Sync Strategy" icon="arrows-rotate" href="/guides/sync-strategy">
-    How to detect and pull changes efficiently
+  <Card title="Estrategia de Sincronización" icon="arrows-rotate" href="/guides/sync-strategy">
+    Cómo detectar y traer cambios eficientemente
   </Card>
 </CardGroup>

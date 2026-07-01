@@ -1,9 +1,9 @@
 ---
-title: "Sync Strategy"
-description: "How to efficiently detect and pull changes from SIMA using audit filters — without re-fetching everything every time"
+title: "Estrategia de Sincronización"
+description: "Cómo detectar y traer cambios de SIMA usando filtros de auditoría — sin re-descargar todo cada vez"
 ---
 
-## Overview
+## Resumen
 
 SIMA's Third-Party API is designed for incremental synchronization. Every list endpoint supports audit filters (`updated_at_from`, `deleted_at_from`, `active`) that let you pull only what changed since your last sync, rather than downloading the full dataset on every run.
 
@@ -105,7 +105,7 @@ for item in response.json()["items"]:
 
 ---
 
-## Per-entity sync frequency
+## Frecuencia por entidad
 
 Not all entities change at the same rate. Adapt your sync cadence accordingly:
 
@@ -120,7 +120,7 @@ Not all entities change at the same rate. Adapt your sync cadence accordingly:
 
 ---
 
-## Pagination
+## Paginación
 
 All list endpoints are paginated. Use `page` and `size` parameters:
 
@@ -147,7 +147,7 @@ When `next_page` is `null`, you've reached the last page.
 
 ---
 
-## Storing the ID mapping
+## Mapeo de IDs
 
 Every entity in SIMA has a `local_id` (SIMA's internal ID) and an optional `external_code` or `external_id` (your system's ID). Maintain a mapping table in your database:
 
@@ -169,7 +169,7 @@ Use `external_code` when creating or updating records in SIMA to store your ID:
 
 ---
 
-## Common mistakes
+## Errores comunes
 
 | Mistake | Correct approach |
 |---|---|
@@ -180,7 +180,7 @@ Use `external_code` when creating or updating records in SIMA to store your ID:
 
 ---
 
-## Next steps
+## Próximos pasos
 
 <CardGroup cols={2}>
   <Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">

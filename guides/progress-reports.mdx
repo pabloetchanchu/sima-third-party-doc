@@ -1,9 +1,9 @@
 ---
-title: "Progress Reports"
-description: "How to query crop progress data — planting, harvest, fertilization, and plant stand reports via the SIMA Third-Party API"
+title: "Avances de Campaña"
+description: "Cómo consultar datos de avance de cultivos — siembra, cosecha, fertilización y control de stand via la API de Terceros de SIMA"
 ---
 
-## Overview
+## Resumen
 
 Progress Reports track the real-time advancement of field operations campaign by campaign. They consolidate data from planting progress, harvest control, fertilization control, and plant stand into a unified endpoint, replacing older legacy endpoints.
 
@@ -44,7 +44,7 @@ For most integrations, `progress_report` is the recommended single endpoint sinc
 
 ---
 
-## Key response fields
+## Campos de respuesta principales
 
 ```json
 {
@@ -91,7 +91,7 @@ For most integrations, `progress_report` is the recommended single endpoint sinc
 
 ---
 
-## Filtering
+## Filtros
 
 Use standard audit filters for incremental sync:
 
@@ -183,7 +183,7 @@ GET /api/v2/third_party/campaigns/update_objective_yield/status/{request_id}
 
 ---
 
-## Sync recommendation
+## Frecuencia de sincronización recomendada
 
 Progress reports change frequently during active seasons. Recommended cadence:
 
@@ -193,7 +193,7 @@ Progress reports change frequently during active seasons. Recommended cadence:
 
 ---
 
-## Next steps
+## Próximos pasos
 
 <CardGroup cols={2}>
   <Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">

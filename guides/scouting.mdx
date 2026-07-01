@@ -1,15 +1,15 @@
 ---
-title: "Scouting & Monitoring"
-description: "How to sync field observations, adversities, and scouting reports via the SIMA Third-Party API"
+title: "Scouting y Monitoreo"
+description: "Cómo sincronizar observaciones de campo, adversidades e informes de scouting via la API de Terceros de SIMA"
 ---
 
-## Overview
+## Resumen
 
 SIMA's scouting module lets third-party apps register and retrieve field observations — pests, diseases, weeds, and other adversities detected during crop monitoring. The data flows from external scouting tools (sensors, mobile apps, drones) into SIMA, where agronomists can review and act on it.
 
 ---
 
-## Entity map
+## Mapa de entidades
 
 ```
 Adversity Kind (Insectos, Enfermedades, Malezas...)
@@ -21,7 +21,7 @@ Adversity Kind (Insectos, Enfermedades, Malezas...)
 
 ---
 
-## Step 1 — Sync the adversity catalog
+## Paso 1 — Sync the adversity catalog
 
 Before registering observations, sync the adversity catalog (read-only, global). These are the reference entities your observations will point to.
 
@@ -88,7 +88,7 @@ GET /api/v2/third_party/adversity
 
 ---
 
-## Step 2 — Register and retrieve scouting sessions
+## Paso 2 — Register and retrieve scouting sessions
 
 A scouting session represents a field visit or monitoring event for a specific campaign. It references one or more adversity IDs observed during that visit.
 
@@ -154,7 +154,7 @@ Pull scouting data from SIMA for analysis or reporting:
 
 ---
 
-## Sync cadence
+## Frecuencia de sincronización
 
 | Entity | Recommended sync |
 |---|---|
@@ -165,7 +165,7 @@ Pull scouting data from SIMA for analysis or reporting:
 
 ---
 
-## Next steps
+## Próximos pasos
 
 <CardGroup cols={2}>
   <Card title="Sync Strategy" icon="arrows-rotate" href="/guides/sync-strategy">

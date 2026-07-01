@@ -1,58 +1,58 @@
 ---
-title: "Introduction"
-description: "SIMA Third-Party API — integrate your system with the SIMA Agricultural Management Platform"
+title: "Introducción"
+description: "API de Terceros de SIMA — integrá tu sistema con la plataforma de gestión agropecuaria"
 ---
 
-## What is SIMA?
+## ¿Qué es SIMA?
 
-SIMA is an agricultural management platform that centralizes field operations across farms, campaigns, and crops. The Third-Party API allows external systems to read and write SIMA data securely, enabling real-time synchronization between your platform and your clients' operations.
+SIMA es una plataforma de gestión agropecuaria que centraliza las operaciones de campo a través de establecimientos, campañas y cultivos. La API de Terceros permite que sistemas externos lean y escriban datos en SIMA de forma segura, habilitando la sincronización en tiempo real entre tu plataforma y las operaciones de tus clientes.
 
-## Who is this API for?
+## ¿Para quién es esta API?
 
-This API is designed for:
+Esta API está diseñada para:
 
-- **ERP / agricultural software providers** that need to sync Work Orders with SIMA
-- **Scouting and monitoring apps** that register field observations in real time
-- **Data analytics platforms** consuming structured campaign and productivity data
-- **Cooperatives and agro-holdings** managing centralized data exchange across multiple producers
+- **Proveedores de ERP / software agropecuario** que necesitan sincronizar Órdenes de Trabajo con SIMA
+- **Apps de scouting y monitoreo** que registran observaciones de campo en tiempo real
+- **Plataformas de analítica de datos** que consumen datos estructurados de campañas y productividad
+- **Cooperativas y agro-holdings** que gestionan el intercambio de datos centralizado entre múltiples productores
 
-## What can you do with it?
+## ¿Qué podés hacer con ella?
 
 <CardGroup cols={2}>
-  <Card title="Work Orders" icon="clipboard-list">
-    Create, update, and sync field operations (OTs) between your system and SIMA bidirectionally.
+  <Card title="Órdenes de Trabajo" icon="clipboard-list">
+    Creá, actualizá y sincronizá operaciones de campo (OTs) entre tu sistema y SIMA de forma bidireccional.
   </Card>
-  <Card title="Hierarchical Structure" icon="sitemap">
-    Query and manage the entity hierarchy: Societies → Establishments → Campaigns → Plots.
+  <Card title="Estructura Jerárquica" icon="sitemap">
+    Consultá y gestioná la jerarquía de entidades: Sociedades → Establecimientos → Campañas → Lotes.
   </Card>
-  <Card title="Master Data" icon="database">
-    Access and sync Applicators, Machines, Formulateds, Units, and more — required before creating Work Orders.
+  <Card title="Datos Maestros" icon="database">
+    Accedé y sincronizá Aplicadores, Máquinas, Formulados, Unidades y más — necesario antes de crear Órdenes de Trabajo.
   </Card>
-  <Card title="Scouting & Monitoring" icon="magnifying-glass">
-    Register field observations and adversities, enabling early issue detection from third-party sensors and apps.
+  <Card title="Scouting y Monitoreo" icon="magnifying-glass">
+    Registrá observaciones de campo y adversidades, habilitando la detección temprana de problemas desde sensores y apps de terceros.
   </Card>
 </CardGroup>
 
-## Technical overview
+## Resumen técnico
 
-- **Protocol:** REST — standard HTTP verbs (GET, POST, PUT, DELETE)
-- **Format:** JSON for all requests and responses
-- **Authentication:** Token-based via `POST /api/v2/login`
-- **Versioning:** Endpoints available in `v1`, `v2`, and `v3` — always use the latest available
+- **Protocolo:** REST — verbos HTTP estándar (GET, POST, PUT, DELETE)
+- **Formato:** JSON para todas las solicitudes y respuestas
+- **Autenticación:** Basada en tokens via `POST /api/v2/login`
+- **Versionado:** Endpoints disponibles en `v1`, `v2` y `v3` — usá siempre la versión más reciente disponible
 
-## Environments
+## Entornos
 
-| Environment | Base URL |
+| Entorno | URL Base |
 |---|---|
-| Test (QA) | `https://api.qa.sima.ag` |
-| Production | `https://api.sima.ag` |
+| Pruebas (QA) | `https://api.qa.sima.ag` |
+| Producción | `https://api.sima.ag` |
 
 <Info>
-  The QA environment resets every 15 days. Use it freely during development and testing.
+  El entorno de QA se resetea cada 15 días. Usalo libremente durante el desarrollo y las pruebas.
 </Info>
 
-## Before you start
+## Antes de empezar
 
-1. Request API credentials from [soporte@sima.ag](mailto:soporte@sima.ag) or use the [demo account](/quickstart#demo-account) for testing
-2. Download the [Postman collection](https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh) to explore all available endpoints
-3. Follow the [Quickstart](/quickstart) to make your first API call in under 5 minutes
+1. Solicitá credenciales API a [soporte@sima.ag](mailto:soporte@sima.ag) o usá la [cuenta demo](/quickstart#cuenta-demo) para probar
+2. Descargá la [colección de Postman](https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh) para explorar todos los endpoints disponibles
+3. Seguí el [Inicio Rápido](/quickstart) para hacer tu primera llamada a la API en menos de 5 minutos
