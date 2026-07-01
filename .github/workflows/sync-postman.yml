@@ -29,7 +29,8 @@ jobs:
 
       - name: Convert to OpenAPI spec
         run: |
-          npx --yes postman-to-openapi postman-collection.json -o openapi.yaml --defaultTag "SIMA Third-Party API"
+          npm install -g postman-to-openapi
+          p2o postman-collection.json -o openapi.yaml --defaultTag "SIMA Third-Party API"
 
       - name: Check for changes
         id: diff
