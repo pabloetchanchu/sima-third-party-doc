@@ -1,4 +1,5 @@
 {
+  "$schema": "https://mintlify.com/docs.json",
   "name": "SIMA Docs para Desarrolladores",
   "theme": "mint",
   "colors": {
@@ -85,11 +86,5 @@
   },
   "footerSocials": {
     "website": "https://sima.ag"
-  },
-  "settings": {
-    "customScripts": [
-      "/sima-assistant-config.js",
-      "/sima-assistant.js"
-    ]
   }
 }

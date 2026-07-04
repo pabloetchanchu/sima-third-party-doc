@@ -5,8 +5,9 @@
   "description": "Backend del asistente de documentación SIMA (Cloudflare Worker)",
   "scripts": {
     "build:kb": "node scripts/build-knowledge-base.js",
+    "sync:widget": "cp ../sima-assistant.js public/widget.js",
     "dev": "npm run build:kb && wrangler dev",
-    "deploy": "npm run build:kb && wrangler deploy"
+    "deploy": "npm run build:kb && npm run sync:widget && wrangler deploy"
   },
   "dependencies": {
     "yaml": "^2.7.0"

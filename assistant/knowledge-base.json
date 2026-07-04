@@ -1,18 +1,26 @@
 {
-  "generatedAt": "2026-07-04T19:23:23.159Z",
+  "generatedAt": "2026-07-04T19:35:41.456Z",
   "docsBaseUrl": "https://docs.tp.sima.ag",
-  "chunkCount": 239,
+  "chunkCount": 275,
   "chunks": [
     {
       "id": "api-reference/entity-schemas.mdx#0",
       "source": "api-reference/entity-schemas.mdx",
       "title": "Schemas de Entidades",
-      "heading": "Resumen",
+      "heading": "Schemas de Entidades",
       "url": "https://docs.tp.sima.ag/api-reference/entity-schemas",
-      "content": "Cada tabla describe los campos principales de una entidad. Para el schema completo de cada endpoint, usá la referencia interactiva. Estas tablas cubren los recursos más usados en integraciones.\n\n \n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "api-reference/entity-schemas.mdx#1",
+      "source": "api-reference/entity-schemas.mdx",
+      "title": "Schemas de Entidades",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/api-reference/entity-schemas#resumen",
+      "content": "Cada tabla describe los campos principales de una entidad. Para el schema completo de cada endpoint, usá la referencia interactiva. Estas tablas cubren los recursos más usados en integraciones.\n\n \n\n---"
+    },
+    {
+      "id": "api-reference/entity-schemas.mdx#2",
       "source": "api-reference/entity-schemas.mdx",
       "title": "Schemas de Entidades",
       "heading": "Orden de Trabajo (Work Order)",
@@ -20,7 +28,7 @@
       "content": "Endpoint de lectura: GET /api/v3/third_party/work_orders \nEndpoint de escritura: POST /integration/api/v1/workOrders\n\n### Header\n\n| Campo | Tipo | Obligatorio | Editable | Descripción |\n|---|---|---|---|---|\n| local_id | integer | No (auto) | Solo lectura | ID interno de SIMA |\n| external_id | string | No | Sí | ID de tu sistema |\n| system_id | string | Sí | Sí | Siempre \"third_party\" |\n| name | string | Sí | Sí | Nombre descriptivo de la OT |\n| date | datetime | Sí | Sí | Fecha/hora de la operación (ISO8601) |\n| voucher_date | datetime | Sí | Sí | Fecha del comprobante |\n| state.pending | boolean | Sí | Sí | OT pendiente de ejecución |\n| state.executed | boolean | Sí | Sí | OT ejecutada en campo |\n| state.confirmed | boolean | Sí | Sí | OT confirmada en SIMA |\n| extra_fields.company.local_id | integer | Sí | Sí | ID de la empresa/sociedad |\n| extra_fields.voucher_type.local_id | integer | Sí | Sí | Tipo de comprobante |\n| is_read_only | boolean | No | Solo lectura | Si true, no se puede modificar |\n\n### Supply (aplicación de agroquímico)\n\n| Campo | Tipo | Obligatorio | Editable | Descripción |\n|---|---|---|---|---|\n| cultivation.local_id | integer | Sí | Sí | Cultivo objetivo |\n| formulated.local_id | integer | Sí | Sí | Producto agroquímico |\n| area_applied | number | Sí | Sí | Hectáreas aplicadas |\n| total_applied | number | Sí | Sí | Cantidad total aplicada |\n| date | datetime | Sí | Sí | Fecha de aplicación |\n| state | object | Sí | Sí | { pending, executed, confirmed } |\n\n### Labour (labor de campo)\n\n| Campo | Tipo | Obligatorio | Editable | Descripción |\n|---|---|---|---|---|\n| cultivation.local_id | integer | Sí | Sí | Cultivo objetivo |\n| area_applied | number | Sí | Sí | Hectáreas |\n| contractors[].local_id | integer | No | Sí | Contratista(s) |\n| machines[].local_id | integer | No | Sí | Máquina(s) |\n| applicators[].local_id | integer | No | Sí | Aplicador(es) |\n| date | datetime | Sí | Sí | Fecha de la labor |\n| state | object | Sí | Sí | { pending, executed, confirmed } |\n\n---"
     },
     {
-      "id": "api-reference/entity-schemas.mdx#2",
+      "id": "api-reference/entity-schemas.mdx#3",
       "source": "api-reference/entity-schemas.mdx",
       "title": "Schemas de Entidades",
       "heading": "Establecimiento (Establishment)",
@@ -28,7 +36,7 @@
       "content": "Endpoint: GET /api/v3/third_party/establishments\n\n| Campo | Tipo | Obligatorio | Editable | Descripción |\n|---|---|---|---|---|\n| id | integer | Auto | Solo lectura | ID interno |\n| name | string | Sí | Sí | Nombre del establecimiento |\n| external_code | string | No | Sí | Código de tu ERP |\n| active | boolean | No | Sí | Activo/inactivo |\n| created_at | datetime | Auto | Solo lectura | Fecha de creación |\n| updated_at | datetime | Auto | Solo lectura | Última modificación |\n| deleted_at | datetime | Auto | Solo lectura | Eliminación lógica (null = activo) |\n\n---"
     },
     {
-      "id": "api-reference/entity-schemas.mdx#3",
+      "id": "api-reference/entity-schemas.mdx#4",
       "source": "api-reference/entity-schemas.mdx",
       "title": "Schemas de Entidades",
       "heading": "Cultivo (Cultivation)",
@@ -36,7 +44,7 @@
       "content": "Endpoint: GET /api/v3/third_party/cultivations\n\n| Campo | Tipo | Obligatorio | Editable | Descripción |\n|---|---|---|---|---|\n| id | integer | Auto | Solo lectura | ID interno |\n| plot_id | integer | Auto | Solo lectura | Lote asociado |\n| campaign_id | integer | Auto | Solo lectura | Campaña asociada |\n| formulated_id | integer | Auto | Solo lectura | Variedad/especie |\n| area | number | Auto | Solo lectura | Hectáreas del cultivo |\n| active | boolean | Auto | Solo lectura | Activo/inactivo |\n| updated_at | datetime | Auto | Solo lectura | Para sync incremental |\n\n---"
     },
     {
-      "id": "api-reference/entity-schemas.mdx#4",
+      "id": "api-reference/entity-schemas.mdx#5",
       "source": "api-reference/entity-schemas.mdx",
       "title": "Schemas de Entidades",
       "heading": "Formulado (Formulated)",
@@ -44,7 +52,7 @@
       "content": "Endpoint: GET /api/v3/third_party/formulateds (solo lectura)\n\n| Campo | Tipo | Obligatorio | Editable | Descripción |\n|---|---|---|---|---|\n| id | integer | Auto | Solo lectura | ID interno |\n| name | string | — | Solo lectura | Nombre comercial |\n| external_code | string | — | Solo lectura | Código de catálogo |\n| active_ingredient | string | — | Solo lectura | Ingrediente activo |\n| formulation_type_id | integer | — | Solo lectura | Tipo de formulación |\n| unit_id | integer | — | Solo lectura | Unidad de medida |\n| active | boolean | — | Solo lectura | Activo/inactivo |\n| updated_at | datetime | Auto | Solo lectura | Para sync incremental |\n\n---"
     },
     {
-      "id": "api-reference/entity-schemas.mdx#5",
+      "id": "api-reference/entity-schemas.mdx#6",
       "source": "api-reference/entity-schemas.mdx",
       "title": "Schemas de Entidades",
       "heading": "Aplicador (Applicator)",
@@ -52,7 +60,7 @@
       "content": "Lectura: GET /api/v3/third_party/applicators \nEscritura (CRUD): POST/PUT/DELETE /api/v2/third_party/applicators\n\n| Campo | Tipo | Obligatorio | Editable | Descripción |\n|---|---|---|---|---|\n| id | integer | Auto | Solo lectura (GET) | ID interno |\n| name | string | Sí | Sí (v2) | Nombre del aplicador |\n| external_code | string | No | Sí (v2) | Código de tu ERP |\n| active | boolean | No | Sí (v2) | Activo/inactivo |\n| updated_at | datetime | Auto | Solo lectura | Para sync incremental |\n\n---"
     },
     {
-      "id": "api-reference/entity-schemas.mdx#6",
+      "id": "api-reference/entity-schemas.mdx#7",
       "source": "api-reference/entity-schemas.mdx",
       "title": "Schemas de Entidades",
       "heading": "Respuesta paginada (común a todos los list endpoints)",
@@ -63,12 +71,20 @@
       "id": "api-reference/errors-and-limits.mdx#0",
       "source": "api-reference/errors-and-limits.mdx",
       "title": "Errores y Límites de Uso",
-      "heading": "Resumen",
+      "heading": "Errores y Límites de Uso",
       "url": "https://docs.tp.sima.ag/api-reference/errors-and-limits",
-      "content": "Esta página documenta cómo la API responde ante errores y cuáles son los límites de uso. Incluye tanto los errores de autenticación (documentados en Autenticación) como los que aplican a **todos** los endpoints.\n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "api-reference/errors-and-limits.mdx#1",
+      "source": "api-reference/errors-and-limits.mdx",
+      "title": "Errores y Límites de Uso",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/api-reference/errors-and-limits#resumen",
+      "content": "Esta página documenta cómo la API responde ante errores y cuáles son los límites de uso. Incluye tanto los errores de autenticación (documentados en Autenticación) como los que aplican a **todos** los endpoints.\n\n---"
+    },
+    {
+      "id": "api-reference/errors-and-limits.mdx#2",
       "source": "api-reference/errors-and-limits.mdx",
       "title": "Errores y Límites de Uso",
       "heading": "Códigos HTTP",
@@ -76,7 +92,7 @@
       "content": "| Código | Significado | Acción recomendada |\n|---|---|---|\n| 200 OK | Solicitud exitosa | Procesar la respuesta normalmente |\n| 201 Created | Recurso creado | Guardar el local_id o id devuelto |\n| 204 No Content | Eliminación exitosa | No hay cuerpo de respuesta |\n| 400 Bad Request | Cuerpo mal formado o campos inválidos | Revisar el payload contra un GET previo del mismo recurso |\n| 401 Unauthorized | Token inválido, expirado o ausente | Renovar token con refresh_token o re-login |\n| 403 Forbidden | Token válido pero sin permisos | Verificar rol api_integrated con soporte@sima.ag |\n| 404 Not Found | Recurso o endpoint inexistente | Verificar URL, versión y local_id |\n| 409 Conflict | Conflicto de estado (ej. recurso en solo lectura) | Verificar is_read_only u otros flags de estado |\n| 422 Unprocessable Entity | Validación de negocio fallida | Revisar campos obligatorios y relaciones (IDs de entidades padre) |\n| 429 Too Many Requests | Rate limit excedido | Esperar y reintentar con backoff exponencial |\n| 500 Internal Server Error | Error del servidor | Reintentar; si persiste, contactar soporte |\n| 503 Service Unavailable | Mantenimiento o sobrecarga | Reintentar después de unos minutos |\n\n---"
     },
     {
-      "id": "api-reference/errors-and-limits.mdx#2",
+      "id": "api-reference/errors-and-limits.mdx#3",
       "source": "api-reference/errors-and-limits.mdx",
       "title": "Errores y Límites de Uso",
       "heading": "Formato de respuesta de error",
@@ -84,7 +100,7 @@
       "content": "La mayoría de los endpoints devuelven errores en JSON:\n\n``json\n{\n \"message\": \"Descripción legible del error\",\n \"code\": \"ERROR_CODE_OPCIONAL\"\n}\n`\n\nEn endpoints de validación compleja (especialmente escritura de OTs), el cuerpo puede incluir detalle por campo:\n\n`json\n{\n \"message\": \"Validation failed\",\n \"errors\": {\n \"header.extra_fields.company.local_id\": [\"The selected company is invalid.\"]\n }\n}\n`\n\n \n\n---"
     },
     {
-      "id": "api-reference/errors-and-limits.mdx#3",
+      "id": "api-reference/errors-and-limits.mdx#4",
       "source": "api-reference/errors-and-limits.mdx",
       "title": "Errores y Límites de Uso",
       "heading": "Errores de autenticación",
@@ -92,7 +108,7 @@
       "content": "Los errores 401 y 403 en el login tienen significados específicos documentados en Autenticación. Para el resto de endpoints, aplican las mismas reglas:\n\n- **401**: el token expiró → renovar con refresh o re-login\n- **403**: el usuario no tiene rol api_integrated o no tiene acceso al recurso solicitado\n\n---"
     },
     {
-      "id": "api-reference/errors-and-limits.mdx#4",
+      "id": "api-reference/errors-and-limits.mdx#5",
       "source": "api-reference/errors-and-limits.mdx",
       "title": "Errores y Límites de Uso",
       "heading": "Rate limiting",
@@ -100,7 +116,7 @@
       "content": "### Buenas prácticas\n\n| Práctica | Detalle |\n|---|---|\n| **Backoff exponencial** | Ante 429 o 503, esperar 1s → 2s → 4s → 8s antes de reintentar |\n| **Sincronización incremental** | Usar updated_at_from en lugar de re-descargar catálogos completos |\n| **Paginación** | Respetar size razonable (50–100) y no paralelizar páginas excesivamente |\n| **Cache local** | Datos maestros (formulados, unidades) cambian poco — sincronizar semanalmente |\n\nSi tu integración requiere volúmenes altos (más de 10.000 requests/día), contactá a soporte@sima.ag para coordinar límites.\n\n---"
     },
     {
-      "id": "api-reference/errors-and-limits.mdx#5",
+      "id": "api-reference/errors-and-limits.mdx#6",
       "source": "api-reference/errors-and-limits.mdx",
       "title": "Errores y Límites de Uso",
       "heading": "Headers de respuesta útiles",
@@ -111,12 +127,20 @@
       "id": "api-reference/glossary.mdx#0",
       "source": "api-reference/glossary.mdx",
       "title": "Glosario de Términos",
-      "heading": "Resumen",
+      "heading": "Glosario de Términos",
       "url": "https://docs.tp.sima.ag/api-reference/glossary",
-      "content": "SIMA usa vocabulario del agro en español en la plataforma web, pero los endpoints y campos de la API están en inglés. Esta tabla te ayuda a traducir conceptos de negocio a recursos técnicos.\n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "api-reference/glossary.mdx#1",
+      "source": "api-reference/glossary.mdx",
+      "title": "Glosario de Términos",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/api-reference/glossary#resumen",
+      "content": "SIMA usa vocabulario del agro en español en la plataforma web, pero los endpoints y campos de la API están en inglés. Esta tabla te ayuda a traducir conceptos de negocio a recursos técnicos.\n\n---"
+    },
+    {
+      "id": "api-reference/glossary.mdx#2",
       "source": "api-reference/glossary.mdx",
       "title": "Glosario de Términos",
       "heading": "Entidades principales",
@@ -124,7 +148,7 @@
       "content": "| Término SIMA (ES) | Endpoint / recurso (EN) | Descripción |\n|---|---|---|\n| **Orden de Trabajo (OT)** | work_orders / workOrders | Operación de campo: aplicación, labor, scouting, etc. |\n| **Establecimiento** | establishments | Unidad productiva (campo, finca) dentro de una sociedad |\n| **Lote** | plots | Subdivisión de un establecimiento donde se siembra |\n| **Campaña madre** | master_campaigns | Planificación: especie + época + ciclo (ej. \"Soja 1ra 24/25\") |\n| **Campaña** | campaigns | Instancia productiva en un lote; en muchos ERPs se llama **Cultivo** |\n| **Cultivo** (catálogo) | cultivations | Especie / commodity (Soja, Maíz); **no** es el cultivo del ERP |\n| **Formulado** | formulateds | Producto agroquímico (herbicida, fungicida, fertilizante) |\n| **Aplicador** | applicators | Persona que aplica productos en campo |\n| **Contratista** | contractors (dentro de OT labours) | Empresa/persona contratada para labores |\n| **Máquina** | machines | Equipo agrícola (pulverizadora, sembradora, etc.) |\n| **Productor** | farmers | Persona física o jurídica productora |\n| **Sociedad / Empresa** | companies / society (login) | Contexto organizacional del cliente |\n| **Depósito / Acopio** | warehouses | Lugar de almacenamiento de granos o insumos |\n\n---"
     },
     {
-      "id": "api-reference/glossary.mdx#2",
+      "id": "api-reference/glossary.mdx#3",
       "source": "api-reference/glossary.mdx",
       "title": "Glosario de Términos",
       "heading": "Monitoreo y avances",
@@ -132,7 +156,7 @@
       "content": "| Término SIMA (ES) | Endpoint / recurso (EN) | Descripción |\n|---|---|---|\n| **Monitoreo / Scouting** | scouting | Observación de campo: plagas, enfermedades, malezas (solo lectura en API terceros) |\n| **Adversidad** | adversity | Plaga, enfermedad o maleza del catálogo de referencia (v2) |\n| **Avance de siembra** | planting_progress | Reporte de progreso de siembra por cultivo |\n| **Avance de cosecha** | harvest_progress | Reporte de progreso de cosecha por cultivo |\n| **Avances** (genérico) | progress_report | Categoría que incluye siembra y cosecha |\n| **Monitoreo de silobolsa** | silobag_scoutings | Inspección de silobolsa (temperatura, extracción) — **distinto** de scouting de campo |\n| **Silobolsa** | silobags | Bolsa de almacenamiento de granos en campo |\n\n \n\n---"
     },
     {
-      "id": "api-reference/glossary.mdx#3",
+      "id": "api-reference/glossary.mdx#4",
       "source": "api-reference/glossary.mdx",
       "title": "Glosario de Términos",
       "heading": "Controles y estados",
@@ -140,7 +164,7 @@
       "content": "| Término SIMA (ES) | Endpoint / recurso (EN) | Descripción |\n|---|---|---|\n| **Control de siembra** | planting_control | Verificación de calidad de siembra |\n| **Control de fertilización** | fertilization_control | Verificación de aplicación de fertilizante |\n| **Control de stand/planta** | plant_stand_control | Conteo de plantas emergidas |\n| **Estado hídrico** | hydric_states | Condición de humedad del suelo/cultivo |\n| **Estado fenológico** | phenological_states | Etapa de desarrollo del cultivo |\n| **Estado del lote** | plot_states | Condición general del lote |\n| **Ciclo de campaña madre** | master_campaign_cycles | Período dentro de una campaña madre (ej. ciclo 2024/25) |\n| **Sistema externo** | external_systems | Sistemas de integración vinculados a la sociedad |\n| **Asociación lote externo** | external_plots_associations | Vínculo entre lote SIMA y parcela en sistema externo |\n\n---"
     },
     {
-      "id": "api-reference/glossary.mdx#4",
+      "id": "api-reference/glossary.mdx#5",
       "source": "api-reference/glossary.mdx",
       "title": "Glosario de Términos",
       "heading": "Campos comunes en respuestas",
@@ -151,12 +175,20 @@
       "id": "api-reference/overview.mdx#0",
       "source": "api-reference/overview.mdx",
       "title": "Referencia de API",
-      "heading": "Resumen",
+      "heading": "Referencia de API",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
+    },
+    {
+      "id": "api-reference/overview.mdx#1",
+      "source": "api-reference/overview.mdx",
+      "title": "Referencia de API",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/api-reference/overview#resumen",
       "content": "La referencia interactiva se genera automáticamente desde la especificación OpenAPI, sincronizada diariamente con la colección de Postman de SIMA. Incluye todos los endpoints agrupados por dominio, con schemas de request/response y un **playground en vivo** para probar llamadas directamente desde el browser.\n\n \n\n---"
     },
     {
-      "id": "api-reference/overview.mdx#2",
+      "id": "api-reference/overview.mdx#3",
       "source": "api-reference/overview.mdx",
       "title": "Referencia de API",
       "heading": "Dominios de endpoints",
@@ -164,7 +196,7 @@
       "content": "| Dominio | Versiones | Notas |\n|---|---|---|\n| Authentication | v2 | Login y refresh token |\n| Work Orders | v1 (integración), v3 | Lectura v3; escritura /integration/api/v1/workOrders |\n| Hierarchy | v2, v3 | Establecimientos, lotes, campañas, cultivos; listado de lotes en v2 |\n| Master Data | v2, v3 | Formulados, aplicadores (CRUD v2), máquinas, unidades, tipos de labor |\n| Scouting | v2, v3 | Solo lectura; catálogo de adversidades en v2 |\n| Progress & Controls | v3 | Avances, controles de siembra/fertilización/stand |\n| Silobags | v3 | Solo lectura |\n| IoT / Weather | v3 | Dispositivos, eventos, factores climáticos, anomalías |\n| Campaign Import | v2 | Importación asíncrona de rendimiento objetivo |\n| Tags & Waypoints | v3 | Etiquetas, asociaciones y waypoints de campo |\n\n---"
     },
     {
-      "id": "api-reference/overview.mdx#3",
+      "id": "api-reference/overview.mdx#4",
       "source": "api-reference/overview.mdx",
       "title": "Referencia de API",
       "heading": "URLs base",
@@ -172,7 +204,7 @@
       "content": "| Entorno | URL |\n|---|---|\n| Pruebas (QA) | https://api.qa.sima.ag |\n| Producción | https://api.sima.ag |\n\n---"
     },
     {
-      "id": "api-reference/overview.mdx#4",
+      "id": "api-reference/overview.mdx#5",
       "source": "api-reference/overview.mdx",
       "title": "Referencia de API",
       "heading": "Headers requeridos",
@@ -180,7 +212,7 @@
       "content": "Cada solicitud debe incluir:\n\n``\nAuthorization: Bearer {access_token}\nX-SIMA-SYSTEM-ID: 8\nAccept: application/json\nContent-Type: application/json\n`\n\n---"
     },
     {
-      "id": "api-reference/overview.mdx#5",
+      "id": "api-reference/overview.mdx#6",
       "source": "api-reference/overview.mdx",
       "title": "Referencia de API",
       "heading": "Sincronización con Postman",
@@ -188,7 +220,7 @@
       "content": "La especificación OpenAPI se regenera automáticamente cada día desde la colección de Postman autorizada. Postman y esta referencia comparten la misma fuente — nunca quedan desincronizados.\n\n \n\n---"
     },
     {
-      "id": "api-reference/overview.mdx#6",
+      "id": "api-reference/overview.mdx#7",
       "source": "api-reference/overview.mdx",
       "title": "Referencia de API",
       "heading": "Especificación OpenAPI",
@@ -199,12 +231,20 @@
       "id": "api-reference/sima-erp-glossary.mdx#0",
       "source": "api-reference/sima-erp-glossary.mdx",
       "title": "Glosario SIMA ↔ ERP",
-      "heading": "Resumen",
+      "heading": "Glosario SIMA ↔ ERP",
       "url": "https://docs.tp.sima.ag/api-reference/sima-erp-glossary",
-      "content": "Al integrar SIMA con un ERP u otro sistema externo, el mayor foco de errores no está en los nombres técnicos de la API (inglés), sino en **homónimos en español**: la misma palabra significa cosas distintas según el sistema.\n\nSIMA es la plataforma que unifica **planificación, ejecución y análisis** de la operación agrícola — Agricultura Conectada — y esta guía mapea su jerga interna con la terminología habitual en ERPs para evitar desalineaciones al sincronizar datos.\n\n \n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "api-reference/sima-erp-glossary.mdx#1",
+      "source": "api-reference/sima-erp-glossary.mdx",
+      "title": "Glosario SIMA ↔ ERP",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/api-reference/sima-erp-glossary#resumen",
+      "content": "Al integrar SIMA con un ERP u otro sistema externo, el mayor foco de errores no está en los nombres técnicos de la API (inglés), sino en **homónimos en español**: la misma palabra significa cosas distintas según el sistema.\n\nSIMA es la plataforma que unifica **planificación, ejecución y análisis** de la operación agrícola — Agricultura Conectada — y esta guía mapea su jerga interna con la terminología habitual en ERPs para evitar desalineaciones al sincronizar datos.\n\n \n\n---"
+    },
+    {
+      "id": "api-reference/sima-erp-glossary.mdx#2",
       "source": "api-reference/sima-erp-glossary.mdx",
       "title": "Glosario SIMA ↔ ERP",
       "heading": "Jerarquía comparada",
@@ -212,7 +252,7 @@
       "content": "``\nERP (típico) SIMA (app) API (recurso)\n─────────────────────────────────────────────────────────────────────────────\nEmpresa / Cliente Sociedad society (login)\nProductor Productor farmers\nCampo / Finca Establecimiento establishments\nLote / Parcela Lote plots\nCiclo (2024/25) Ciclo campaña madre master_campaign_cycles\nPlanificación / Asignación Campaña madre master_campaigns\nCultivo (instancia en lote) Campaña campaigns\nEspecie / Cultivo (catálogo) Cultivo (especie) cultivations\nOrden de laboreo / OT Orden de Trabajo work_orders\n`\n\nEn las **líneas de una OT**, el campo cultivation.local_id del protocolo de integración apunta al ID de una **Campaña** (campaigns), no al catálogo de especies (cultivations). Es un nombre heredado del protocolo — ver sección de homónimos.\n\n---"
     },
     {
-      "id": "api-reference/sima-erp-glossary.mdx#2",
+      "id": "api-reference/sima-erp-glossary.mdx#3",
       "source": "api-reference/sima-erp-glossary.mdx",
       "title": "Glosario SIMA ↔ ERP",
       "heading": "Tabla de equivalencias",
@@ -220,7 +260,7 @@
       "content": "### Estructura y planificación\n\n| Concepto SIMA | Término habitual en ERP / sistema externo | Endpoint API | Notas |\n|---|---|---|---|\n| **Sociedad** | Empresa, cliente, cuenta, tenant | society (login) | Raíz de aislamiento de datos; no se crea por API |\n| **Productor** | Productor, titular, cliente agrícola | farmers | Agrupa establecimientos; solo lectura en API terceros |\n| **Establecimiento** | Campo, finca, unidad productiva, fundo | establishments | Pertenece a un productor |\n| **Lote** | Lote, parcela, chacra, potrero | plots | Subdivisión geográfica dentro del establecimiento |\n| **Ciclo de campaña madre** | Ciclo, campaña agrícola, año/cosecha | master_campaign_cycles | Ventana temporal (ej. 01/07/2024–30/06/2025) |\n| **Campaña madre** | Planificación, asignación, proyecto, plan de siembra | master_campaigns | Combina especie + época de siembra + ciclo + nombre |\n| **Campaña** | **Cultivo**, lote productivo, asignación lote–ciclo | campaigns | Instancia productiva en un lote para una planificación |\n| **Cultivo** (catálogo) | Especie, cultivo, commodity, rubro | cultivations | Catálogo global (Soja, Maíz, Trigo…); **no** es el cultivo del ERP |\n\n### Operaciones y maestros\n\n| Concepto SIMA | Término habitual en ERP | Endpoint API | Notas |\n|---|---|---|---|\n| **Orden de Trabajo (OT)** | OT, orden de laboreo, orden de aplicación, labor | work_orders / workOrders | Lectura v3; escritura /integration/api/v1/ |\n| **Formulado** | Insumo, producto, agroquímico, artículo | formulateds | Catálogo de productos |\n| **Aplicador** | Aplicador, operador, maquinista | applicators | CRUD en v2; listado en v3 |\n| **Contratista** | Contratista, prestador, tercerizado | contractors (en labours de OT) | Dentro del payload de OT |\n| **Máquina** | Máquina, equipo, pulverizadora, tractor | machines | Solo lectura en API terceros |\n| **Depósito** | Depósito, acopio, silo de insumos | warehouses | Distinto de silobolsa de grano |\n| **Tipo de labor OT** | Tipo de labor, actividad, operación | application_order_labour_types | Clasifica líneas de labor en OTs |\n\n### Monitoreo y avances\n\n| Concepto SIMA | Término habitual en ERP | Endpoint API | Notas |\n|---|---|---|---|\n| **Scouting** | Monitoreo, recorrida, toma de muestra | scouting | Solo lectura en API terceros |\n| **Adversidad** | Plaga, enfermedad, maleza (catálogo) | adversity (v2) | Referencia para scouting |\n| **Avance de siembra / cosecha** | Avance, progreso, % completado | planting_progress, harvest_progress | También unificado en progress_report |\n| **Silobolsa** | Bolsa, silo bolsa, acopio en campo | silobags | Almacenamiento de grano en campo |\n\n---"
     },
     {
-      "id": "api-reference/sima-erp-glossary.mdx#3",
+      "id": "api-reference/sima-erp-glossary.mdx#4",
       "source": "api-reference/sima-erp-glossary.mdx",
       "title": "Glosario SIMA ↔ ERP",
       "heading": "Homónimos que confunden integradores",
@@ -228,7 +268,7 @@
       "content": "### 1. «Cultivo» en el ERP ≠ «Cultivo» en SIMA\n\n| Contexto | Qué es en la práctica | ID que usás |\n|---|---|---|\n| ERP dice *«Cultivo Soja 2024/25 en Lote 3»* | **Campaña** SIMA (lote + planificación) | campaigns.id o cultivation.local_id en OT |\n| ERP dice *«Especie: Soja»* o catálogo de cultivos | **Cultivo** SIMA (catálogo de especies) | cultivations.id |\n| Payload de OT con cultivation.local_id | Referencia a **Campaña**, no al catálogo | campaigns.id |\n\n### 2. «Campaña» en SIMA ≠ «Campaña» en el ERP\n\n| Contexto | SIMA | ERP (habitual) |\n|---|---|---|\n| Planificación por especie y época | **Campaña madre** (master_campaigns) | Planificación, asignación, proyecto |\n| Instancia en un lote con fechas y rendimiento | **Campaña** (campaigns) | **Cultivo** |\n| Ventana temporal 2024/25 | **Ciclo** (master_campaign_cycles) | **Ciclo**, campaña agrícola |\n\n### 3. «Campaña madre» vs «Ciclo»\n\nUna **campaña madre** en SIMA es una planificación concreta: nombre + especie (cultivation_id) + época de siembra (planting_time_id) + **ciclo** (cycle_id).\n\nEl **ciclo** (master_campaign_cycles) es el contenedor temporal compartido — lo que muchos ERPs llaman simplemente *«Ciclo 24/25»*.\n\n`\nCiclo 2024/25 (master_campaign_cycles)\n └── Planificación \"Soja 1ra 24/25\" (master_campaigns)\n └── Cultivo en Lote Norte (campaigns) ← ERP: \"Cultivo\"\n └── OT Pulverización #123 (work_orders)\n`\n\n---"
     },
     {
-      "id": "api-reference/sima-erp-glossary.mdx#4",
+      "id": "api-reference/sima-erp-glossary.mdx#5",
       "source": "api-reference/sima-erp-glossary.mdx",
       "title": "Glosario SIMA ↔ ERP",
       "heading": "Cómo mapear IDs entre sistemas",
@@ -236,7 +276,7 @@
       "content": "Al sincronizar, guardá una tabla de equivalencias en tu ERP con al menos estas columnas:\n\n| Tu ID (ERP) | SIMA local_id | SIMA external_code | Entidad SIMA |\n|---|---|---|---|\n| ERP-CULT-8842 | 506362 | ERP-CULT-8842 | Campaña (≠ cultivations) |\n| ERP-LOTE-15 | 227056 | ERP-LOTE-15 | Lote |\n| ERP-PLAN-SOJA-24 | 199 | — | Campaña madre |\n\nUsá external_code al crear entidades en SIMA (establecimientos, lotes, campañas) para que el mapeo persista sin depender del nombre.\n\n---"
     },
     {
-      "id": "api-reference/sima-erp-glossary.mdx#5",
+      "id": "api-reference/sima-erp-glossary.mdx#6",
       "source": "api-reference/sima-erp-glossary.mdx",
       "title": "Glosario SIMA ↔ ERP",
       "heading": "Preguntas rápidas al integrar",
@@ -244,7 +284,7 @@
       "content": "| Si tu ERP tiene… | Buscá en SIMA… | Endpoint |\n|---|---|---|\n| Un cultivo en un lote para una temporada | Campaña | GET /api/v3/third_party/campaigns |\n| Una planificación / asignación de siembra | Campaña madre | GET /api/v3/third_party/master_campaigns |\n| Un ciclo 2024/25 | Ciclo de campaña madre | GET /api/v3/third_party/master_campaign_cycles |\n| Una especie (Soja, Maíz) | Cultivo (catálogo) | GET /api/v3/third_party/cultivations |\n| Una OT con líneas por cultivo | Campaña en cada línea | cultivation.local_id → campaigns.id |\n\n---"
     },
     {
-      "id": "api-reference/sima-erp-glossary.mdx#6",
+      "id": "api-reference/sima-erp-glossary.mdx#7",
       "source": "api-reference/sima-erp-glossary.mdx",
       "title": "Glosario SIMA ↔ ERP",
       "heading": "Ecosistema de integraciones SIMA",
@@ -255,12 +295,20 @@
       "id": "api-reference/versions.mdx#0",
       "source": "api-reference/versions.mdx",
       "title": "Versiones de la API",
-      "heading": "Resumen",
+      "heading": "Versiones de la API",
       "url": "https://docs.tp.sima.ag/api-reference/versions",
-      "content": "La API de Terceros de SIMA expone endpoints en **tres generaciones** (v1, v2, v3). Para integraciones nuevas, **usá siempre la versión más reciente disponible** para cada operación. Esta página indica cuál es la ruta recomendada hoy.\n\n \n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "api-reference/versions.mdx#1",
+      "source": "api-reference/versions.mdx",
+      "title": "Versiones de la API",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/api-reference/versions#resumen",
+      "content": "La API de Terceros de SIMA expone endpoints en **tres generaciones** (v1, v2, v3). Para integraciones nuevas, **usá siempre la versión más reciente disponible** para cada operación. Esta página indica cuál es la ruta recomendada hoy.\n\n \n\n---"
+    },
+    {
+      "id": "api-reference/versions.mdx#2",
       "source": "api-reference/versions.mdx",
       "title": "Versiones de la API",
       "heading": "Regla general",
@@ -268,7 +316,7 @@
       "content": "| Operación | Versión recomendada | Prefijo de ruta |\n|---|---|---|\n| Login / autenticación | v2 | /api/v2/ |\n| Lectura (list, detail) | v3 | /api/v3/third_party/ |\n| Escritura de OTs | v1 (integración) | /integration/api/v1/ |\n| Escritura de otros recursos | v3 (si existe) o v1 | Ver tabla por dominio |\n| Endpoints legacy | v1 / v2 | Solo si no hay equivalente v3 |\n\n---"
     },
     {
-      "id": "api-reference/versions.mdx#2",
+      "id": "api-reference/versions.mdx#3",
       "source": "api-reference/versions.mdx",
       "title": "Versiones de la API",
       "heading": "Rutas recomendadas por dominio",
@@ -276,7 +324,7 @@
       "content": "| Dominio | Leer (GET) | Crear / actualizar (POST/PATCH) | Eliminar (DELETE) |\n|---|---|---|---|\n| **Autenticación** | — | POST /api/v2/login | — |\n| **Órdenes de Trabajo** | GET /api/v3/third_party/work_orders | POST /integration/api/v1/workOrders | DELETE /integration/api/v1/workOrders/{localId} |\n| **Establecimientos** | GET /api/v3/third_party/establishments | POST /api/v3/third_party/establishments | DELETE /api/v3/third_party/establishments/{id} |\n| **Lotes (Plots)** | GET /api/v2/third_party/plots | POST /api/v3/third_party/plots | DELETE /api/v3/third_party/plots/{id} |\n| **Cultivos** | GET /api/v3/third_party/cultivations | — | — |\n| **Formulados** | GET /api/v3/third_party/formulateds | — | — |\n| **Aplicadores** | GET /api/v3/third_party/applicators | POST /api/v2/third_party/applicators | DELETE /api/v2/third_party/applicators/{id} |\n| **Máquinas** | GET /api/v3/third_party/machines | — | — |\n| **Scouting** | GET /api/v3/third_party/scouting | — | — |\n| **Avances (Progress)** | GET /api/v3/third_party/progress_report | — | — |\n| **Silobolsas** | GET /api/v3/third_party/silobags | — | — |\n| **IoT / Clima** | GET /api/v3/third_party/devices, device_events, … | POST /api/v3/third_party/devices, device_events | — |\n\n---"
     },
     {
-      "id": "api-reference/versions.mdx#3",
+      "id": "api-reference/versions.mdx#4",
       "source": "api-reference/versions.mdx",
       "title": "Versiones de la API",
       "heading": "Por qué OTs usa dos versiones",
@@ -284,7 +332,7 @@
       "content": "``\nLectura → GET /api/v3/third_party/work_orders\nEscritura → POST /integration/api/v1/workOrders\n`\n\nLa API v3 de lectura devuelve OTs con filtros de auditoría (updated_at_from, paginación, estados) optimizados para sincronización. La capa /integration/api/v1/ es el motor de escritura heredado que acepta la estructura completa (header + supplies + labours) necesaria para crear y modificar OTs.\n\n**Flujo recomendado para updates:**\n\n1. GET /api/v3/third_party/work_orders — obtener la OT actual con todos los campos\n2. Modificar los campos necesarios en tu sistema\n3. PATCH /integration/api/v1/workOrders/{localId} — enviar la estructura completa actualizada\n\n \n\n---"
     },
     {
-      "id": "api-reference/versions.mdx#4",
+      "id": "api-reference/versions.mdx#5",
       "source": "api-reference/versions.mdx",
       "title": "Versiones de la API",
       "heading": "Diferencias v2 vs v3 en parámetros",
@@ -292,7 +340,7 @@
       "content": "Los endpoints v3 usan nombres de parámetros con sufijo _at:\n\n| v3 | v2 (legacy) |\n|---|---|\n| updated_at_from | updated_from |\n| created_at_from | created_from |\n| deleted_at_from | deleted_from |\n\nSi estás migrando desde v2, revisá cada endpoint en la referencia interactiva — los nombres no son intercambiables.\n\n---"
     },
     {
-      "id": "api-reference/versions.mdx#5",
+      "id": "api-reference/versions.mdx#6",
       "source": "api-reference/versions.mdx",
       "title": "Versiones de la API",
       "heading": "Endpoints legacy (evitar en integraciones nuevas)",
@@ -303,12 +351,20 @@
       "id": "authentication.mdx#0",
       "source": "authentication.mdx",
       "title": "Autenticación",
-      "heading": "Resumen",
+      "heading": "Autenticación",
       "url": "https://docs.tp.sima.ag/authentication",
-      "content": "SIMA usa autenticación basada en tokens. Cada solicitud debe incluir un access_token válido obtenido via el endpoint de login. Los tokens tienen fecha de expiración y pueden renovarse con un refresh_token sin necesidad de hacer login nuevamente.\n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "authentication.mdx#1",
+      "source": "authentication.mdx",
+      "title": "Autenticación",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/authentication#resumen",
+      "content": "SIMA usa autenticación basada en tokens. Cada solicitud debe incluir un access_token válido obtenido via el endpoint de login. Los tokens tienen fecha de expiración y pueden renovarse con un refresh_token sin necesidad de hacer login nuevamente.\n\n---"
+    },
+    {
+      "id": "authentication.mdx#2",
       "source": "authentication.mdx",
       "title": "Autenticación",
       "heading": "Endpoint de login",
@@ -316,7 +372,7 @@
       "content": "### Headers requeridos\n\n| Header | Valor | Descripción |\n|---|---|---|\n| Accept | application/json | Requerido en todas las solicitudes |\n| Content-Type | application/json | Requerido en todas las solicitudes |\n| X-SIMA-SYSTEM-ID | 8 | Identifica tu sistema como integrador de Terceros |\n\n \n\n### Cuerpo de la solicitud\n\n``json\n{\n \"email\": \"tu-usuario-api@example.com\",\n \"password\": \"tu-contraseña\"\n}\n`\n\n### Respuesta\n\n`json\n{\n \"access_token\": \"aff6ac1d-b48c-4ea4-aba2-a2753bf2abf5\",\n \"refresh_token\": \"20626ffd-1288-4106-ac10-dc5a5f3487bc\",\n \"expiration_datetime\": \"2024-06-16T17:38:58-03:00\",\n \"society\": {\n \"id\": 34,\n \"legalName\": \"Nombre de tu Sociedad\",\n \"syncCheck\": \"usuario@example.com3293547\"\n }\n}\n`\n\nGuardá tanto el access_token como el refresh_token — los vas a necesitar para sesiones continuas.\n\n---"
     },
     {
-      "id": "authentication.mdx#2",
+      "id": "authentication.mdx#3",
       "source": "authentication.mdx",
       "title": "Autenticación",
       "heading": "Usar el token",
@@ -324,7 +380,7 @@
       "content": "Incluí el access_token como Bearer token en el header Authorization de cada solicitud:\n\n`bash\nAuthorization: Bearer aff6ac1d-b48c-4ea4-aba2-a2753bf2abf5\n`\n\n**Ejemplo completo:**\n\n`bash\ncurl -X GET https://api.qa.sima.ag/api/v3/establishments \\\n -H \"Accept: application/json\" \\\n -H \"Content-Type: application/json\" \\\n -H \"Authorization: Bearer aff6ac1d-b48c-4ea4-aba2-a2753bf2abf5\" \\\n -H \"X-SIMA-SYSTEM-ID: 8\"\n`\n\n---"
     },
     {
-      "id": "authentication.mdx#3",
+      "id": "authentication.mdx#4",
       "source": "authentication.mdx",
       "title": "Autenticación",
       "heading": "Expiración y renovación del token",
@@ -332,7 +388,7 @@
       "content": "Los tokens expiran según la fecha indicada en expiration_datetime. Cuando un token expira, tenés dos opciones:\n\n**Opción A — Re-login:** Llamá a /api/v2/login nuevamente con tus credenciales.\n\n**Opción B — Refresh:** Usá el refresh_token para obtener un nuevo access_token sin enviar credenciales (recomendado para integraciones en producción).\n\n---"
     },
     {
-      "id": "authentication.mdx#4",
+      "id": "authentication.mdx#5",
       "source": "authentication.mdx",
       "title": "Autenticación",
       "heading": "Requisitos del usuario",
@@ -340,7 +396,7 @@
       "content": "La cuenta utilizada para acceso API debe tener el rol api_integrated asignado en SIMA. Si la autenticación falla con email/contraseña válidos, contactá a soporte@sima.ag para verificar que el rol esté configurado.\n\n---"
     },
     {
-      "id": "authentication.mdx#5",
+      "id": "authentication.mdx#6",
       "source": "authentication.mdx",
       "title": "Autenticación",
       "heading": "Respuestas de error",
@@ -351,12 +407,20 @@
       "id": "guides/farmers.mdx#0",
       "source": "guides/farmers.mdx",
       "title": "Productores",
-      "heading": "Resumen",
+      "heading": "Productores",
       "url": "https://docs.tp.sima.ag/guides/farmers",
-      "content": "A **Farmer** (Productor) is the top-level entity in SIMA's hierarchy. Every Establishment belongs to a Farmer, and every Farmer belongs to a Society. When setting up a new client integration, you start here to get the farmer_id required to create Establishments.\n\n``\nSociety\n └── Farmer (Productor)\n └── Establishment\n └── Plot → Campaign → Cultivation → Work Order\n`\n\n \n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "guides/farmers.mdx#1",
+      "source": "guides/farmers.mdx",
+      "title": "Productores",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/guides/farmers#resumen",
+      "content": "A **Farmer** (Productor) is the top-level entity in SIMA's hierarchy. Every Establishment belongs to a Farmer, and every Farmer belongs to a Society. When setting up a new client integration, you start here to get the farmer_id required to create Establishments.\n\n``\nSociety\n └── Farmer (Productor)\n └── Establishment\n └── Plot → Campaign → Cultivation → Work Order\n`\n\n \n\n---"
+    },
+    {
+      "id": "guides/farmers.mdx#2",
       "source": "guides/farmers.mdx",
       "title": "Productores",
       "heading": "Endpoints",
@@ -364,7 +428,7 @@
       "content": "### List Farmers\n\n`\nGET /api/v2/third_party/farmers\n`\n\n**Filters:**\n\n| Parameter | Type | Description |\n|---|---|---|\n| name | string | Filter by first name |\n| last_name | string | Filter by last name |\n| area_from / area_to | int | Filter by total area (hectares) |\n| modified_at_from | datetime | Change detection |\n| deleted_at_from | datetime | Detect deleted farmers |\n| page / size | int | Pagination |\n\n**Response:**\n\n`json\n{\n \"items\": [\n {\n \"id\": 40,\n \"name\": \"Juan\",\n \"lastname\": \"Rodríguez\",\n \"cuit\": \"20-12345678-9\",\n \"observations\": null,\n \"email\": \"juan@example.com\",\n \"phone_number\": \"011-1234-5678\",\n \"area\": 850,\n \"external_code\": null,\n \"date_created\": \"2015-06-20T16:45:46-03:00\",\n \"date_modified\": \"2024-01-15T10:30:00-03:00\",\n \"deleted_at\": null\n }\n ],\n \"current_page\": 1,\n \"next_page\": null,\n \"total_pages\": 1,\n \"total_items\": 1\n}\n`\n\n### Get Farmer detail\n\n`\nGET /api/v2/third_party/farmers/{id}\n`\n\nReturns a single farmer by ID. Same fields as the list response.\n\n---"
     },
     {
-      "id": "guides/farmers.mdx#2",
+      "id": "guides/farmers.mdx#3",
       "source": "guides/farmers.mdx",
       "title": "Productores",
       "heading": "Finding the right farmer_id",
@@ -372,7 +436,7 @@
       "content": "When setting up a new client:\n\n1. List all farmers: GET /api/v2/third_party/farmers\n2. Match by name + lastname or cuit to identify the producer\n3. Store the id — you'll use it as farmer_id when creating Establishments\n\nIf the farmer doesn't exist yet, they need to be created in SIMA by the client or a SIMA admin before the integration can proceed.\n\n---"
     },
     {
-      "id": "guides/farmers.mdx#3",
+      "id": "guides/farmers.mdx#4",
       "source": "guides/farmers.mdx",
       "title": "Productores",
       "heading": "External code mapping",
@@ -383,12 +447,20 @@
       "id": "guides/hierarchy-setup.mdx#0",
       "source": "guides/hierarchy-setup.mdx",
       "title": "Configuración de Jerarquía",
-      "heading": "Resumen",
+      "heading": "Configuración de Jerarquía",
       "url": "https://docs.tp.sima.ag/guides/hierarchy-setup",
-      "content": "SIMA organiza los datos agropecuarios en una jerarquía estricta. Cada OT se vincula en última instancia a un **cultivo**, que es la combinación de un lote, una campaña y un cultivo. Debés configurar esta jerarquía antes de poder registrar operaciones de campo.\n\n``\nSociedad\n └── Productor\n └── Establecimiento\n └── Lote\n └── Ciclo (master_campaign_cycles)\n └── Campaña madre / Planificación (master_campaigns)\n └── Campaña (campaigns) ← en ERP suele llamarse \"Cultivo\"\n └── Orden de Trabajo\n`\n\n \n\n \n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "guides/hierarchy-setup.mdx#1",
+      "source": "guides/hierarchy-setup.mdx",
+      "title": "Configuración de Jerarquía",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/guides/hierarchy-setup#resumen",
+      "content": "SIMA organiza los datos agropecuarios en una jerarquía estricta. Cada OT se vincula en última instancia a un **cultivo**, que es la combinación de un lote, una campaña y un cultivo. Debés configurar esta jerarquía antes de poder registrar operaciones de campo.\n\n``\nSociedad\n └── Productor\n └── Establecimiento\n └── Lote\n └── Ciclo (master_campaign_cycles)\n └── Campaña madre / Planificación (master_campaigns)\n └── Campaña (campaigns) ← en ERP suele llamarse \"Cultivo\"\n └── Orden de Trabajo\n`\n\n \n\n \n\n---"
+    },
+    {
+      "id": "guides/hierarchy-setup.mdx#2",
       "source": "guides/hierarchy-setup.mdx",
       "title": "Configuración de Jerarquía",
       "heading": "Orden de configuración",
@@ -396,7 +468,7 @@
       "content": "El orden importa — cada nivel depende del anterior.\n\n \n \n \n \n \n \n \n\n---"
     },
     {
-      "id": "guides/hierarchy-setup.mdx#2",
+      "id": "guides/hierarchy-setup.mdx#3",
       "source": "guides/hierarchy-setup.mdx",
       "title": "Configuración de Jerarquía",
       "heading": "Establecimientos",
@@ -404,7 +476,7 @@
       "content": "### Crear\n\n`\nPOST /api/v3/third_party/establishments\n`\n\n`json\n{\n \"farmer_id\": 13873,\n \"name\": \"La Correntina\",\n \"observations\": \"Sector norte, bajo riego\"\n}\n`\n\n**Respuesta:**\n\n`json\n{\n \"id\": 118422,\n \"farmer_id\": 13873,\n \"name\": \"La Correntina\",\n \"observations\": \"Sector norte, bajo riego\",\n \"location\": null,\n \"created_at\": \"2024-08-30T18:03:13-03:00\",\n \"active\": true\n}\n`\n\nGuardá el id devuelto — lo vas a necesitar para crear lotes.\n\n### Actualizar\n\n`\nPATCH /api/v3/third_party/establishments/{id}\n`\n\n### Eliminar\n\n`\nDELETE /api/v3/third_party/establishments/{id}\n`\n\n### Listar\n\n`\nGET /api/v3/third_party/establishments\n`\n\n**Filtros principales:**\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| farmer_id | int | Filtrar por productor |\n| updated_at_from | datetime | Detectar establecimientos nuevos o modificados |\n| page / size | int | Paginación |\n\n---"
     },
     {
-      "id": "guides/hierarchy-setup.mdx#3",
+      "id": "guides/hierarchy-setup.mdx#4",
       "source": "guides/hierarchy-setup.mdx",
       "title": "Configuración de Jerarquía",
       "heading": "Lotes",
@@ -412,7 +484,7 @@
       "content": "El listado está en **v2**; la creación, actualización y eliminación en **v3**.\n\n#### Listar (v2)\n\n`\nGET /api/v2/third_party/plots\n`\n\nFiltros v2: establishment_id, modified_at_from, page, size.\n\n#### Crear (v3)\n\n`\nPOST /api/v3/third_party/plots\n`\n\n`json\n{\n \"establishment_id\": 118422,\n \"name\": \"Lote 1 Norte\",\n \"area\": 150.5\n}\n`\n\n#### Actualizar / eliminar (v3)\n\n`\nPATCH /api/v3/third_party/plots/{id}\nDELETE /api/v3/third_party/plots/{id}\n`\n\n---"
     },
     {
-      "id": "guides/hierarchy-setup.mdx#4",
+      "id": "guides/hierarchy-setup.mdx#5",
       "source": "guides/hierarchy-setup.mdx",
       "title": "Configuración de Jerarquía",
       "heading": "Campañas Madre y Campañas",
@@ -420,7 +492,7 @@
       "content": "Una **Campaña Madre** representa una temporada agrícola (ej: \"2024/25 Finos\"). Una **Campaña** es el cultivo específico + período vinculado a un conjunto de lotes dentro de esa temporada.\n\n### Listar Campañas Madre\n\n`\nGET /api/v3/third_party/master_campaigns\n`\n\n### Listar Ciclos de Campaña Madre\n\n`\nGET /api/v3/third_party/master_campaign_cycles\n`\n\nLos ciclos agrupan las campañas madre por período (ej. \"2024/25\"). Útil para filtrar campañas por temporada.\n\n### Listar Campañas\n\n`\nGET /api/v3/third_party/campaigns\n`\n\n**Filtros principales:**\n\n| Parámetro | Descripción |\n|---|---|\n| establishment_id | Campañas dentro de un establecimiento |\n| updated_at_from | Detección de cambios |\n| active | Solo campañas activas |\n\n---"
     },
     {
-      "id": "guides/hierarchy-setup.mdx#5",
+      "id": "guides/hierarchy-setup.mdx#6",
       "source": "guides/hierarchy-setup.mdx",
       "title": "Configuración de Jerarquía",
       "heading": "Cultivos",
@@ -428,7 +500,7 @@
       "content": "Un **cultivo** en SIMA (cultivations) es una **especie del catálogo** (Soja, Maíz, Trigo). No confundir con la **campaña** — que es lo que muchos ERPs llaman *Cultivo* y es lo que referencian las OTs.\n\n### Listar especies (catálogo)\n\n`\nGET /api/v3/third_party/cultivations\n`\n\n### Listar campañas (instancia en lote — referencia de OTs)\n\n`\nGET /api/v3/third_party/campaigns\n`\n\nEs el endpoint que vas a consultar con más frecuencia para obtener los IDs que necesitás en OTs (cultivation.local_id).\n\n**Consulta típica para campañas de un establecimiento:**\n\n`bash\nGET /api/v3/third_party/campaigns?establishment_id=118422&active=true\n`\n\n---"
     },
     {
-      "id": "guides/hierarchy-setup.mdx#6",
+      "id": "guides/hierarchy-setup.mdx#7",
       "source": "guides/hierarchy-setup.mdx",
       "title": "Configuración de Jerarquía",
       "heading": "Vincular tus IDs con los IDs de SIMA",
@@ -436,7 +508,7 @@
       "content": "Cuando tu sistema tiene sus propios identificadores, usá external_code para crear un mapeo persistente:\n\n`json\n{\n \"farmer_id\": 13873,\n \"name\": \"La Correntina\",\n \"external_code\": \"TU-ERP-ESTAB-001\"\n}\n`\n\nLuego podés buscar la entidad por tu propio código: GET /api/v3/third_party/establishments?external_code=TU-ERP-ESTAB-001\n\n---"
     },
     {
-      "id": "guides/hierarchy-setup.mdx#7",
+      "id": "guides/hierarchy-setup.mdx#8",
       "source": "guides/hierarchy-setup.mdx",
       "title": "Configuración de Jerarquía",
       "heading": "Manejo de entidades existentes",
@@ -447,12 +519,20 @@
       "id": "guides/iot-weather.mdx#0",
       "source": "guides/iot-weather.mdx",
       "title": "IoT y Clima",
-      "heading": "Resumen",
+      "heading": "IoT y Clima",
       "url": "https://docs.tp.sima.ag/guides/iot-weather",
-      "content": "SIMA's IoT module allows third-party hardware providers and weather station integrators to push sensor data directly into SIMA. Registered devices can report rainfall, temperature, wind, and other climatic events, which are then available to agronomists alongside field operation data.\n\n**Typical use cases:**\n- Weather station networks sending daily or hourly readings\n- Soil moisture sensors reporting to SIMA campaigns\n- Automatic rain gauges (pluviometers) registering daily accumulation\n\n \n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "guides/iot-weather.mdx#1",
+      "source": "guides/iot-weather.mdx",
+      "title": "IoT y Clima",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/guides/iot-weather#resumen",
+      "content": "SIMA's IoT module allows third-party hardware providers and weather station integrators to push sensor data directly into SIMA. Registered devices can report rainfall, temperature, wind, and other climatic events, which are then available to agronomists alongside field operation data.\n\n**Typical use cases:**\n- Weather station networks sending daily or hourly readings\n- Soil moisture sensors reporting to SIMA campaigns\n- Automatic rain gauges (pluviometers) registering daily accumulation\n\n \n\n---"
+    },
+    {
+      "id": "guides/iot-weather.mdx#2",
       "source": "guides/iot-weather.mdx",
       "title": "IoT y Clima",
       "heading": "Concepts",
@@ -460,7 +540,7 @@
       "content": "The IoT module is built around three core entities:\n\n``\nDevice (physical sensor or station)\n └── Device Event (a recording session)\n └── Device Event Protocol Results (individual measurements)\n └── Device Event Sample (the actual value)\n`\n\nEach event type is identified by a table_code_id — a numeric code that tells SIMA what kind of data is being reported.\n\n**Common table_code_id values:**\n\n| Value | Description |\n|---|---|\n| 53 | Weather station device |\n| 56 | Weather scouting event |\n| 57 | Weather event protocol |\n| 62 | Weather scouting protocol result |\n\n---"
     },
     {
-      "id": "guides/iot-weather.mdx#2",
+      "id": "guides/iot-weather.mdx#3",
       "source": "guides/iot-weather.mdx",
       "title": "IoT y Clima",
       "heading": "Paso 1 — Register a device",
@@ -468,7 +548,7 @@
       "content": "If you're integrating a new sensor or station, create it first:\n\n`\nPOST /api/v3/third_party/devices\n`\n\n`json\n{\n \"name\": \"Rain Gauge - La Correntina N\",\n \"external_code\": \"RG-STATION-001\",\n \"is_automatic\": true,\n \"latitude\": -32.93489339,\n \"longitude\": -60.65658509,\n \"table_code_id\": 53\n}\n`\n\nStore the returned id — you'll use it when submitting events.\n\n### List existing devices\n\n`\nGET /api/v3/third_party/devices\n`\n\n---"
     },
     {
-      "id": "guides/iot-weather.mdx#3",
+      "id": "guides/iot-weather.mdx#4",
       "source": "guides/iot-weather.mdx",
       "title": "IoT y Clima",
       "heading": "Paso 2 — Get climatic factors and protocols",
@@ -476,7 +556,7 @@
       "content": "Before submitting readings, identify the correct factor and protocol IDs for your measurement type.\n\n### List climatic factors\n\n`\nGET /api/v3/third_party/climatic_factors\n`\n\nKey factors:\n\n| ID | Name |\n|---|---|\n| 1 | Lluvia (rainfall) |\n| Other IDs | Temperature, wind, humidity, etc. |\n\n### List device event protocols\n\n`\nGET /api/v3/third_party/device_event_protocols?table_code_id=57\n`\n\nFor rainfall: Protocol ID 1, name \"Lluvia\", procedure: daily water accumulation recording.\n\n### List measure thresholds\n\n`\nGET /api/v3/third_party/device_event_measure_thresholds\n`\n\nThresholds define the valid measurement ranges for each protocol.\n\n---"
     },
     {
-      "id": "guides/iot-weather.mdx#4",
+      "id": "guides/iot-weather.mdx#5",
       "source": "guides/iot-weather.mdx",
       "title": "IoT y Clima",
       "heading": "Paso 3 — Submit sensor readings",
@@ -484,7 +564,7 @@
       "content": "Create a device event with the measured values:\n\n`\nPOST /api/v3/third_party/device_events\n`\n\n**Rainfall example (4mm recorded):**\n\n`json\n{\n \"device_id\": 17,\n \"date\": \"2024-07-04T08:00:00-03:00\",\n \"table_code_id\": 56,\n \"suitable_for_scouting\": true,\n \"observations\": \"Automatic daily reading\",\n \"semaphore\": 1,\n \"device_event_sample_group\": {\n \"observations\": \"Daily accumulation group\"\n },\n \"device_event_protocol_results\": [\n {\n \"device_event_measure_threshold_id\": 1,\n \"semaphore\": 1,\n \"table_code_id\": 62,\n \"device_event_sample\": {\n \"value\": 4\n }\n }\n ]\n}\n`\n\n### List device events\n\n`\nGET /api/v3/third_party/device_events?table_code_id=56\n`\n\n---"
     },
     {
-      "id": "guides/iot-weather.mdx#5",
+      "id": "guides/iot-weather.mdx#6",
       "source": "guides/iot-weather.mdx",
       "title": "IoT y Clima",
       "heading": "Weather anomalies",
@@ -492,7 +572,7 @@
       "content": "Weather anomalies are significant climate events (frost, hail, strong winds) that can be registered and tracked independently.\n\n### List anomaly types\n\n`\nGET /api/v3/third_party/weather_anomaly_types\n`\n\n### List anomalies\n\n`\nGET /api/v3/third_party/weather_anomaly\n`\n\n### Create an anomaly\n\n`\nPOST /api/v3/third_party/weather_anomaly\n`\n\n---"
     },
     {
-      "id": "guides/iot-weather.mdx#6",
+      "id": "guides/iot-weather.mdx#7",
       "source": "guides/iot-weather.mdx",
       "title": "IoT y Clima",
       "heading": "Additional IoT endpoints",
@@ -500,7 +580,7 @@
       "content": "| Endpoint | Description |\n|---|---|\n| GET /api/v3/third_party/device_event_sample_groups | Sample groups list |\n| GET /api/v3/third_party/device_event_samples | Individual samples |\n| GET /api/v3/third_party/device_event_protocol_results | Protocol results |\n| GET /api/v3/third_party/device_event_measure_thresholds | Measure thresholds catalog |\n\n---"
     },
     {
-      "id": "guides/iot-weather.mdx#7",
+      "id": "guides/iot-weather.mdx#8",
       "source": "guides/iot-weather.mdx",
       "title": "IoT y Clima",
       "heading": "Units for IoT measurements",
@@ -508,7 +588,7 @@
       "content": "For rainfall and other measurements, query the units endpoint with the appropriate category:\n\n`\nGET /api/v1/units?category=pluvio\n`\n\nThis returns units like mm for rainfall accumulation.\n\n---"
     },
     {
-      "id": "guides/iot-weather.mdx#8",
+      "id": "guides/iot-weather.mdx#9",
       "source": "guides/iot-weather.mdx",
       "title": "IoT y Clima",
       "heading": "Frecuencia de sincronización recomendada",
@@ -519,12 +599,20 @@
       "id": "guides/master-data.mdx#0",
       "source": "guides/master-data.mdx",
       "title": "Datos Maestros",
-      "heading": "Resumen",
+      "heading": "Datos Maestros",
       "url": "https://docs.tp.sima.ag/guides/master-data",
-      "content": "Master data are the shared catalogs that Work Orders reference — agrochemical products (formulateds), applicators, machines, units, and labour types. You must sync these before creating any Work Order, since each supply and labour line requires valid IDs from these catalogs.\n\n \n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "guides/master-data.mdx#1",
+      "source": "guides/master-data.mdx",
+      "title": "Datos Maestros",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/guides/master-data#resumen",
+      "content": "Master data are the shared catalogs that Work Orders reference — agrochemical products (formulateds), applicators, machines, units, and labour types. You must sync these before creating any Work Order, since each supply and labour line requires valid IDs from these catalogs.\n\n \n\n---"
+    },
+    {
+      "id": "guides/master-data.mdx#2",
       "source": "guides/master-data.mdx",
       "title": "Datos Maestros",
       "heading": "Mapa de datos maestros",
@@ -532,7 +620,7 @@
       "content": "| Entity | CRUD | Scope | Required for |\n|---|---|---|---|\n| Formulateds | Read only | Global + society | Supply lines in OTs |\n| Active Ingredients | Read only | Global | Formulated metadata |\n| Units | Read only | Global | Formulated quantities |\n| Applicators | Full CRUD (v2) / Read (v3) | Society | Labour lines in OTs |\n| Machines | Read only | Society | Labour lines in OTs |\n| Work Order Labour Types | Read only | Global | Labour type classification |\n| Work Order Labour Type Categories | Read only | Global | Labour type grouping |\n\n---"
     },
     {
-      "id": "guides/master-data.mdx#2",
+      "id": "guides/master-data.mdx#3",
       "source": "guides/master-data.mdx",
       "title": "Datos Maestros",
       "heading": "Formulateds",
@@ -540,7 +628,7 @@
       "content": "Formulateds are agrochemical products (herbicides, fertilizers, fungicides, etc.). The catalog includes both SIMA's global products and your society's own records.\n\n### List\n\n``\nGET /api/v3/third_party/formulateds\n`\n\n**Key filters:**\n\n| Parameter | Type | Description |\n|---|---|---|\n| name | string | Search by commercial brand name |\n| use_id | int | Filter by formulate use (herbicide, fungicide, etc.) |\n| active | bool | Active records only |\n| updated_at_from | datetime | Detect catalog changes |\n\n**Response:**\n\n`json\n{\n \"items\": [\n {\n \"id\": 8844,\n \"commercial_brand\": \"Glifosato 48 SL\",\n \"formulation_type_id\": 195,\n \"formulated_use_id\": 15,\n \"formulated_unit_id\": 3,\n \"active_ingredients\": [\n { \"active_ingredient_id\": 15, \"concentration\": \"48.000\" }\n ],\n \"external_code\": null,\n \"active\": true\n }\n ],\n \"current_page\": 1,\n \"next_page\": 2,\n \"total_pages\": 6061,\n \"total_items\": 36364\n}\n`\n\n \n\n### Matching with your system's products\n\nIf your ERP has its own product catalog, use external_code or external_reference to store your product ID on the SIMA record. This allows reliable lookups without name-matching.\n\n### Endpoints relacionados (v2)\n\n- GET /api/v2/third_party/active_ingredients — catálogo de ingredientes activos\n- GET /api/v2/third_party/formulated_uses — categorías de uso (herbicida, fungicida, etc.)\n- GET /api/v2/third_party/formulation_types — tipos de formulación (SC, WG, EC, etc.)\n\n---"
     },
     {
-      "id": "guides/master-data.mdx#3",
+      "id": "guides/master-data.mdx#4",
       "source": "guides/master-data.mdx",
       "title": "Datos Maestros",
       "heading": "Applicators",
@@ -548,7 +636,7 @@
       "content": "Los aplicadores son personas o empresas contratistas que ejecutan operaciones de campo. Son **scoped por sociedad**. La escritura (crear, actualizar, eliminar) está disponible solo en **v2**.\n\n### Listar (v3 — recomendado)\n\n`\nGET /api/v3/third_party/applicators\n`\n\nFiltros v3: name, active, updated_at_from, page, size.\n\n### Listar (v2 — legacy)\n\n`\nGET /api/v2/third_party/applicators\n`\n\n**Response:**\n\n`json\n{\n \"items\": [\n {\n \"id\": 596,\n \"name\": \"Sanchez Ricardo\",\n \"address\": \"Colón 56\",\n \"phone_number\": \"03444-15501565\",\n \"email\": null,\n \"machines\": [640, 1081],\n \"own\": false,\n \"external_code\": null,\n \"active\": true\n }\n ]\n}\n`\n\nNote: machines is an array of machine IDs associated to this applicator.\n\n### Crear (v2)\n\n`\nPOST /api/v2/third_party/applicators\n`\n\n`json\n{\n \"name\": \"Juan Rodríguez\",\n \"address\": \"Av. San Martín 123\",\n \"phone_number\": \"03492-123456\",\n \"email\": \"juan@example.com\",\n \"external_code\": \"YOUR-ERP-APPLICATOR-ID\"\n}\n`\n\n### Actualizar (v2)\n\n`\nPUT /api/v2/third_party/applicators/{id}\n`\n\n### Eliminar (v2)\n\n`\nDELETE /api/v2/third_party/applicators/{id}\n`\n\n---"
     },
     {
-      "id": "guides/master-data.mdx#4",
+      "id": "guides/master-data.mdx#5",
       "source": "guides/master-data.mdx",
       "title": "Datos Maestros",
       "heading": "Machines",
@@ -556,7 +644,7 @@
       "content": "Machines represent equipment used in field operations (sprayers, tractors, etc.). They are society-scoped and can be associated to applicators.\n\n### List\n\n`\nGET /api/v3/third_party/machines\n`\n\n**Key filters:** name, active, updated_at_from\n\n---"
     },
     {
-      "id": "guides/master-data.mdx#5",
+      "id": "guides/master-data.mdx#6",
       "source": "guides/master-data.mdx",
       "title": "Datos Maestros",
       "heading": "Units",
@@ -564,7 +652,7 @@
       "content": "Units are measurement units used in formulated quantities (liters, kilograms, etc.).\n\n### List\n\n`\nGET /api/v3/third_party/units\n`\n\nUnits are a global catalog — query once and cache locally. They rarely change.\n\n---"
     },
     {
-      "id": "guides/master-data.mdx#6",
+      "id": "guides/master-data.mdx#7",
       "source": "guides/master-data.mdx",
       "title": "Datos Maestros",
       "heading": "Work Order Labour Types",
@@ -572,7 +660,7 @@
       "content": "Labour types classify the kind of work in a labour line (spraying, seeding, harvest, etc.).\n\n### List (v3 — recommended)\n\n`\nGET /api/v3/third_party/application_order_labour_types\n`\n\n**Key filters:** active, updated_at_from\n\n### List (v2 — legacy)\n\n`\nGET /api/v2/third_party/application_order_labour_types\n``\n\n \n\n---"
     },
     {
-      "id": "guides/master-data.mdx#7",
+      "id": "guides/master-data.mdx#8",
       "source": "guides/master-data.mdx",
       "title": "Datos Maestros",
       "heading": "Estrategia de sincronización recomendada",
@@ -583,12 +671,20 @@
       "id": "guides/progress-reports.mdx#0",
       "source": "guides/progress-reports.mdx",
       "title": "Avances de Campaña",
-      "heading": "Resumen",
+      "heading": "Avances de Campaña",
       "url": "https://docs.tp.sima.ag/guides/progress-reports",
-      "content": "Progress Reports track the real-time advancement of field operations campaign by campaign. They consolidate data from planting progress, harvest control, fertilization control, and plant stand into a unified endpoint, replacing older legacy endpoints.\n\nThis is particularly useful for:\n- **Machinery platforms** tracking daily planting or harvest progress in hectares\n- **ERP systems** that need yield and completion data per campaign\n- **Analytics platforms** consuming crop advancement timelines\n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "guides/progress-reports.mdx#1",
+      "source": "guides/progress-reports.mdx",
+      "title": "Avances de Campaña",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/guides/progress-reports#resumen",
+      "content": "Progress Reports track the real-time advancement of field operations campaign by campaign. They consolidate data from planting progress, harvest control, fertilization control, and plant stand into a unified endpoint, replacing older legacy endpoints.\n\nThis is particularly useful for:\n- **Machinery platforms** tracking daily planting or harvest progress in hectares\n- **ERP systems** that need yield and completion data per campaign\n- **Analytics platforms** consuming crop advancement timelines\n\n---"
+    },
+    {
+      "id": "guides/progress-reports.mdx#2",
       "source": "guides/progress-reports.mdx",
       "title": "Avances de Campaña",
       "heading": "Progress types",
@@ -596,7 +692,7 @@
       "content": "Each progress record has a progressType that identifies what kind of operation it tracks:\n\n| progressType | Operation |\n|---|---|\n| 11 | Harvest progress |\n| 13 | Planting progress |\n| 15 | Fertilization control |\n| 17 | Plant stand control |\n\n---"
     },
     {
-      "id": "guides/progress-reports.mdx#2",
+      "id": "guides/progress-reports.mdx#3",
       "source": "guides/progress-reports.mdx",
       "title": "Avances de Campaña",
       "heading": "Endpoints",
@@ -604,7 +700,7 @@
       "content": "All Progress Report endpoints are available under v3:\n\n| Method | URI | Description |\n|---|---|---|\n| GET | /api/v3/third_party/progress_report | List all progress records |\n| GET | /api/v3/third_party/harvest_progress | Harvest progress only |\n| GET | /api/v3/third_party/planting_progress | Planting progress only |\n| GET | /api/v3/third_party/planting_control | Planting control records |\n| GET | /api/v3/third_party/plant_stand_control | Plant stand control |\n| GET | /api/v3/third_party/fertilization_control | Fertilization control |\n\nFor most integrations, progress_report is the recommended single endpoint since it returns all types filterable by progressType.\n\n---"
     },
     {
-      "id": "guides/progress-reports.mdx#3",
+      "id": "guides/progress-reports.mdx#4",
       "source": "guides/progress-reports.mdx",
       "title": "Avances de Campaña",
       "heading": "Campos de respuesta principales",
@@ -612,7 +708,7 @@
       "content": "``json\n{\n \"id\": 402345,\n \"date\": \"2025-12-16T08:18:00-03:00\",\n \"status\": 4,\n \"campaign\": 506362,\n \"progressType\": 13,\n \"hydricState\": 5,\n \"baselineHa\": 50,\n \"progressHaDaily\": 5,\n \"progressHaTotal\": 45,\n \"remainingHaTotal\": 5,\n \"plantedPercent\": 90,\n \"harvestedPercent\": null,\n \"progressTnDaily\": null,\n \"progressTnTotal\": null,\n \"yieldTnHaPartial\": null,\n \"yieldTnHaFinal\": null,\n \"isLast\": true,\n \"finished\": false,\n \"machineSamples\": [],\n \"created_by\": \"operator@example.com\",\n \"system_id\": 4\n}\n`\n\n**Key fields explained:**\n\n| Field | Description |\n|---|---|\n| progressType | Operation type (11=harvest, 13=planting, 15=fertilization, 17=plant stand) |\n| baselineHa | Total planned hectares for the campaign |\n| progressHaDaily | Hectares worked on this specific date |\n| progressHaTotal | Cumulative hectares worked to date |\n| remainingHaTotal | Hectares still pending |\n| plantedPercent | Planting completion % (only for type 13) |\n| harvestedPercent | Harvest completion % (only for type 11) |\n| yieldTnHaPartial | Partial yield in Tn/Ha (harvest) |\n| yieldTnHaFinal | Final yield in Tn/Ha (harvest, when finished) |\n| isLast | Whether this is the most recent record for this campaign |\n| finished | Whether the operation is fully complete |\n| hydricState | Soil/crop hydric condition at time of report |\n\n---"
     },
     {
-      "id": "guides/progress-reports.mdx#4",
+      "id": "guides/progress-reports.mdx#5",
       "source": "guides/progress-reports.mdx",
       "title": "Avances de Campaña",
       "heading": "Filtros",
@@ -620,7 +716,7 @@
       "content": "Use standard audit filters for incremental sync:\n\n`bash\nGET /api/v3/third_party/progress_report?campaign_id=506362&updated_at_from=2025-01-01T00:00:00-03:00\n`\n\n**Common filters:**\n\n| Parameter | Description |\n|---|---|\n| campaign_id | Filter by specific campaign |\n| updated_at_from | Change detection since last sync |\n| cycle_id | Filter by master campaign cycle |\n| page / size | Pagination |\n\n---"
     },
     {
-      "id": "guides/progress-reports.mdx#5",
+      "id": "guides/progress-reports.mdx#6",
       "source": "guides/progress-reports.mdx",
       "title": "Avances de Campaña",
       "heading": "Updating objective yield on campaigns",
@@ -628,7 +724,7 @@
       "content": "If your system tracks planned yields per campaign, you can push that data back to SIMA asynchronously:\n\n### Submit update (async)\n\n`\nPOST /api/v2/third_party/campaigns/update_objective_yield\n`\n\n`json\n[\n {\n \"campaign_id\": 506362,\n \"external_code\": \"YOUR-ERP-CAMP-001\",\n \"objective_yield_kg_ha\": 4500.0\n },\n {\n \"campaign_id\": 506363,\n \"external_code\": \"YOUR-ERP-CAMP-002\",\n \"objective_yield_kg_ha\": 3800.0\n }\n]\n`\n\n**Response — job queued:**\n\n`json\n{\n \"status\": true,\n \"data\": {\n \"request_id\": \"fec770b9-ae3b-42af-aec7-bb030c767d03\",\n \"status\": \"RECEIVED\"\n }\n}\n`\n\n### Check job status\n\n`\nGET /api/v2/third_party/campaigns/update_objective_yield/jobs\n`\n\n`json\n{\n \"data\": [\n {\n \"request_id\": \"fec770b9-ae3b-42af-aec7-bb030c767d03\",\n \"status\": \"DONE\",\n \"total_records\": 6,\n \"processed_records\": 6,\n \"error_records\": 0,\n \"created_at\": \"2026-05-07T12:43:48-03:00\",\n \"updated_at\": \"2026-05-07T12:43:53-03:00\"\n }\n ]\n}\n`\n\n### Check specific job\n\n`\nGET /api/v2/third_party/campaigns/update_objective_yield/status/{request_id}\n`\n\n**Job statuses:** RECEIVED → PROCESSING → DONE / ERROR\n\n \n\n---"
     },
     {
-      "id": "guides/progress-reports.mdx#6",
+      "id": "guides/progress-reports.mdx#7",
       "source": "guides/progress-reports.mdx",
       "title": "Avances de Campaña",
       "heading": "Frecuencia de sincronización recomendada",
@@ -639,12 +735,20 @@
       "id": "guides/scouting.mdx#0",
       "source": "guides/scouting.mdx",
       "title": "Scouting y Monitoreo",
-      "heading": "Resumen",
+      "heading": "Scouting y Monitoreo",
       "url": "https://docs.tp.sima.ag/guides/scouting",
-      "content": "SIMA's scouting module lets third-party apps register and retrieve field observations — pests, diseases, weeds, and other adversities detected during crop monitoring. The data flows from external scouting tools (sensors, mobile apps, drones) into SIMA, where agronomists can review and act on it.\n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "guides/scouting.mdx#1",
+      "source": "guides/scouting.mdx",
+      "title": "Scouting y Monitoreo",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/guides/scouting#resumen",
+      "content": "SIMA's scouting module lets third-party apps register and retrieve field observations — pests, diseases, weeds, and other adversities detected during crop monitoring. The data flows from external scouting tools (sensors, mobile apps, drones) into SIMA, where agronomists can review and act on it.\n\n---"
+    },
+    {
+      "id": "guides/scouting.mdx#2",
       "source": "guides/scouting.mdx",
       "title": "Scouting y Monitoreo",
       "heading": "Mapa de entidades",
@@ -652,7 +756,7 @@
       "content": "``\nAdversity Kind (Insectos, Enfermedades, Malezas...)\n └── Adversity Category\n └── Adversity (specific pest or disease)\n └── Scouting (field observation session)\n └── linked to a Campaign\n`\n\n---"
     },
     {
-      "id": "guides/scouting.mdx#2",
+      "id": "guides/scouting.mdx#3",
       "source": "guides/scouting.mdx",
       "title": "Scouting y Monitoreo",
       "heading": "Paso 1 — Sync the adversity catalog",
@@ -660,7 +764,7 @@
       "content": "Before registering observations, sync the adversity catalog (read-only, global). These are the reference entities your observations will point to.\n\n### Adversity Kinds\n\nTop-level classification: Insects, Diseases, Weeds, etc.\n\n`\nGET /api/v2/third_party/adversity_kinds\n`\n\n**Filters:** name, modified_at_from, modified_at_to, deleted_at_from\n\n**Response:**\n\n`json\n{\n \"items\": [\n { \"id\": 2, \"name\": \"Insectos\", \"modified_at\": \"2023-12-07T19:36:31-03:00\", \"deleted_at\": null },\n { \"id\": 3, \"name\": \"Enfermedades\", \"modified_at\": \"2023-12-07T19:36:31-03:00\", \"deleted_at\": null },\n { \"id\": 4, \"name\": \"Medidas\", \"modified_at\": \"2023-12-07T19:36:31-03:00\", \"deleted_at\": null }\n ]\n}\n`\n\n### Adversity Categories\n\nSub-classification within each kind.\n\n`\nGET /api/v2/third_party/adversity_categories\n`\n\n### Adversities\n\nSpecific pests, diseases, or weeds with scientific names and descriptions.\n\n`\nGET /api/v2/third_party/adversity\n`\n\n**Filters:** name, scientific_name, adv_category_id, modified_at_from\n\n**Response:**\n\n`json\n{\n \"items\": [\n {\n \"id\": 12,\n \"adv_category_id\": 3,\n \"name\": \"Bicho bolita\",\n \"scientific_name\": \"Armadillium vulgare\",\n \"description\": \"Soil pest that attacks seedlings at hypocotyl level...\",\n \"modified_at\": \"2021-06-25T00:00:00-03:00\"\n }\n ]\n}\n`\n\n \n\n---"
     },
     {
-      "id": "guides/scouting.mdx#3",
+      "id": "guides/scouting.mdx#4",
       "source": "guides/scouting.mdx",
       "title": "Scouting y Monitoreo",
       "heading": "Paso 2 — Consultar sesiones de scouting",
@@ -668,7 +772,7 @@
       "content": "Una sesión de scouting representa una visita de campo o evento de monitoreo para una campaña específica. Referencia uno o más IDs de adversidad observados durante esa visita.\n\n \n\n### Listar sesiones de scouting (v3 — recomendado)\n\n`\nGET /api/v3/third_party/scouting\n`\n\nUsá filtros de auditoría v3: updated_at_from, deleted_at_from, page, size.\n\n### Listar sesiones de scouting (v2 — legacy)\n\n`\nGET /api/v2/third_party/scouting\n`\n\n**Filters:**\n\n| Parameter | Type | Description |\n|---|---|---|\n| campaign_id | int | Filter by campaign |\n| modified_at_from | datetime | Change detection |\n| modified_at_to | datetime | Upper bound |\n| deleted_at_from | datetime | Detect deletions |\n| page / size | int | Pagination |\n\n**Response:**\n\n`json\n{\n \"items\": [\n {\n \"id\": 293087,\n \"campaign_id\": 85973,\n \"date_created\": \"2024-04-01T11:02:34-03:00\",\n \"date_modified\": \"2024-04-01T11:02:34-03:00\",\n \"deleted_at\": null,\n \"observations\": \"High aphid pressure detected in NE sector\",\n \"adversity_ids\": [9, 24, 26, 84, 119, 135, 258, 491]\n }\n ],\n \"current_page\": 1,\n \"next_page\": null,\n \"total_pages\": 1,\n \"total_items\": 1\n}\n`\n\nEach adversity_id in the array maps to a specific pest or disease from the adversity catalog. An ID can appear multiple times if multiple occurrences were recorded at different locations in the same session.\n\n---"
     },
     {
-      "id": "guides/scouting.mdx#4",
+      "id": "guides/scouting.mdx#5",
       "source": "guides/scouting.mdx",
       "title": "Scouting y Monitoreo",
       "heading": "Patrones de integración típicos",
@@ -676,7 +780,7 @@
       "content": "### SIMA → plataforma externa de analítica\n\nExtraer datos de scouting de SIMA para análisis o reportes:\n\n1. Listá campañas de los establecimientos de interés (GET /api/v3/third_party/campaigns)\n2. Consultá GET /api/v3/third_party/scouting?campaign_id={id}&updated_at_from={last_sync} por campaña\n3. Enriquecé con detalles de adversidad cruzando adversity_ids` contra tu caché local del catálogo (Paso 1)\n\n### App de scouting → SIMA\n\nLa API de Terceros **no permite crear** sesiones de scouting. Si tu app registra observaciones en campo, las opciones son:\n\n- Cargar los monitoreos en SIMA vía la app móvil/web del productor, y luego sincronizar hacia tu sistema con GET\n- Contactar soporte@sima.ag si necesitás un flujo de escritura automatizado\n\n---"
     },
     {
-      "id": "guides/scouting.mdx#5",
+      "id": "guides/scouting.mdx#6",
       "source": "guides/scouting.mdx",
       "title": "Scouting y Monitoreo",
       "heading": "Frecuencia de sincronización",
@@ -687,12 +791,20 @@
       "id": "guides/silobags.mdx#0",
       "source": "guides/silobags.mdx",
       "title": "Silobolsas",
-      "heading": "Resumen",
+      "heading": "Silobolsas",
       "url": "https://docs.tp.sima.ag/guides/silobags",
-      "content": "Silobags (silobolsas) are grain storage bags used widely in South American agriculture. SIMA tracks their location, status, and monitoring history. Third-party systems — particularly grain management platforms and logistics systems — can query silobag data to integrate with SIMA's storage tracking.\n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "guides/silobags.mdx#1",
+      "source": "guides/silobags.mdx",
+      "title": "Silobolsas",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/guides/silobags#resumen",
+      "content": "Silobags (silobolsas) are grain storage bags used widely in South American agriculture. SIMA tracks their location, status, and monitoring history. Third-party systems — particularly grain management platforms and logistics systems — can query silobag data to integrate with SIMA's storage tracking.\n\n---"
+    },
+    {
+      "id": "guides/silobags.mdx#2",
       "source": "guides/silobags.mdx",
       "title": "Silobolsas",
       "heading": "Endpoints",
@@ -700,7 +812,7 @@
       "content": "### Detalle de silobolsa\n\n``\nGET /api/v3/third_party/silobags/{id}\n`\n\nDevuelve una silobolsa por ID, incluyendo coordenadas GPS y estado actual.\n\n**Response:**\n\n`json\n{\n \"id\": 8,\n \"code\": \"766code\",\n \"date_extracted\": \"2024-05-13T12:18:41-03:00\",\n \"silobag_longitude\": \"55.000\",\n \"rebagged\": false,\n \"semaphore\": 3,\n \"latitude\": \"-32.93489339\",\n \"longitude\": \"-60.65658509\",\n \"observations\": null,\n \"created_at\": \"2024-05-06T15:56:09-03:00\",\n \"modified_at\": \"2024-05-06T15:56:08-03:00\",\n \"deleted_at\": null,\n \"active\": true\n}\n`\n\n### Listar silobolsas\n\n`\nGET /api/v3/third_party/silobags\n`\n\n**Filters:**\n\n| Parameter | Type | Description |\n|---|---|---|\n| code | string | Search by silobag code |\n| semaphore | int | Filter by status: 1 (green), 2 (yellow), 3 (red) |\n| rebagged | int | Filter re-bagged silobags: 1 (yes), 0 (no) |\n| active | int | Filter active: 1 (active), 0 (inactive) |\n| date_extracted_from / date_extracted_to | datetime | Filter by extraction date |\n| updated_at_from / updated_at_to | datetime | Change detection |\n| deleted_at_from | datetime | Detect deleted silobags |\n| page / size | int | Pagination |\n\n---"
     },
     {
-      "id": "guides/silobags.mdx#2",
+      "id": "guides/silobags.mdx#3",
       "source": "guides/silobags.mdx",
       "title": "Silobolsas",
       "heading": "Valores del semáforo",
@@ -708,7 +820,7 @@
       "content": "The semaphore field represents the monitoring status of the silobag:\n\n| Value | Meaning |\n|---|---|\n| 1 | 🟢 Green — OK, no issues detected |\n| 2 | 🟡 Yellow — attention required |\n| 3 | 🔴 Red — critical issue, immediate action needed |\n\nUse semaphore=3 to pull only bags in critical state:\n\n`bash\nGET /api/v3/third_party/silobags?semaphore=3&active=1\n`\n\n---"
     },
     {
-      "id": "guides/silobags.mdx#3",
+      "id": "guides/silobags.mdx#4",
       "source": "guides/silobags.mdx",
       "title": "Silobolsas",
       "heading": "Campos principales",
@@ -716,7 +828,7 @@
       "content": "| Field | Description |\n|---|---|\n| code | Your reference code for the silobag |\n| silobag_longitude | Length of the bag in meters |\n| latitude / longitude | GPS coordinates of the bag's location |\n| date_extracted | Date the grain was extracted (null if still in use) |\n| rebagged | Whether the grain was transferred to a new bag |\n| semaphore | Current monitoring status (1/2/3) |\n\n---"
     },
     {
-      "id": "guides/silobags.mdx#4",
+      "id": "guides/silobags.mdx#5",
       "source": "guides/silobags.mdx",
       "title": "Silobolsas",
       "heading": "Frecuencia de sincronización recomendada",
@@ -724,7 +836,7 @@
       "content": "For active integrations monitoring storage status:\n\n- **During harvest / storage season**: query every few hours filtering by updated_at_from\n- **Off-season**: daily sync is sufficient\n- Always use semaphore=3` alerts for priority notifications\n\n---"
     },
     {
-      "id": "guides/silobags.mdx#5",
+      "id": "guides/silobags.mdx#6",
       "source": "guides/silobags.mdx",
       "title": "Silobolsas",
       "heading": "Limitaciones",
@@ -735,12 +847,20 @@
       "id": "guides/sync-strategy.mdx#0",
       "source": "guides/sync-strategy.mdx",
       "title": "Estrategia de Sincronización",
-      "heading": "Resumen",
+      "heading": "Estrategia de Sincronización",
       "url": "https://docs.tp.sima.ag/guides/sync-strategy",
-      "content": "La API de Terceros de SIMA está diseñada para sincronización incremental. Cada endpoint de listado soporta filtros de auditoría (updated_at_from, deleted_at_from, active) que te permiten traer solo lo que cambió desde tu última sincronización, en lugar de descargar el dataset completo en cada ejecución.\n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "guides/sync-strategy.mdx#1",
+      "source": "guides/sync-strategy.mdx",
+      "title": "Estrategia de Sincronización",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/guides/sync-strategy#resumen",
+      "content": "La API de Terceros de SIMA está diseñada para sincronización incremental. Cada endpoint de listado soporta filtros de auditoría (updated_at_from, deleted_at_from, active) que te permiten traer solo lo que cambió desde tu última sincronización, en lugar de descargar el dataset completo en cada ejecución.\n\n---"
+    },
+    {
+      "id": "guides/sync-strategy.mdx#2",
       "source": "guides/sync-strategy.mdx",
       "title": "Estrategia de Sincronización",
       "heading": "Patrón de filtros de auditoría",
@@ -748,7 +868,7 @@
       "content": "Todos los endpoints de listado v3 (y la mayoría de v2) comparten el mismo set de parámetros de auditoría:\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| updated_at_from | datetime (ISO8601) | Registros modificados en o después de este timestamp |\n| updated_at_to | datetime (ISO8601) | Registros modificados antes de este timestamp |\n| created_at_from | datetime (ISO8601) | Registros creados en o después de este timestamp |\n| created_at_to | datetime (ISO8601) | Registros creados antes de este timestamp |\n| deleted_at_from | datetime (ISO8601) | Registros eliminados lógicamente en o después de este timestamp |\n| deleted_at_to | datetime (ISO8601) | Registros eliminados lógicamente antes de este timestamp |\n| active | bool | Filtrar por flag activo (true / false) |\n\n**Formato de datetime:** 2024-01-01T00:00:00-03:00 (ISO8601 con offset de timezone)\n\n \n\n---"
     },
     {
-      "id": "guides/sync-strategy.mdx#2",
+      "id": "guides/sync-strategy.mdx#3",
       "source": "guides/sync-strategy.mdx",
       "title": "Estrategia de Sincronización",
       "heading": "Comportamiento por defecto de soft-delete",
@@ -756,7 +876,7 @@
       "content": "Por defecto, cuando no pasás ningún parámetro deleted_at_*, la API **excluye automáticamente** los registros eliminados lógicamente. Obtenés solo filas activas (no eliminadas).\n\n``\n# Devuelve solo establecimientos no eliminados\nGET /api/v3/third_party/establishments?page=1\n`\n\nPara **incluir** registros eliminados (ej. para detectar borrados), pasá un rango con deleted_at_from:\n\n`\n# Devuelve establecimientos eliminados después del 1 de enero de 2024\nGET /api/v3/third_party/establishments?deleted_at_from=2024-01-01T00:00:00-03:00\n`\n\n---"
     },
     {
-      "id": "guides/sync-strategy.mdx#3",
+      "id": "guides/sync-strategy.mdx#4",
       "source": "guides/sync-strategy.mdx",
       "title": "Estrategia de Sincronización",
       "heading": "Flujo de sincronización recomendado",
@@ -764,7 +884,7 @@
       "content": "### Sincronización inicial (primera vez)\n\nDescargá el dataset completo de cada entidad. Paginá por todas las páginas.\n\n`python\npage = 1\nwhile True:\n response = requests.get(\n f\"{BASE_URL}/api/v3/third_party/formulateds\",\n headers=headers,\n params={\"page\": page, \"size\": 100, \"active\": \"true\"},\n )\n data = response.json()\n store_locally(data[\"items\"])\n\n if data[\"next_page\"] is None:\n break\n page += 1\n\nsave_sync_timestamp(datetime.now())\n`\n\n### Sincronización incremental (ejecuciones posteriores)\n\nUsá updated_at_from con el timestamp de tu última sincronización. Solo vuelven los registros que cambiaron.\n\n`python\nlast_sync = load_last_sync_timestamp() # ej. \"2024-06-01T00:00:00-03:00\"\n\nresponse = requests.get(\n f\"{BASE_URL}/api/v3/third_party/formulateds\",\n headers=headers,\n params={\"updated_at_from\": last_sync, \"page\": 1, \"size\": 100},\n)\n# Procesar y hacer upsert de los registros cambiados\nsave_sync_timestamp(datetime.now())\n`\n\n### Detectar eliminaciones\n\nEjecutá una consulta separada con deleted_at_from para encontrar registros eliminados lógicamente y marcarlos como inactivos en tu sistema:\n\n`python\nresponse = requests.get(\n f\"{BASE_URL}/api/v3/third_party/establishments\",\n headers=headers,\n params={\"deleted_at_from\": last_sync},\n)\nfor item in response.json()[\"items\"]:\n mark_as_deleted_locally(item[\"id\"])\n`\n\n---"
     },
     {
-      "id": "guides/sync-strategy.mdx#4",
+      "id": "guides/sync-strategy.mdx#5",
       "source": "guides/sync-strategy.mdx",
       "title": "Estrategia de Sincronización",
       "heading": "Frecuencia por entidad",
@@ -772,7 +892,7 @@
       "content": "No todas las entidades cambian al mismo ritmo. Adaptá la cadencia de sincronización:\n\n| Entidad | Frecuencia de cambio | Sync recomendado |\n|---|---|---|\n| Órdenes de Trabajo | Alta — se crean/actualizan constantemente | Cada 15–30 min o bajo demanda |\n| Establecimientos / Lotes | Media — cambian cuando el cliente modifica la estructura | Diario |\n| Campañas / Cultivos | Media — cambian al inicio/fin de campaña | Diario |\n| Aplicadores / Máquinas | Baja — se agregan con nuevos contratistas | Diario o semanal |\n| Formulados | Muy baja — catálogo global | Semanal |\n| Unidades / Tipos de labor | Rara vez cambian | Semanal o al iniciar |\n\n---"
     },
     {
-      "id": "guides/sync-strategy.mdx#5",
+      "id": "guides/sync-strategy.mdx#6",
       "source": "guides/sync-strategy.mdx",
       "title": "Estrategia de Sincronización",
       "heading": "Paginación",
@@ -780,7 +900,7 @@
       "content": "Todos los endpoints de listado están paginados. Usá los parámetros page y size:\n\n`\nGET /api/v3/third_party/work_orders?page=1&size=50\n`\n\nLa respuesta incluye:\n\n`json\n{\n \"items\": [ ... ],\n \"current_page\": 1,\n \"next_page\": 2,\n \"total_pages\": 19,\n \"total_items\": 57\n}\n`\n\nCuando next_page es null, llegaste a la última página.\n\n \n\n---"
     },
     {
-      "id": "guides/sync-strategy.mdx#6",
+      "id": "guides/sync-strategy.mdx#7",
       "source": "guides/sync-strategy.mdx",
       "title": "Estrategia de Sincronización",
       "heading": "Mapeo de IDs",
@@ -788,7 +908,7 @@
       "content": "Cada entidad en SIMA tiene un local_id (ID interno de SIMA) y un external_code o external_id opcional (ID de tu sistema). Mantené una tabla de mapeo en tu base de datos:\n\n`\ntu_tabla_productos:\n erp_id → tu ID interno de producto\n sima_local_id → local_id de SIMA para el mismo producto\n last_synced → timestamp de última sync de este registro\n`\n\nUsá external_code al crear o actualizar registros en SIMA para almacenar tu ID:\n\n`json\n{\n \"name\": \"Juan Rodríguez\",\n \"external_code\": \"ERP-APLICADOR-0042\"\n}\n`\n\n---"
     },
     {
-      "id": "guides/sync-strategy.mdx#7",
+      "id": "guides/sync-strategy.mdx#8",
       "source": "guides/sync-strategy.mdx",
       "title": "Estrategia de Sincronización",
       "heading": "Errores comunes",
@@ -799,12 +919,20 @@
       "id": "guides/warehouses.mdx#0",
       "source": "guides/warehouses.mdx",
       "title": "Depósitos",
-      "heading": "Resumen",
+      "heading": "Depósitos",
       "url": "https://docs.tp.sima.ag/guides/warehouses",
-      "content": "Warehouses are storage locations (depósitos) where agrochemical inputs are stored. They can be referenced in Work Order supply lines to track which depot a product was drawn from.\n\n \n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "guides/warehouses.mdx#1",
+      "source": "guides/warehouses.mdx",
+      "title": "Depósitos",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/guides/warehouses#resumen",
+      "content": "Warehouses are storage locations (depósitos) where agrochemical inputs are stored. They can be referenced in Work Order supply lines to track which depot a product was drawn from.\n\n \n\n---"
+    },
+    {
+      "id": "guides/warehouses.mdx#2",
       "source": "guides/warehouses.mdx",
       "title": "Depósitos",
       "heading": "Endpoints",
@@ -812,7 +940,7 @@
       "content": "### Listar depósitos (v3 — recomendado)\n\n``\nGET /api/v3/third_party/warehouses\n`\n\nFiltros v3: name, updated_at_from, deleted_at_from, page, size.\n\n### Listar depósitos (v2 — legacy)\n\n`\nGET /api/v2/third_party/warehouses\n`\n\n**Filters:**\n\n| Parameter | Type | Description |\n|---|---|---|\n| search | string | Search by name |\n| id | int | Filter by specific warehouse ID |\n| updated_from | datetime | Change detection (note: v2 uses updated_from, not updated_at_from) |\n| page / size | int | Pagination |\n\n**Response:**\n\n`json\n{\n \"items\": [\n {\n \"id\": 6342,\n \"name\": \"El Galpón\",\n \"description\": null,\n \"date_modified\": \"2022-04-08T15:35:48-03:00\"\n }\n ],\n \"current_page\": 1,\n \"next_page\": null,\n \"total_pages\": 1,\n \"total_items\": 1\n}\n`\n\n### Detalle de depósito (v2)\n\n`\nGET /api/v2/third_party/warehouses/{id}\n`\n\nDevuelve un depósito por ID.\n\n---"
     },
     {
-      "id": "guides/warehouses.mdx#2",
+      "id": "guides/warehouses.mdx#3",
       "source": "guides/warehouses.mdx",
       "title": "Depósitos",
       "heading": "Uso en Órdenes de Trabajo",
@@ -820,7 +948,7 @@
       "content": "When creating a Work Order supply line, you can optionally reference a warehouse:\n\n`json\n\"supplies\": [\n {\n \"cultivation\": { \"local_id\": 243405 },\n \"formulated\": { \"local_id\": 8844 },\n \"total_applied\": 59.999,\n \"area_applied\": 37,\n \"warehouse\": { \"local_id\": 6342 }\n }\n]\n`\n\nIf no warehouse applies, set \"warehouse\": null.\n\n---"
     },
     {
-      "id": "guides/warehouses.mdx#3",
+      "id": "guides/warehouses.mdx#4",
       "source": "guides/warehouses.mdx",
       "title": "Depósitos",
       "heading": "Frecuencia de sincronización recomendada",
@@ -831,12 +959,20 @@
       "id": "guides/work-orders.mdx#0",
       "source": "guides/work-orders.mdx",
       "title": "Integrar Órdenes de Trabajo",
-      "heading": "Resumen",
+      "heading": "Integrar Órdenes de Trabajo",
       "url": "https://docs.tp.sima.ag/guides/work-orders",
-      "content": "Las Órdenes de Trabajo (OTs) son la entidad central de SIMA. Representan operaciones de campo — aplicaciones, labores, scouting y más. Los sistemas de terceros pueden crear, leer, actualizar y eliminar OTs de forma bidireccional.\n\n \n\n \n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "guides/work-orders.mdx#1",
+      "source": "guides/work-orders.mdx",
+      "title": "Integrar Órdenes de Trabajo",
+      "heading": "Resumen",
+      "url": "https://docs.tp.sima.ag/guides/work-orders#resumen",
+      "content": "Las Órdenes de Trabajo (OTs) son la entidad central de SIMA. Representan operaciones de campo — aplicaciones, labores, scouting y más. Los sistemas de terceros pueden crear, leer, actualizar y eliminar OTs de forma bidireccional.\n\n \n\n \n\n---"
+    },
+    {
+      "id": "guides/work-orders.mdx#2",
       "source": "guides/work-orders.mdx",
       "title": "Integrar Órdenes de Trabajo",
       "heading": "Estructura de una OT",
@@ -844,7 +980,7 @@
       "content": "Cada Orden de Trabajo tiene tres secciones:\n\n| Sección | Descripción |\n|---|---|\n| header | Información general: nombre, fecha, estado, empresa, tipo de comprobante |\n| supplies | Aplicaciones de agroquímicos — formulado, área y cantidad por cultivo |\n| labours | Labores — aplicadores, contratistas, máquinas por cultivo |\n\nCada línea de supply o labour está vinculada a un **cultivo** (cultivation.local_id), que asocia la operación a una combinación específica de lote + campaña + cultivo.\n\n---"
     },
     {
-      "id": "guides/work-orders.mdx#2",
+      "id": "guides/work-orders.mdx#3",
       "source": "guides/work-orders.mdx",
       "title": "Integrar Órdenes de Trabajo",
       "heading": "Checklist de prerequisitos",
@@ -852,7 +988,7 @@
       "content": "Antes de crear una OT, confirmá que tenés IDs para:\n\n \n \n \n \n \n \n\n---"
     },
     {
-      "id": "guides/work-orders.mdx#3",
+      "id": "guides/work-orders.mdx#4",
       "source": "guides/work-orders.mdx",
       "title": "Integrar Órdenes de Trabajo",
       "heading": "Endpoints",
@@ -860,7 +996,7 @@
       "content": "### Listar Órdenes de Trabajo\n\n``\nGET /api/v3/third_party/work_orders\n`\n\n**Filtros principales:**\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| updated_at_from | datetime | Detectar cambios desde la última sincronización |\n| updated_at_to | datetime | Límite superior para detección de cambios |\n| state | string | confirmed o pending |\n| cultivation_id | int | Filtrar por cultivo |\n| formulated_id | int | Filtrar por formulado utilizado |\n| page / size | int | Paginación (tamaño por defecto: 10) |\n\n curl\ncurl -X GET \"https://api.qa.sima.ag/api/v3/third_party/work_orders?updated_at_from=2024-01-01T00:00:00-03:00&page=1\" \\\n -H \"Authorization: Bearer TU_TOKEN\" \\\n -H \"X-SIMA-SYSTEM-ID: 8\" \\\n -H \"Accept: application/json\"\n\n Python\nresponse = requests.get(\n \"https://api.qa.sima.ag/api/v3/third_party/work_orders\",\n headers={\"Authorization\": f\"Bearer {token}\", \"X-SIMA-SYSTEM-ID\": \"8\"},\n params={\"updated_at_from\": \"2024-01-01T00:00:00-03:00\", \"page\": 1},\n)\n\n**Respuesta exitosa (HTTP 200):**\n\n`json\n{\n \"items\": [\n {\n \"id\": 473229,\n \"name\": \"Aplicación Herbicida - Lote L1\",\n \"date\": \"2024-07-04T17:03:14-03:00\",\n \"state\": { \"pending\": true, \"executed\": false, \"confirmed\": false },\n \"is_read_only\": false,\n \"cultivation_id\": 243405,\n \"company_id\": 32,\n \"updated_at\": \"2024-07-04T17:03:14-03:00\",\n \"created_at\": \"2024-07-04T17:03:14-03:00\"\n }\n ],\n \"current_page\": 1,\n \"next_page\": null,\n \"total_pages\": 1,\n \"total_items\": 1\n}\n`\n\n---\n\n### Crear una Orden de Trabajo\n\n`\nPOST /integration/api/v1/workOrders\n`\n\n curl\ncurl -X POST https://api.qa.sima.ag/integration/api/v1/workOrders \\\n -H \"Authorization: Bearer TU_TOKEN\" \\\n -H \"X-SIMA-SYSTEM-ID: 8\" \\\n -H \"Content-Type: application/json\" \\\n -d '{\n \"header\": {\n \"system_id\": \"third_party\",\n \"name\": \"Aplicación Herbicida - Lote L1\",\n \"date\": \"2024-07-04T17:03:14-03:00\",\n \"voucher_date\": \"2024-07-04T00:00:00-03:00\",\n \"state\": { \"pending\": true, \"executed\": false, \"confirmed\": false },\n \"extra_fields\": {\n \"company\": { \"local_id\": 32 },\n \"voucher_type\": { \"local_id\": 7 }\n }\n },\n \"supplies\": [\n {\n \"cultivation\": { \"local_id\": 243405 },\n \"date\": \"2024-07-04T17:03:14-03:00\",\n \"area_applied\": 37,\n \"formulated\": { \"local_id\": 8844 },\n \"total_applied\": 59.999,\n \"state\": { \"pending\": true, \"executed\": false, \"confirmed\": false },\n \"extra_fields\": { \"voucher_type\": { \"local_id\": 7 } }\n }\n ],\n \"labours\": [\n {\n \"cultivation\": { \"local_id\": 243405 },\n \"date\": \"2024-07-04T00:00:00-03:00\",\n \"area_applied\": 37,\n \"contractors\": [{ \"local_id\": 3056 }],\n \"machines\": [{ \"local_id\": 4419 }],\n \"state\": { \"pending\": true, \"executed\": false, \"confirmed\": false },\n \"extra_fields\": { \"voucher_type\": { \"local_id\": 7 } }\n }\n ]\n }'\n\n**Respuesta exitosa (HTTP 200):**\n\n`json\n{\n \"header\": {\n \"local_id\": 473229,\n \"external_id\": null,\n \"system_id\": \"third_party\",\n \"name\": \"Aplicación Herbicida - Lote L1\",\n \"date\": \"2024-07-04T17:03:14-03:00\",\n \"voucher_date\": \"2024-07-04T00:00:00-03:00\",\n \"state\": { \"pending\": true, \"executed\": false, \"confirmed\": false },\n \"extra_fields\": {\n \"company\": { \"local_id\": 32 },\n \"voucher_type\": { \"local_id\": 7 }\n }\n },\n \"supplies\": [\n {\n \"local_id\": 891234,\n \"cultivation\": { \"local_id\": 243405 },\n \"formulated\": { \"local_id\": 8844 },\n \"area_applied\": 37,\n \"total_applied\": 59.999\n }\n ],\n \"labours\": [\n {\n \"local_id\": 891235,\n \"cultivation\": { \"local_id\": 243405 },\n \"area_applied\": 37,\n \"contractors\": [{ \"local_id\": 3056 }],\n \"machines\": [{ \"local_id\": 4419 }]\n }\n ]\n}\n`\n\nGuardá el local_id del header (**473229** en este ejemplo) para vincular futuras actualizaciones o eliminaciones.\n\n---\n\n### Actualizar una OT\n\n`\nPATCH /integration/api/v1/workOrders/{localId}\n`\n\nEnviá la estructura completa de la OT (igual que en la creación) con los campos modificados. SIMA reemplaza los supplies y labours existentes con lo que enviás.\n\n \n\n**Respuesta exitosa (HTTP 200):** devuelve la OT actualizada con la misma estructura que el POST.\n\n---\n\n### Eliminar una OT\n\n`\nDELETE /integration/api/v1/workOrders/{localId}\n`\n\nDevuelve HTTP"
     },
     {
-      "id": "guides/work-orders.mdx#4",
+      "id": "guides/work-orders.mdx#5",
       "source": "guides/work-orders.mdx",
       "title": "Integrar Órdenes de Trabajo",
       "heading": "Estados de una OT",
@@ -868,7 +1004,7 @@
       "content": "| Estado | Significado |\n|---|---|\n| pending: true | Creada pero aún no ejecutada en el campo |\n| executed: true | Operación de campo completada |\n| confirmed: true | Revisada y confirmada en SIMA |\n\n \n\n---"
     },
     {
-      "id": "guides/work-orders.mdx#5",
+      "id": "guides/work-orders.mdx#6",
       "source": "guides/work-orders.mdx",
       "title": "Integrar Órdenes de Trabajo",
       "heading": "Mapeo de IDs entre sistemas",
@@ -879,12 +1015,20 @@
       "id": "introduction.mdx#0",
       "source": "introduction.mdx",
       "title": "Introducción",
-      "heading": "¿Qué es SIMA?",
+      "heading": "Introducción",
       "url": "https://docs.tp.sima.ag/introduction",
-      "content": "SIMA — *Agricultura Conectada* — es una plataforma AgTech para gestionar toda la operación agrícola en un solo lugar: **planificación, ejecución y análisis en tiempo real**. Más de 10.000 usuarios la utilizan a diario en la región.\n\nLa plataforma digitaliza la operación de campo a través de ocho módulos integrados:\n\n| Módulo SIMA | Qué cubre | Relación con la API de Terceros |\n|---|---|---|\n| **GIS** | Mapas, lotes y geometrías | establishments, plots |\n| **Siembra** | Planificación y avance de siembra | master_campaigns, campaigns, planting_progress |\n| **Monitoreo** | Recorridas, adversidades, NDVI, estados fenológico e hídrico | scouting, adversity, hydric_states, phenological_states |\n| **Órdenes de trabajo** | Labores y aplicaciones de campo | work_orders + /integration/api/v1/workOrders |\n| **Clima** | Registro pluviométrico y eventos por lote | devices, device_events, climatic_factors, weather_anomaly |\n| **Analytics** | Reportes e indicadores de gestión | Consumo de datos vía endpoints de lectura |\n| **Cosecha** | Avance y rendimiento de cosecha | harvest_progress, progress_report |\n| **Post cosecha** | Silobolsas y almacenamiento en campo | silobags, silobag_scoutings |\n\nLa **API de Terceros** permite que ERPs, software agropecuario y plataformas externas lean y escriban datos en SIMA de forma segura — evitando la doble carga que genera tener la operación aislada en dos sistemas."
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "introduction.mdx#1",
+      "source": "introduction.mdx",
+      "title": "Introducción",
+      "heading": "¿Qué es SIMA?",
+      "url": "https://docs.tp.sima.ag/introduction#que-es-sima",
+      "content": "SIMA — *Agricultura Conectada* — es una plataforma AgTech para gestionar toda la operación agrícola en un solo lugar: **planificación, ejecución y análisis en tiempo real**. Más de 10.000 usuarios la utilizan a diario en la región.\n\nLa plataforma digitaliza la operación de campo a través de ocho módulos integrados:\n\n| Módulo SIMA | Qué cubre | Relación con la API de Terceros |\n|---|---|---|\n| **GIS** | Mapas, lotes y geometrías | establishments, plots |\n| **Siembra** | Planificación y avance de siembra | master_campaigns, campaigns, planting_progress |\n| **Monitoreo** | Recorridas, adversidades, NDVI, estados fenológico e hídrico | scouting, adversity, hydric_states, phenological_states |\n| **Órdenes de trabajo** | Labores y aplicaciones de campo | work_orders + /integration/api/v1/workOrders |\n| **Clima** | Registro pluviométrico y eventos por lote | devices, device_events, climatic_factors, weather_anomaly |\n| **Analytics** | Reportes e indicadores de gestión | Consumo de datos vía endpoints de lectura |\n| **Cosecha** | Avance y rendimiento de cosecha | harvest_progress, progress_report |\n| **Post cosecha** | Silobolsas y almacenamiento en campo | silobags, silobag_scoutings |\n\nLa **API de Terceros** permite que ERPs, software agropecuario y plataformas externas lean y escriban datos en SIMA de forma segura — evitando la doble carga que genera tener la operación aislada en dos sistemas."
+    },
+    {
+      "id": "introduction.mdx#2",
       "source": "introduction.mdx",
       "title": "Introducción",
       "heading": "¿Para quién es esta API?",
@@ -892,7 +1036,7 @@
       "content": "Esta API está diseñada para proveedores que integran con el ecosistema SIMA — el mismo que ya conecta productores con soluciones como Finnegans, Albor, Synagro, Acronex y otras plataformas de gestión:\n\n- **Proveedores de ERP / software agropecuario** que necesitan sincronizar Órdenes de Trabajo, maestros y avances con SIMA\n- **Apps de scouting y monitoreo** que complementan el módulo de Monitoreo Inteligente de SIMA\n- **Plataformas de analítica** que consumen datos de campañas, clima y productividad\n- **Cooperativas y agro-holdings** que centralizan el intercambio de datos entre múltiples productores\n- **Proveedores de hardware IoT** (estaciones, pluviómetros) que alimentan el módulo de Clima"
     },
     {
-      "id": "introduction.mdx#3",
+      "id": "introduction.mdx#4",
       "source": "introduction.mdx",
       "title": "Introducción",
       "heading": "Resumen técnico",
@@ -900,7 +1044,7 @@
       "content": "- **Protocolo:** REST — verbos HTTP estándar (GET, POST, PUT, DELETE)\n- **Formato:** JSON para todas las solicitudes y respuestas\n- **Autenticación:** Basada en tokens via POST /api/v2/login\n- **Versionado:** Endpoints en v1, v2 y v3 — consultá la guía de versiones para saber cuál usar"
     },
     {
-      "id": "introduction.mdx#4",
+      "id": "introduction.mdx#5",
       "source": "introduction.mdx",
       "title": "Introducción",
       "heading": "Entornos",
@@ -908,7 +1052,7 @@
       "content": "| Entorno | URL Base |\n|---|---|\n| Pruebas (QA) | https://api.qa.sima.ag |\n| Producción | https://api.sima.ag |"
     },
     {
-      "id": "introduction.mdx#5",
+      "id": "introduction.mdx#6",
       "source": "introduction.mdx",
       "title": "Introducción",
       "heading": "Antes de empezar",
@@ -919,12 +1063,20 @@
       "id": "quickstart.mdx#0",
       "source": "quickstart.mdx",
       "title": "Inicio Rápido",
-      "heading": "Lo que necesitás",
+      "heading": "Inicio Rápido",
       "url": "https://docs.tp.sima.ag/quickstart",
-      "content": "- Una cuenta API (usá la cuenta demo para empezar de inmediato)\n- Un cliente REST — Postman o curl\n\n---"
+      "content": "import { SimaAssistant } from \"/snippets/SimaAssistant.jsx\";"
     },
     {
       "id": "quickstart.mdx#1",
+      "source": "quickstart.mdx",
+      "title": "Inicio Rápido",
+      "heading": "Lo que necesitás",
+      "url": "https://docs.tp.sima.ag/quickstart#lo-que-necesitas",
+      "content": "- Una cuenta API (usá la cuenta demo para empezar de inmediato)\n- Un cliente REST — Postman o curl\n\n---"
+    },
+    {
+      "id": "quickstart.mdx#2",
       "source": "quickstart.mdx",
       "title": "Inicio Rápido",
       "heading": "Paso 1 — Autenticarte",
@@ -932,7 +1084,7 @@
       "content": "Todas las llamadas a la API requieren un access_token válido. Obtenelo llamando al endpoint de login.\n\n curl\ncurl -X POST https://api.qa.sima.ag/api/v2/login \\\n -H \"Accept: application/json\" \\\n -H \"Content-Type: application/json\" \\\n -H \"X-SIMA-SYSTEM-ID: 8\" \\\n -d '{\n \"email\": \"demo@sima.ag\",\n \"password\": \"demo_sima\"\n }'\n\n PHP\n$response = $client->post('/api/v2/login', [\n 'headers' => [\n 'Accept' => 'application/json',\n 'Content-Type' => 'application/json',\n 'X-SIMA-SYSTEM-ID' => '8',\n ],\n 'json' => [\n 'email' => 'demo@sima.ag',\n 'password' => 'demo_sima',\n ],\n]);\n$token = json_decode($response->getBody())->access_token;\n\n Python\nimport requests\n\nresponse = requests.post(\n \"https://api.qa.sima.ag/api/v2/login\",\n headers={\n \"Accept\": \"application/json\",\n \"Content-Type\": \"application/json\",\n \"X-SIMA-SYSTEM-ID\": \"8\",\n },\n json={\"email\": \"demo@sima.ag\", \"password\": \"demo_sima\"},\n)\ntoken = response.json()[\"access_token\"]\n\n**Respuesta exitosa (HTTP 200):**\n\n``json\n{\n \"access_token\": \"aff6ac1d-b48c-4ea4-aba2-a2753bf2abf5\",\n \"refresh_token\": \"20626ffd-1288-4106-ac10-dc5a5f3487bc\",\n \"expiration_datetime\": \"2024-06-16T17:38:58-03:00\",\n \"society\": {\n \"id\": 34,\n \"legalName\": \"Sociedad Demo\"\n }\n}\n`\n\n \n\n---"
     },
     {
-      "id": "quickstart.mdx#2",
+      "id": "quickstart.mdx#3",
       "source": "quickstart.mdx",
       "title": "Inicio Rápido",
       "heading": "Paso 2 — Tu primera solicitud",
@@ -940,7 +1092,7 @@
       "content": "Con el token, consultá la lista de Establecimientos para verificar que todo funciona:\n\n curl\ncurl -X GET https://api.qa.sima.ag/api/v3/establishments \\\n -H \"Accept: application/json\" \\\n -H \"Authorization: Bearer TU_ACCESS_TOKEN\" \\\n -H \"X-SIMA-SYSTEM-ID: 8\"\n\n PHP\n$response = $client->get('/api/v3/establishments', [\n 'headers' => [\n 'Accept' => 'application/json',\n 'Authorization' => 'Bearer ' . $token,\n 'X-SIMA-SYSTEM-ID' => '8',\n ],\n]);\n\n Python\nresponse = requests.get(\n \"https://api.qa.sima.ag/api/v3/establishments\",\n headers={\n \"Accept\": \"application/json\",\n \"Authorization\": f\"Bearer {token}\",\n \"X-SIMA-SYSTEM-ID\": \"8\",\n },\n)\n\nSi recibís una lista de establecimientos (aunque sea un array vacío []), tu integración está funcionando correctamente.\n\n**Respuesta exitosa (HTTP 200):**\n\n`json\n{\n \"items\": [\n {\n \"id\": 1234,\n \"name\": \"Establecimiento Demo\",\n \"external_code\": null,\n \"active\": true,\n \"created_at\": \"2024-01-15T10:30:00-03:00\",\n \"updated_at\": \"2024-06-01T08:00:00-03:00\",\n \"deleted_at\": null\n }\n ],\n \"current_page\": 1,\n \"next_page\": null,\n \"total_pages\": 1,\n \"total_items\": 1\n}\n`\n\n---"
     },
     {
-      "id": "quickstart.mdx#3",
+      "id": "quickstart.mdx#4",
       "source": "quickstart.mdx",
       "title": "Inicio Rápido",
       "heading": "Paso 3 — Explorá la referencia de API",
@@ -948,7 +1100,7 @@
       "content": "La referencia interactiva incluye todos los endpoints con un playground en vivo. Ya no necesitás Postman para explorar la API — aunque la colección de Postman sigue disponible como alternativa.\n\n---"
     },
     {
-      "id": "quickstart.mdx#4",
+      "id": "quickstart.mdx#5",
       "source": "quickstart.mdx",
       "title": "Inicio Rápido",
       "heading": "Cuenta demo",
@@ -956,7 +1108,7 @@
       "content": "Usá estas credenciales para probar contra el entorno de QA sin costo:\n\n| | Valor |\n|---|---|\n| **Email API** | demo@sima.ag |\n| **Contraseña API** | demo_sima |\n| **URL Web** | https://env.qa.sima.ag |\n| **Usuario web (ES)** | demo-web@sima.ag |\n| **Usuario web (PT)** | demo-web-pt@sima.ag` |\n\n \n\n---"
     },
     {
-      "id": "quickstart.mdx#5",
+      "id": "quickstart.mdx#6",
       "source": "quickstart.mdx",
       "title": "Inicio Rápido",
       "heading": "Próximos pasos",
@@ -1098,6 +1250,22 @@
       "heading": "GET /api/v2/third_party/campaigns",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
       "content": "Endpoint: GET /api/v2/third_party/campaigns\nResumen: List\nTags: Version 1 > Campaigns"
+    },
+    {
+      "id": "openapi:post:/api/v2/third_party/campaigns/update_objective_yield",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "POST /api/v2/third_party/campaigns/update_objective_yield",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: POST /api/v2/third_party/campaigns/update_objective_yield\nResumen: Update Objective yield\nTags: Version 1 > Campaigns"
+    },
+    {
+      "id": "openapi:get:/api/v2/third_party/campaigns/update_objective_yield/jobs",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v2/third_party/campaigns/update_objective_yield/jobs",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v2/third_party/campaigns/update_objective_yield/jobs\nResumen: Update Objective yield Status\nTags: Version 1 > Campaigns"
     },
     {
       "id": "openapi:get:/api/v2/third_party/companies/1",
@@ -1380,12 +1548,12 @@
       "content": "Endpoint: DELETE /integration/api/v1/workOrdersGroup\nResumen: Delete Group\nTags: Version 1 > WorkOrder\nDescripción: Parámetros por get aceptados page={{integer}} por default se devuelve la paǵina N°1. orderTypes={{integer,integer}} lista de ids de tipo de ordenes dateFrom={{'YYYY-mm-dd'}} string con fecha desde según formato. dateTo={{'YYYY-mm-dd'}} string con fecha hasta según formato."
     },
     {
-      "id": "openapi:patch:/integration/api/v1/workOrders/464171",
+      "id": "openapi:patch:/integration/api/v1/workOrders/991829",
       "source": "openapi.yaml",
       "title": "API Reference",
-      "heading": "PATCH /integration/api/v1/workOrders/464171",
+      "heading": "PATCH /integration/api/v1/workOrders/991829",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: PATCH /integration/api/v1/workOrders/464171\nResumen: Edit\nTags: Version 1 > WorkOrder"
+      "content": "Endpoint: PATCH /integration/api/v1/workOrders/991829\nResumen: Edit\nTags: Version 1 > WorkOrder"
     },
     {
       "id": "openapi:get:/api/v2/third_party/work_order_labour_type_attributes/1",
@@ -1452,6 +1620,14 @@
       "content": "Endpoint: GET /api/v2/third_party/plots\nResumen: List\nTags: Version 2 > Plots"
     },
     {
+      "id": "openapi:get:/api/v3/third_party/activity_statuses",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/activity_statuses",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/activity_statuses\nResumen: List Activity Statuses\nTags: Version 3 > Activity Statuses\nDescripción: Obtiene el listado de estados de actividades disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado de actividad - `name`: Búsqueda parcial por nombre del estado - `activity_name`: Búsqueda parcial por nombre de actividad **Ordenamiento:** - `order_column`: Columna para ordenar (id, name, activity_name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado de actividad - `name`: Nombre del estado traducido (con fallback al valor de BD) - `activity_name`: Nombre de la actividad traducido (con fallback al valor de BD)"
+    },
+    {
       "id": "openapi:get:/api/v3/third_party/applicators",
       "source": "openapi.yaml",
       "title": "API Reference",
@@ -1476,12 +1652,60 @@
       "content": "Endpoint: GET /api/v3/third_party/application_order_labour_types\nResumen: List\nTags: Version 3 > Application Order Labour Types"
     },
     {
+      "id": "openapi:post:/api/v3/third_party/application_order_labour_types",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "POST /api/v3/third_party/application_order_labour_types",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: POST /api/v3/third_party/application_order_labour_types\nResumen: Create\nTags: Version 3 > Application Order Labour Types"
+    },
+    {
+      "id": "openapi:patch:/api/v3/third_party/application_order_labour_types/{labour_type_id}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "PATCH /api/v3/third_party/application_order_labour_types/{labour_type_id}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: PATCH /api/v3/third_party/application_order_labour_types/{labour_type_id}\nResumen: Update\nTags: Version 3 > Application Order Labour Types"
+    },
+    {
+      "id": "openapi:delete:/api/v3/third_party/application_order_labour_types/{labour_type_id}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "DELETE /api/v3/third_party/application_order_labour_types/{labour_type_id}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: DELETE /api/v3/third_party/application_order_labour_types/{labour_type_id}\nResumen: Delete\nTags: Version 3 > Application Order Labour Types"
+    },
+    {
       "id": "openapi:get:/api/v3/third_party/campaigns",
       "source": "openapi.yaml",
       "title": "API Reference",
       "heading": "GET /api/v3/third_party/campaigns",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
       "content": "Endpoint: GET /api/v3/third_party/campaigns\nResumen: List\nTags: Version 3 > Campaign"
+    },
+    {
+      "id": "openapi:post:/app_dev.php/api/v3/third_party/campaigns",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "POST /app_dev.php/api/v3/third_party/campaigns",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: POST /app_dev.php/api/v3/third_party/campaigns\nResumen: Create\nTags: Version 3 > Campaign"
+    },
+    {
+      "id": "openapi:patch:/api/v3/third_party/campaigns/{new_campaign}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "PATCH /api/v3/third_party/campaigns/{new_campaign}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: PATCH /api/v3/third_party/campaigns/{new_campaign}\nResumen: Edit\nTags: Version 3 > Campaign"
+    },
+    {
+      "id": "openapi:delete:/api/v3/third_party/campaigns/{new_campaign}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "DELETE /api/v3/third_party/campaigns/{new_campaign}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: DELETE /api/v3/third_party/campaigns/{new_campaign}\nResumen: Delete\nTags: Version 3 > Campaign"
     },
     {
       "id": "openapi:get:/api/v3/third_party/cultivations",
@@ -1524,12 +1748,44 @@
       "content": "Endpoint: PATCH /api/v3/third_party/establishments/{new_establishment}\nResumen: Edit\nTags: Version 3 > Establishments"
     },
     {
+      "id": "openapi:get:/api/v3/third_party/external_plots_associations",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/external_plots_associations",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/external_plots_associations\nResumen: List\nTags: Version 3 > External Plot Association\nDescripción: Retorna asociaciones entre lotes SIMA y códigos externos de sistemas de integración. Parámetros: id, plot_id, system_id, external_code, external_reference, page, size, created_at_from, created_at_to, updated_at_from, updated_at_to, deleted_at_from, deleted_at_to, active. Requiere permiso LIST sobre Plot."
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/external_systems",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/external_systems",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/external_systems\nResumen: List\nTags: Version 3 > External Systems\nDescripción: Retorna la lista de sistemas externos disponibles para integración Third Party. Parámetros soportados: page (página actual, default 1), size (ítems por página, default 10). Requiere permiso LIST sobre System."
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/fertilization_control",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/fertilization_control",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/fertilization_control\nResumen: List\nTags: Version 3 > Fertilization Control"
+    },
+    {
       "id": "openapi:get:/api/v3/third_party/formulateds",
       "source": "openapi.yaml",
       "title": "API Reference",
       "heading": "GET /api/v3/third_party/formulateds",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
       "content": "Endpoint: GET /api/v3/third_party/formulateds\nResumen: List\nTags: Version 3 > Formulated"
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/hydric_states",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/hydric_states",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/hydric_states\nResumen: List Hydric States\nTags: Version 3 > Hydric States\nDescripción: Obtiene el listado de estados hídricos disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado hídrico - `name`: Búsqueda parcial por nombre **Ordenamiento:** - `order_column`: Columna para ordenar (id, name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado hídrico - `name`: Nombre traducido (con fallback al valor de BD)"
     },
     {
       "id": "openapi:get:/api/v3/third_party/climatic_factors",
@@ -1673,7 +1929,79 @@
       "title": "API Reference",
       "heading": "GET /api/v3/third_party/master_campaigns",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/master_campaigns\nResumen: List\nTags: Version 3 > Master Campaigns"
+      "content": "Endpoint: GET /api/v3/third_party/master_campaigns\nResumen: List\nTags: Version 3 > Master Campaigns\nDescripción: Lista campañas maestras de la sociedad del usuario autenticado (Third Party V3). **Query:** `page`, `size` (paginación); `id`, `name`, `cultivation_id`, `planting_time_id`, `cycle_id`, `date_from`, `date_to` (filtros de entidad); `created_at_from/to`, `updated_at_from/to`, `deleted_at_from/to`, `active` (auditoría Third Party)."
+    },
+    {
+      "id": "openapi:post:/api/v3/third_party/master_campaigns",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "POST /api/v3/third_party/master_campaigns",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: POST /api/v3/third_party/master_campaigns\nResumen: Create\nTags: Version 3 > Master Campaigns\nDescripción: Crea una campaña maestra para la sociedad del usuario. Requiere permiso CREATE sobre MasterCampaign. **Body requerido:** `name`, `cultivation_id`, `planting_time_id`, `cycle_id`."
+    },
+    {
+      "id": "openapi:patch:/api/v3/third_party/master_campaigns/{master_campaign_id}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "PATCH /api/v3/third_party/master_campaigns/{master_campaign_id}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: PATCH /api/v3/third_party/master_campaigns/{master_campaign_id}\nResumen: Edit\nTags: Version 3 > Master Campaigns\nDescripción: Actualiza una campaña maestra por id. Requiere permiso EDIT. **Body opcional:** `name`."
+    },
+    {
+      "id": "openapi:delete:/api/v3/third_party/master_campaigns/{master_campaign_id}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "DELETE /api/v3/third_party/master_campaigns/{master_campaign_id}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: DELETE /api/v3/third_party/master_campaigns/{master_campaign_id}\nResumen: Delete\nTags: Version 3 > Master Campaigns\nDescripción: Elimina (soft delete) una campaña maestra por id. Requiere permiso DELETE. Solo si no tiene campañas asociadas."
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/master_campaign_cycles/{cycle_id}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/master_campaign_cycles/{cycle_id}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/master_campaign_cycles/{cycle_id}\nResumen: Detail\nTags: Version 3 > Master Campaign Cycles\nDescripción: Detalle de un ciclo por id, si pertenece al país o la sociedad del usuario autenticado."
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/master_campaign_cycles",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/master_campaign_cycles",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/master_campaign_cycles\nResumen: List\nTags: Version 3 > Master Campaign Cycles\nDescripción: Lista ciclos de campaña maestra visibles para el país o la sociedad del usuario. **Query:** `page`, `size` (paginación); `id`, `name` (filtros de entidad); `updated_at_from`, `updated_at_to`, `active` (filtros de auditoría Third Party). No aplica `created_at_*` ni `deleted_at_*` en este recurso."
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/phenological_states",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/phenological_states",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/phenological_states\nResumen: List Phenological States\nTags: Version 3 > Phenological States\nDescripción: Obtiene el listado de estados fenológicos disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado fenológico - `name`: Búsqueda parcial por nombre - `cultivation_id`: Filtrar por cultivo específico **Ordenamiento:** - `order_column`: Columna para ordenar (id, name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado fenológico - `name`: Nombre traducido (con fallback al valor de BD) - `cultivation_id`: ID del cultivo asociado"
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/planting_control",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/planting_control",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/planting_control\nResumen: List\nTags: Version 3 > Planting Control"
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/planting_times",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/planting_times",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/planting_times\nResumen: List Planting times\nTags: Version 3 > Planting Times\nDescripción: Obtiene el listado de estados de actividades disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado de actividad - `name`: Búsqueda parcial por nombre del estado - `activity_name`: Búsqueda parcial por nombre de actividad **Ordenamiento:** - `order_column`: Columna para ordenar (id, name, activity_name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado de actividad - `name`: Nombre del estado traducido (con fallback al valor de BD) - `activity_name`: Nombre de la actividad traducido (con fallback al valor de BD)"
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/plant_stand_control",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/plant_stand_control",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/plant_stand_control\nResumen: List\nTags: Version 3 > Plant Stand Control"
     },
     {
       "id": "openapi:post:/api/v3/third_party/plots",
@@ -1698,6 +2026,14 @@
       "heading": "PATCH /api/v3/third_party/plots/{new_plot}",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
       "content": "Endpoint: PATCH /api/v3/third_party/plots/{new_plot}\nResumen: Edit\nTags: Version 3 > Plots"
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/plot_states",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/plot_states",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/plot_states\nResumen: List Plot States\nTags: Version 3 > Plot States\nDescripción: Obtiene el listado de estados de lote disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado de lote - `name`: Búsqueda parcial por nombre **Ordenamiento:** - `order_column`: Columna para ordenar (id, name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado de lote - `name`: Nombre traducido (con fallback al valor de BD)"
     },
     {
       "id": "openapi:get:/api/v3/third_party/progress_report",
@@ -1729,7 +2065,7 @@
       "title": "API Reference",
       "heading": "GET /api/v3/third_party/silobag_scoutings",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/silobag_scoutings\nResumen: Get scouting by ID\nTags: Version 3 > SIlo Bag > Silobag Scoutings\nDescripción: Get a specific scouting by its ID."
+      "content": "Endpoint: GET /api/v3/third_party/silobag_scoutings\nResumen: Filter by semaphore status\nTags: Version 3 > SIlo Bag > Silobag Scoutings & Extractions\nDescripción: Get scoutings with critical status (red semaphore) in both silo and cereal."
     },
     {
       "id": "openapi:get:/api/v3/third_party/silobag_campaigns",
@@ -1737,7 +2073,7 @@
       "title": "API Reference",
       "heading": "GET /api/v3/third_party/silobag_campaigns",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/silobag_campaigns\nResumen: Combination: Silobag + Campaign\nTags: Version 3 > SIlo Bag > Silobag Campaigns\nDescripción: Get the specific record of a silobag in a given campaign."
+      "content": "Endpoint: GET /api/v3/third_party/silobag_campaigns\nResumen: List\nTags: Version 3 > SIlo Bag > Silobag Campaigns\nDescripción: Get the complete list of silobag campaigns with pagination."
     },
     {
       "id": "openapi:get:/api/v3/third_party/silobags",
@@ -1778,6 +2114,22 @@
       "heading": "GET /api/v3/third_party/scouting_measures",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
       "content": "Endpoint: GET /api/v3/third_party/scouting_measures\nResumen: List\nTags: Version 3 > Scoutings > Measure"
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/tags",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/tags",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/tags\nResumen: List Tags\nTags: Version 3 > Tags\nDescripción: Obtiene el listado de estados de actividades disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado de actividad - `name`: Búsqueda parcial por nombre del estado - `activity_name`: Búsqueda parcial por nombre de actividad **Ordenamiento:** - `order_column`: Columna para ordenar (id, name, activity_name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado de actividad - `name`: Nombre del estado traducido (con fallback al valor de BD) - `activity_name`: Nombre de la actividad traducido (con fallback al valor de BD)"
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/tag_associations",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/tag_associations",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/tag_associations\nResumen: List Tags Associations\nTags: Version 3 > Tags\nDescripción: Obtiene el listado de estados de actividades disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado de actividad - `name`: Búsqueda parcial por nombre del estado - `activity_name`: Búsqueda parcial por nombre de actividad **Ordenamiento:** - `order_column`: Columna para ordenar (id, name, activity_name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado de actividad - `name`: Nombre del estado traducido (con fallback al valor de BD) - `activity_name`: Nombre de la actividad traducido (con fallback al valor de BD)"
     },
     {
       "id": "openapi:get:/api/v3/third_party/units",
@@ -1836,84 +2188,20 @@
       "content": "Endpoint: GET /api/v3/third_party/work_orders\nResumen: List\nTags: Version 3 > Work Orders"
     },
     {
-      "id": "openapi:get:/api/v3/third_party/planting_control",
+      "id": "openapi:get:/api/v3/third_party/work_order_labour_type_categories",
       "source": "openapi.yaml",
       "title": "API Reference",
-      "heading": "GET /api/v3/third_party/planting_control",
+      "heading": "GET /api/v3/third_party/work_order_labour_type_categories",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/planting_control\nResumen: List\nTags: Version 3 > Planting Control"
+      "content": "Endpoint: GET /api/v3/third_party/work_order_labour_type_categories\nResumen: List\nTags: Version 3 > Work Order Labour Type Categories"
     },
     {
-      "id": "openapi:get:/api/v3/third_party/fertilization_control",
+      "id": "openapi:get:/api/v3/third_party/work_order_labour_type_categories/7",
       "source": "openapi.yaml",
       "title": "API Reference",
-      "heading": "GET /api/v3/third_party/fertilization_control",
+      "heading": "GET /api/v3/third_party/work_order_labour_type_categories/7",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/fertilization_control\nResumen: List\nTags: Version 3 > Fertilization Control"
-    },
-    {
-      "id": "openapi:get:/api/v3/third_party/plant_stand_control",
-      "source": "openapi.yaml",
-      "title": "API Reference",
-      "heading": "GET /api/v3/third_party/plant_stand_control",
-      "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/plant_stand_control\nResumen: List\nTags: Version 3 > Plant Stand Control"
-    },
-    {
-      "id": "openapi:get:/api/v3/third_party/hydric_states",
-      "source": "openapi.yaml",
-      "title": "API Reference",
-      "heading": "GET /api/v3/third_party/hydric_states",
-      "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/hydric_states\nResumen: List Hydric States\nTags: Version 3 > Hydric States\nDescripción: Obtiene el listado de estados hídricos disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado hídrico - `name`: Búsqueda parcial por nombre **Ordenamiento:** - `order_column`: Columna para ordenar (id, name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado hídrico - `name`: Nombre traducido (con fallback al valor de BD)"
-    },
-    {
-      "id": "openapi:get:/api/v3/third_party/plot_states",
-      "source": "openapi.yaml",
-      "title": "API Reference",
-      "heading": "GET /api/v3/third_party/plot_states",
-      "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/plot_states\nResumen: List Plot States\nTags: Version 3 > Plot States\nDescripción: Obtiene el listado de estados de lote disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado de lote - `name`: Búsqueda parcial por nombre **Ordenamiento:** - `order_column`: Columna para ordenar (id, name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado de lote - `name`: Nombre traducido (con fallback al valor de BD)"
-    },
-    {
-      "id": "openapi:get:/api/v3/third_party/phenological_states",
-      "source": "openapi.yaml",
-      "title": "API Reference",
-      "heading": "GET /api/v3/third_party/phenological_states",
-      "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/phenological_states\nResumen: List Phenological States\nTags: Version 3 > Phenological States\nDescripción: Obtiene el listado de estados fenológicos disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado fenológico - `name`: Búsqueda parcial por nombre - `cultivation_id`: Filtrar por cultivo específico **Ordenamiento:** - `order_column`: Columna para ordenar (id, name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado fenológico - `name`: Nombre traducido (con fallback al valor de BD) - `cultivation_id`: ID del cultivo asociado"
-    },
-    {
-      "id": "openapi:get:/api/v3/third_party/activity_statuses",
-      "source": "openapi.yaml",
-      "title": "API Reference",
-      "heading": "GET /api/v3/third_party/activity_statuses",
-      "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/activity_statuses\nResumen: List Activity Statuses\nTags: Version 3 > Activity Statuses\nDescripción: Obtiene el listado de estados de actividades disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado de actividad - `name`: Búsqueda parcial por nombre del estado - `activity_name`: Búsqueda parcial por nombre de actividad **Ordenamiento:** - `order_column`: Columna para ordenar (id, name, activity_name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado de actividad - `name`: Nombre del estado traducido (con fallback al valor de BD) - `activity_name`: Nombre de la actividad traducido (con fallback al valor de BD)"
-    },
-    {
-      "id": "openapi:get:/api/v3/third_party/planting_times",
-      "source": "openapi.yaml",
-      "title": "API Reference",
-      "heading": "GET /api/v3/third_party/planting_times",
-      "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/planting_times\nResumen: List Planting times\nTags: Version 3 > Planting Times\nDescripción: Obtiene el listado de estados de actividades disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado de actividad - `name`: Búsqueda parcial por nombre del estado - `activity_name`: Búsqueda parcial por nombre de actividad **Ordenamiento:** - `order_column`: Columna para ordenar (id, name, activity_name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado de actividad - `name`: Nombre del estado traducido (con fallback al valor de BD) - `activity_name`: Nombre de la actividad traducido (con fallback al valor de BD)"
-    },
-    {
-      "id": "openapi:get:/api/v3/third_party/tags",
-      "source": "openapi.yaml",
-      "title": "API Reference",
-      "heading": "GET /api/v3/third_party/tags",
-      "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/tags\nResumen: List Tags\nTags: Version 3 > Tags\nDescripción: Obtiene el listado de estados de actividades disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado de actividad - `name`: Búsqueda parcial por nombre del estado - `activity_name`: Búsqueda parcial por nombre de actividad **Ordenamiento:** - `order_column`: Columna para ordenar (id, name, activity_name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado de actividad - `name`: Nombre del estado traducido (con fallback al valor de BD) - `activity_name`: Nombre de la actividad traducido (con fallback al valor de BD)"
-    },
-    {
-      "id": "openapi:get:/api/v3/third_party/tag_associations",
-      "source": "openapi.yaml",
-      "title": "API Reference",
-      "heading": "GET /api/v3/third_party/tag_associations",
-      "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/tag_associations\nResumen: List Tags Associations\nTags: Version 3 > Tags\nDescripción: Obtiene el listado de estados de actividades disponibles. **Parámetros de paginación:** - `page`: Número de página (default: 1) - `size`: Elementos por página (default: 10) **Filtros disponibles:** - `id`: ID específico del estado de actividad - `name`: Búsqueda parcial por nombre del estado - `activity_name`: Búsqueda parcial por nombre de actividad **Ordenamiento:** - `order_column`: Columna para ordenar (id, name, activity_name) - `order_dir`: Dirección (asc, desc) **Respuesta:** Retorna un listado paginado con: - `id`: ID del estado de actividad - `name`: Nombre del estado traducido (con fallback al valor de BD) - `activity_name`: Nombre de la actividad traducido (con fallback al valor de BD)"
+      "content": "Endpoint: GET /api/v3/third_party/work_order_labour_type_categories/7\nResumen: Detail\nTags: Version 3 > Work Order Labour Type Categories"
     }
   ]
 }

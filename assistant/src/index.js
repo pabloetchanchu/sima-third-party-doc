@@ -143,63 +143,71 @@ export default {
       return jsonResponse({ status: 'ok', chunks: knowledgeBase.chunkCount }, 200, origin);
     }
 
-    if (url.pathname !== '/chat' || request.method !== 'POST') {
-      return jsonResponse({ error: 'Not found' }, 404, origin);
+    if (url.pathname === '/chat' && request.method === 'POST') {
+      return handleChat(request, env, origin);
     }
 
-    if (!isAllowedOrigin(origin)) {
-      return jsonResponse({ error: 'Origin not allowed' }, 403, origin);
+    if (env.ASSETS) {
+      return env.ASSETS.fetch(request);
     }
 
-    if (!validateSecret(env, request)) {
-      return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-    }
-
-    if (!env.GEMINI_API_KEY) {
-      return jsonResponse({ error: 'Assistant not configured' }, 503, origin);
-    }
-
-    let body;
-    try {
-      body = await request.json();
-    } catch (e) {
-      return jsonResponse({ error: 'Invalid JSON body' }, 400, origin);
-    }
-
-    const message = (body.message || '').trim();
-    if (!message || message.length > 2000) {
-      return jsonResponse({ error: 'Message required (max 2000 chars)' }, 400, origin);
-    }
-
-    const history = Array.isArray(body.history) ? body.history.slice(-6) : [];
-    const chunks = retrieveRelevantChunks(knowledgeBase, message, 6);
-    const context = buildContextPrompt(chunks);
-
-    const messages = [
-      { role: 'system', content: SYSTEM_PROMPT },
-      {
-        role: 'user',
-        content: 'Contexto de documentación:\n\n' + context,
-      },
-    ];
-
-    history.forEach(function (turn) {
-      if (turn.role === 'user' || turn.role === 'assistant') {
-        messages.push({ role: turn.role, content: String(turn.content).slice(0, 4000) });
-      }
-    });
-
-    messages.push({ role: 'user', content: message });
-
-    try {
-      const answer = await callGemini(env, messages);
-      const sources = chunks.map(function (chunk) {
-        return { title: chunk.title + ' — ' + chunk.heading, url: chunk.url };
-      });
-
-      return jsonResponse({ answer: answer, sources: sources }, 200, origin);
-    } catch (e) {
-      return jsonResponse({ error: 'Assistant error', detail: e.message }, 500, origin);
-    }
+    return jsonResponse({ error: 'Not found' }, 404, origin);
   },
 };
+
+async function handleChat(request, env, origin) {
+  if (!isAllowedOrigin(origin)) {
+    return jsonResponse({ error: 'Origin not allowed' }, 403, origin);
+  }
+
+  if (!validateSecret(env, request)) {
+    return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+  }
+
+  if (!env.GEMINI_API_KEY) {
+    return jsonResponse({ error: 'Assistant not configured' }, 503, origin);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch (e) {
+    return jsonResponse({ error: 'Invalid JSON body' }, 400, origin);
+  }
+
+  const message = (body.message || '').trim();
+  if (!message || message.length > 2000) {
+    return jsonResponse({ error: 'Message required (max 2000 chars)' }, 400, origin);
+  }
+
+  const history = Array.isArray(body.history) ? body.history.slice(-6) : [];
+  const chunks = retrieveRelevantChunks(knowledgeBase, message, 6);
+  const context = buildContextPrompt(chunks);
+
+  const messages = [
+    { role: 'system', content: SYSTEM_PROMPT },
+    {
+      role: 'user',
+      content: 'Contexto de documentación:\n\n' + context,
+    },
+  ];
+
+  history.forEach(function (turn) {
+    if (turn.role === 'user' || turn.role === 'assistant') {
+      messages.push({ role: turn.role, content: String(turn.content).slice(0, 4000) });
+    }
+  });
+
+  messages.push({ role: 'user', content: message });
+
+  try {
+    const answer = await callGemini(env, messages);
+    const sources = chunks.map(function (chunk) {
+      return { title: chunk.title + ' — ' + chunk.heading, url: chunk.url };
+    });
+
+    return jsonResponse({ answer: answer, sources: sources }, 200, origin);
+  } catch (e) {
+    return jsonResponse({ error: 'Assistant error', detail: e.message }, 500, origin);
+  }
+}

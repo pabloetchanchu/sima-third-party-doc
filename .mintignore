@@ -1,0 +1,4 @@
+assistant/node_modules/
+assistant/.wrangler/
+assistant/.dev.vars
+.github/

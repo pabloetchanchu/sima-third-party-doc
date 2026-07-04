@@ -2,6 +2,10 @@ name = "sima-docs-assistant"
 main = "src/index.js"
 compatibility_date = "2024-11-01"
 
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
 # Variables públicas (no sensibles)
 [vars]
 DOCS_BASE_URL = "https://docs.tp.sima.ag"
