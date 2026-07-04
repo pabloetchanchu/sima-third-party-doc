@@ -12,11 +12,13 @@
     apiKey: 'f8f1b311a321edd0a18e690ace8cb2928aa3f3d85d65dd0b125062a05defc77c',
     title: 'Asistente SIMA',
     subtitle: 'Preguntá sobre la API de Terceros',
-    placeholder: 'Ej: ¿Cómo me autentico?',
+    placeholder: 'Preguntá sobre auth, endpoints, OTs, lotes o sincronización…',
     exampleQueries: [
-      '¿Cómo me autentico en la API?',
-      '¿Qué versión usar para work orders?',
-      '¿Cuáles son los límites de rate limiting?',
+      '¿Cómo me autentico y renuevo el token?',
+      '¿Cómo creo una orden de trabajo desde mi ERP?',
+      '¿Cuál es la diferencia entre campaña y cultivo?',
+      '¿Cómo hago sync incremental con updated_at?',
+      '¿Qué headers son obligatorios en cada request?',
     ],
     supportEmail: 'soporte@sima.ag',
   };
@@ -28,7 +30,7 @@
 
     var script = document.createElement('script');
     script.id = 'sima-assistant-external';
-    script.src = 'https://sima-docs-assistant.simaag.workers.dev/widget.js?v=3';
+    script.src = 'https://sima-docs-assistant.simaag.workers.dev/widget.js?v=4';
     script.async = true;
     document.head.appendChild(script);
   }
