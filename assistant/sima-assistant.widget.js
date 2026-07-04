@@ -1,19 +1,24 @@
 (function () {
   'use strict';
 
-  var CONFIG = window.SIMA_ASSISTANT_CONFIG || {
-  apiUrl: 'https://sima-docs-assistant.simaag.workers.dev/chat',
-  apiKey: 'f8f1b311a321edd0a18e690ace8cb2928aa3f3d85d65dd0b125062a05defc77c',
-  title: 'Asistente SIMA',
-  subtitle: 'Preguntá sobre la API de Terceros',
-  placeholder: 'Ej: ¿Cómo me autentico?',
-  exampleQueries: [
-    '¿Cómo me autentico en la API?',
-    '¿Qué versión usar para work orders?',
-    '¿Cuáles son los límites de rate limiting?',
-  ],
-  supportEmail: 'soporte@sima.ag',
-};
+  var DEFAULT_CONFIG = {
+    apiUrl: 'https://sima-docs-assistant.simaag.workers.dev/chat',
+    apiKey: 'f8f1b311a321edd0a18e690ace8cb2928aa3f3d85d65dd0b125062a05defc77c',
+    title: 'Asistente SIMA',
+    subtitle: 'Preguntá sobre la API de Terceros',
+    placeholder: 'Ej: ¿Cómo me autentico?',
+    exampleQueries: [
+      '¿Cómo me autentico en la API?',
+      '¿Qué versión usar para work orders?',
+      '¿Cuáles son los límites de rate limiting?',
+    ],
+    supportEmail: 'soporte@sima.ag',
+  };
+
+  var CONFIG = Object.assign({}, DEFAULT_CONFIG, window.SIMA_ASSISTANT_CONFIG || {});
+  if (!CONFIG.exampleQueries || !CONFIG.exampleQueries.length) {
+    CONFIG.exampleQueries = DEFAULT_CONFIG.exampleQueries;
+  }
 
   var COLORS = {
     primary: '#1a6b3c',
@@ -39,7 +44,8 @@
     var style = document.createElement('style');
     style.id = 'sima-assistant-styles';
     style.textContent = [
-      '#sima-assistant-root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; line-height: 1.5; z-index: 99999; }',
+      '#sima-assistant-root { position: fixed; bottom: 0; right: 0; z-index: 2147483000; pointer-events: none; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; line-height: 1.5; }',
+      '#sima-assistant-trigger, #sima-assistant-panel { pointer-events: auto; }',
       '#sima-assistant-trigger { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; border-radius: 50%; border: none; background: ' + COLORS.primary + '; color: #fff; cursor: pointer; box-shadow: 0 4px 20px rgba(26,107,60,.35); display: flex; align-items: center; justify-content: center; transition: transform .2s, background .2s; }',
       '#sima-assistant-trigger:hover { background: ' + COLORS.primaryLight + '; transform: scale(1.05); }',
       '#sima-assistant-trigger svg { width: 26px; height: 26px; }',
@@ -239,7 +245,6 @@
 
     var examplesEl = createElement('div');
     examplesEl.id = 'sima-assistant-examples';
-    CONFIG.exampleQueries = CONFIG.exampleQueries || [];
     CONFIG.exampleQueries.forEach(function (query) {
       var btn = createElement('button', 'sima-example-btn', query);
       btn.addEventListener('click', function () {
