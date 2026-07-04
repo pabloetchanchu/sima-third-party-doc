@@ -239,6 +239,7 @@
 
     var examplesEl = createElement('div');
     examplesEl.id = 'sima-assistant-examples';
+    CONFIG.exampleQueries = CONFIG.exampleQueries || [];
     CONFIG.exampleQueries.forEach(function (query) {
       var btn = createElement('button', 'sima-example-btn', query);
       btn.addEventListener('click', function () {

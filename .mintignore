@@ -1,4 +1,5 @@
-assistant/node_modules/
-assistant/.wrangler/
-assistant/.dev.vars
-.github/
+scripts/
+assistant/
+snippets/
+sima-assistant.js
+sima-assistant-config.js
