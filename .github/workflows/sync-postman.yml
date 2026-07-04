@@ -16,7 +16,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: "20"
 
       - name: Download Postman collection
         run: |
@@ -33,11 +33,12 @@ jobs:
           npx --yes postman-to-openapi@3 postman-collection.json \
             -f openapi.yaml \
             -o p2o-options.json
+          node scripts/patch-openapi.js
 
       - name: Check for changes
         id: diff
         run: |
-          if git diff --quiet openapi.yaml 2>/dev/null || [ ! -f openapi.yaml ]; then
+          if git diff --quiet openapi.yaml 2>/dev/null; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT

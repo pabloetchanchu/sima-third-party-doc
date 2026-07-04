@@ -8,7 +8,7 @@ description: "Cómo sincronizar Formulados, Aplicadores, Máquinas, Unidades y o
 Master data are the shared catalogs that Work Orders reference — agrochemical products (formulateds), applicators, machines, units, and labour types. You must sync these before creating any Work Order, since each supply and labour line requires valid IDs from these catalogs.
 
 <Info>
-  Most master data is **read-only from third-party** — you query it from SIMA's global catalog and store the IDs locally. Applicators and Machines are the exception: they support full CRUD (create, update, delete).
+  La mayoría de los datos maestros son **solo lectura** desde la API de Terceros. Los **aplicadores** son la excepción: soportan CRUD completo, pero solo en **v2** (`/api/v2/third_party/applicators`). En v3, aplicadores y máquinas son solo lectura.
 </Info>
 
 ---
@@ -20,7 +20,7 @@ Master data are the shared catalogs that Work Orders reference — agrochemical 
 | Formulateds | Read only | Global + society | Supply lines in OTs |
 | Active Ingredients | Read only | Global | Formulated metadata |
 | Units | Read only | Global | Formulated quantities |
-| Applicators | Full CRUD | Society | Labour lines in OTs |
+| Applicators | Full CRUD (v2) / Read (v3) | Society | Labour lines in OTs |
 | Machines | Read only | Society | Labour lines in OTs |
 | Work Order Labour Types | Read only | Global | Labour type classification |
 | Work Order Labour Type Categories | Read only | Global | Labour type grouping |
@@ -79,22 +79,30 @@ GET /api/v3/third_party/formulateds
 
 If your ERP has its own product catalog, use `external_code` or `external_reference` to store your product ID on the SIMA record. This allows reliable lookups without name-matching.
 
-### Related endpoints
+### Endpoints relacionados (v2)
 
-- `GET /api/v3/third_party/active_ingredients` — ingredient catalog
-- `GET /api/v3/third_party/formulate_uses` — use categories (herbicide, fungicide, etc.)
-- `GET /api/v3/third_party/formulation_types` — formulation types (SC, WG, EC, etc.)
+- `GET /api/v2/third_party/active_ingredients` — catálogo de ingredientes activos
+- `GET /api/v2/third_party/formulated_uses` — categorías de uso (herbicida, fungicida, etc.)
+- `GET /api/v2/third_party/formulation_types` — tipos de formulación (SC, WG, EC, etc.)
 
 ---
 
 ## Applicators
 
-Applicators are the people or contractor companies that execute field operations. Unlike formulateds, applicators are **society-scoped** and support full CRUD.
+Los aplicadores son personas o empresas contratistas que ejecutan operaciones de campo. Son **scoped por sociedad**. La escritura (crear, actualizar, eliminar) está disponible solo en **v2**.
 
-### List
+### Listar (v3 — recomendado)
 
 ```
 GET /api/v3/third_party/applicators
+```
+
+Filtros v3: `name`, `active`, `updated_at_from`, `page`, `size`.
+
+### Listar (v2 — legacy)
+
+```
+GET /api/v2/third_party/applicators
 ```
 
 **Response:**
@@ -119,10 +127,10 @@ GET /api/v3/third_party/applicators
 
 Note: `machines` is an array of machine IDs associated to this applicator.
 
-### Create
+### Crear (v2)
 
 ```
-POST /api/v3/third_party/applicators
+POST /api/v2/third_party/applicators
 ```
 
 ```json
@@ -135,16 +143,16 @@ POST /api/v3/third_party/applicators
 }
 ```
 
-### Update
+### Actualizar (v2)
 
 ```
-PATCH /api/v3/third_party/applicators/{id}
+PUT /api/v2/third_party/applicators/{id}
 ```
 
-### Delete
+### Eliminar (v2)
 
 ```
-DELETE /api/v3/third_party/applicators/{id}
+DELETE /api/v2/third_party/applicators/{id}
 ```
 
 ---
@@ -196,7 +204,7 @@ GET /api/v2/third_party/application_order_labour_types
 ```
 
 <Info>
-  Labour types have a `wo_labour_type_category_id` field that groups them. Query `GET /api/v3/third_party/work_order_labour_type_categories` for the category list.
+  Los tipos de labor tienen un campo `wo_labour_type_category_id` que los agrupa. Consultá `GET /api/v2/third_party/work_order_labour_type_categories` para el listado de categorías (solo v2).
 </Info>
 
 ---

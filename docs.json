@@ -16,6 +16,21 @@
     "name": "Contact Support",
     "url": "mailto:soporte@sima.ag"
   },
+  "api": {
+    "openapi": "openapi.yaml",
+    "playground": {
+      "display": "interactive"
+    },
+    "params": {
+      "expanded": "closed"
+    },
+    "url": "full",
+    "examples": {
+      "languages": ["curl", "python", "javascript", "php"],
+      "defaults": "required",
+      "prefill": true
+    }
+  },
   "navigation": {
     "tabs": [
       {
@@ -50,10 +65,19 @@
         "tab": "Referencia de API",
         "groups": [
           {
-            "group": "Referencia",
+            "group": "General",
             "pages": [
-              "api-reference/overview"
+              "api-reference/overview",
+              "api-reference/versions",
+              "api-reference/errors-and-limits",
+              "api-reference/glossary",
+              "api-reference/sima-erp-glossary",
+              "api-reference/entity-schemas"
             ]
+          },
+          {
+            "group": "Endpoints",
+            "openapi": "openapi.yaml"
           }
         ]
       }

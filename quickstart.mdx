@@ -113,15 +113,33 @@ response = requests.get(
 
 Si recibís una lista de establecimientos (aunque sea un array vacío `[]`), tu integración está funcionando correctamente.
 
+**Respuesta exitosa (HTTP 200):**
+
+```json
+{
+  "items": [
+    {
+      "id": 1234,
+      "name": "Establecimiento Demo",
+      "external_code": null,
+      "active": true,
+      "created_at": "2024-01-15T10:30:00-03:00",
+      "updated_at": "2024-06-01T08:00:00-03:00",
+      "deleted_at": null
+    }
+  ],
+  "current_page": 1,
+  "next_page": null,
+  "total_pages": 1,
+  "total_items": 1
+}
+```
+
 ---
 
-## Paso 3 — Explorá la colección de Postman
+## Paso 3 — Explorá la referencia de API
 
-La colección de Postman incluye todos los endpoints disponibles con ejemplos preconfigurados para cada recurso.
-
-<Card title="Abrir colección de Postman" icon="arrow-up-right-from-square" href="https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh">
-  Explorá y probá todos los endpoints de la API de Terceros de SIMA
-</Card>
+La [referencia interactiva](/api-reference/overview) incluye todos los endpoints con un playground en vivo. Ya no necesitás Postman para explorar la API — aunque la [colección de Postman](https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh) sigue disponible como alternativa.
 
 ---
 
@@ -159,5 +177,8 @@ Ahora que estás autenticado, seguí las guías de integración según tu caso d
   </Card>
   <Card title="Scouting y Monitoreo" icon="magnifying-glass" href="/guides/scouting">
     Registrá adversidades y observaciones de campo
+  </Card>
+  <Card title="Referencia de API" icon="book" href="/api-reference/overview">
+    108 endpoints con playground interactivo
   </Card>
 </CardGroup>

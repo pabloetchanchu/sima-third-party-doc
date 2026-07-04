@@ -1,0 +1,103 @@
+---
+title: "Versiones de la API"
+description: "Qué versión usar para cada recurso y por qué conviven v1, v2 y v3"
+---
+
+## Resumen
+
+La API de Terceros de SIMA expone endpoints en **tres generaciones** (`v1`, `v2`, `v3`). Para integraciones nuevas, **usá siempre la versión más reciente disponible** para cada operación. Esta página indica cuál es la ruta recomendada hoy.
+
+<Warning>
+  Algunos recursos usan **rutas distintas para leer y escribir**. El caso más importante son las Órdenes de Trabajo: lectura en `/api/v3/...` y escritura en `/integration/api/v1/...`. Esto es intencional — la capa de integración v1 maneja payloads complejos de escritura que aún no migraron a v3.
+</Warning>
+
+---
+
+## Regla general
+
+| Operación | Versión recomendada | Prefijo de ruta |
+|---|---|---|
+| Login / autenticación | v2 | `/api/v2/` |
+| Lectura (list, detail) | v3 | `/api/v3/third_party/` |
+| Escritura de OTs | v1 (integración) | `/integration/api/v1/` |
+| Escritura de otros recursos | v3 (si existe) o v1 | Ver tabla por dominio |
+| Endpoints legacy | v1 / v2 | Solo si no hay equivalente v3 |
+
+---
+
+## Rutas recomendadas por dominio
+
+| Dominio | Leer (GET) | Crear / actualizar (POST/PATCH) | Eliminar (DELETE) |
+|---|---|---|---|
+| **Autenticación** | — | `POST /api/v2/login` | — |
+| **Órdenes de Trabajo** | `GET /api/v3/third_party/work_orders` | `POST /integration/api/v1/workOrders` | `DELETE /integration/api/v1/workOrders/{localId}` |
+| **Establecimientos** | `GET /api/v3/third_party/establishments` | `POST /api/v3/third_party/establishments` | `DELETE /api/v3/third_party/establishments/{id}` |
+| **Lotes (Plots)** | `GET /api/v2/third_party/plots` | `POST /api/v3/third_party/plots` | `DELETE /api/v3/third_party/plots/{id}` |
+| **Cultivos** | `GET /api/v3/third_party/cultivations` | — | — |
+| **Formulados** | `GET /api/v3/third_party/formulateds` | — | — |
+| **Aplicadores** | `GET /api/v3/third_party/applicators` | `POST /api/v2/third_party/applicators` | `DELETE /api/v2/third_party/applicators/{id}` |
+| **Máquinas** | `GET /api/v3/third_party/machines` | — | — |
+| **Scouting** | `GET /api/v3/third_party/scouting` | — | — |
+| **Avances (Progress)** | `GET /api/v3/third_party/progress_report` | — | — |
+| **Silobolsas** | `GET /api/v3/third_party/silobags` | — | — |
+| **IoT / Clima** | `GET /api/v3/third_party/devices`, `device_events`, … | `POST /api/v3/third_party/devices`, `device_events` | — |
+
+---
+
+## Por qué OTs usa dos versiones
+
+```
+Lectura  →  GET  /api/v3/third_party/work_orders
+Escritura →  POST /integration/api/v1/workOrders
+```
+
+La API v3 de lectura devuelve OTs con filtros de auditoría (`updated_at_from`, paginación, estados) optimizados para sincronización. La capa `/integration/api/v1/` es el motor de escritura heredado que acepta la estructura completa (`header` + `supplies` + `labours`) necesaria para crear y modificar OTs.
+
+**Flujo recomendado para updates:**
+
+1. `GET /api/v3/third_party/work_orders` — obtener la OT actual con todos los campos
+2. Modificar los campos necesarios en tu sistema
+3. `PATCH /integration/api/v1/workOrders/{localId}` — enviar la estructura completa actualizada
+
+<Info>
+  Nunca adivines la forma del payload de escritura. Siempre obtené la OT con GET antes de un PATCH. Ver la [guía de Órdenes de Trabajo](/guides/work-orders).
+</Info>
+
+---
+
+## Diferencias v2 vs v3 en parámetros
+
+Los endpoints v3 usan nombres de parámetros con sufijo `_at`:
+
+| v3 | v2 (legacy) |
+|---|---|
+| `updated_at_from` | `updated_from` |
+| `created_at_from` | `created_from` |
+| `deleted_at_from` | `deleted_from` |
+
+Si estás migrando desde v2, revisá cada endpoint en la [referencia interactiva](/api-reference/overview) — los nombres no son intercambiables.
+
+---
+
+## Endpoints legacy (evitar en integraciones nuevas)
+
+Los endpoints bajo `/api/v2/third_party/` y `/api/v1/` siguen activos por compatibilidad con integraciones existentes. **No los uses en proyectos nuevos** salvo que no exista equivalente v3 (por ejemplo, catálogos solo v2 como `adversity_kinds`, CRUD de aplicadores, listado de lotes, o importación de campañas).
+
+---
+
+## Próximos pasos
+
+<CardGroup cols={2}>
+  <Card title="Referencia de API" icon="book" href="/api-reference/overview">
+    Explorá la referencia interactiva con playground
+  </Card>
+  <Card title="Órdenes de Trabajo" icon="clipboard-list" href="/guides/work-orders">
+    Guía completa con ejemplos de request y response
+  </Card>
+  <Card title="Estrategia de Sincronización" icon="arrows-rotate" href="/guides/sync-strategy">
+    Filtros de auditoría y detección de cambios
+  </Card>
+  <Card title="Errores y límites" icon="triangle-exclamation" href="/api-reference/errors-and-limits">
+    Códigos HTTP y manejo de errores
+  </Card>
+</CardGroup>

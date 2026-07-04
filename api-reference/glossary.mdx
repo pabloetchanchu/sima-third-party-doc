@@ -1,0 +1,92 @@
+---
+title: "Glosario de Términos"
+description: "Mapeo entre terminología de negocio agropecuario (español) y nombres técnicos de la API (inglés)"
+---
+
+## Resumen
+
+SIMA usa vocabulario del agro en español en la plataforma web, pero los endpoints y campos de la API están en inglés. Esta tabla te ayuda a traducir conceptos de negocio a recursos técnicos.
+
+---
+
+## Entidades principales
+
+| Término SIMA (ES) | Endpoint / recurso (EN) | Descripción |
+|---|---|---|
+| **Orden de Trabajo (OT)** | `work_orders` / `workOrders` | Operación de campo: aplicación, labor, scouting, etc. |
+| **Establecimiento** | `establishments` | Unidad productiva (campo, finca) dentro de una sociedad |
+| **Lote** | `plots` | Subdivisión de un establecimiento donde se siembra |
+| **Campaña madre** | `master_campaigns` | Planificación: especie + época + ciclo (ej. "Soja 1ra 24/25") |
+| **Campaña** | `campaigns` | Instancia productiva en un lote; en muchos ERPs se llama **Cultivo** |
+| **Cultivo** (catálogo) | `cultivations` | Especie / commodity (Soja, Maíz); **no** es el cultivo del ERP |
+| **Formulado** | `formulateds` | Producto agroquímico (herbicida, fungicida, fertilizante) |
+| **Aplicador** | `applicators` | Persona que aplica productos en campo |
+| **Contratista** | `contractors` (dentro de OT labours) | Empresa/persona contratada para labores |
+| **Máquina** | `machines` | Equipo agrícola (pulverizadora, sembradora, etc.) |
+| **Productor** | `farmers` | Persona física o jurídica productora |
+| **Sociedad / Empresa** | `companies` / `society` (login) | Contexto organizacional del cliente |
+| **Depósito / Acopio** | `warehouses` | Lugar de almacenamiento de granos o insumos |
+
+---
+
+## Monitoreo y avances
+
+| Término SIMA (ES) | Endpoint / recurso (EN) | Descripción |
+|---|---|---|
+| **Monitoreo / Scouting** | `scouting` | Observación de campo: plagas, enfermedades, malezas (solo lectura en API terceros) |
+| **Adversidad** | `adversity` | Plaga, enfermedad o maleza del catálogo de referencia (v2) |
+| **Avance de siembra** | `planting_progress` | Reporte de progreso de siembra por cultivo |
+| **Avance de cosecha** | `harvest_progress` | Reporte de progreso de cosecha por cultivo |
+| **Avances** (genérico) | `progress_report` | Categoría que incluye siembra y cosecha |
+| **Monitoreo de silobolsa** | `silobag_scoutings` | Inspección de silobolsa (temperatura, extracción) — **distinto** de scouting de campo |
+| **Silobolsa** | `silobags` | Bolsa de almacenamiento de granos en campo |
+
+<Warning>
+  **Monitoreo** (scouting de campo) y **Monitoreo de silobolsa** (silobag scouting) son conceptos completamente distintos con endpoints separados. No los confundas al integrar.
+</Warning>
+
+---
+
+## Controles y estados
+
+| Término SIMA (ES) | Endpoint / recurso (EN) | Descripción |
+|---|---|---|
+| **Control de siembra** | `planting_control` | Verificación de calidad de siembra |
+| **Control de fertilización** | `fertilization_control` | Verificación de aplicación de fertilizante |
+| **Control de stand/planta** | `plant_stand_control` | Conteo de plantas emergidas |
+| **Estado hídrico** | `hydric_states` | Condición de humedad del suelo/cultivo |
+| **Estado fenológico** | `phenological_states` | Etapa de desarrollo del cultivo |
+| **Estado del lote** | `plot_states` | Condición general del lote |
+| **Ciclo de campaña madre** | `master_campaign_cycles` | Período dentro de una campaña madre (ej. ciclo 2024/25) |
+| **Sistema externo** | `external_systems` | Sistemas de integración vinculados a la sociedad |
+| **Asociación lote externo** | `external_plots_associations` | Vínculo entre lote SIMA y parcela en sistema externo |
+
+---
+
+## Campos comunes en respuestas
+
+| Campo (EN) | Significado (ES) | Notas |
+|---|---|---|
+| `local_id` | ID interno de SIMA | Usar para referenciar en escritura |
+| `external_id` / `external_code` | ID de tu sistema | Enviar al crear para mapeo bidireccional |
+| `active` | Activo / inactivo | `false` = deshabilitado, no necesariamente eliminado |
+| `deleted_at` | Fecha de eliminación lógica | `null` = no eliminado; ver [Estrategia de Sincronización](/guides/sync-strategy) |
+| `updated_at` | Última modificación | Usar con `updated_at_from` para sync incremental |
+| `created_at` | Fecha de creación | |
+| `sync_check` | Hash de sincronización | Devuelto en login; útil para detectar cambios de sociedad |
+
+---
+
+## Próximos pasos
+
+<CardGroup cols={2}>
+  <Card title="Glosario SIMA ↔ ERP" icon="right-left" href="/api-reference/sima-erp-glossary">
+    Equivalencias con jerga de ERPs y sistemas externos
+  </Card>
+  <Card title="Referencia de API" icon="book" href="/api-reference/overview">
+    Endpoints organizados por dominio
+  </Card>
+  <Card title="Schemas de entidades" icon="table" href="/api-reference/entity-schemas">
+    Tablas de campos por entidad
+  </Card>
+</CardGroup>

@@ -1,0 +1,184 @@
+---
+title: "Glosario SIMA ↔ ERP"
+description: "Equivalencias entre la jerga de SIMA y la terminología habitual en ERPs y sistemas externos de gestión agropecuaria"
+---
+
+## Resumen
+
+Al integrar SIMA con un ERP u otro sistema externo, el mayor foco de errores no está en los nombres técnicos de la API (inglés), sino en **homónimos en español**: la misma palabra significa cosas distintas según el sistema.
+
+SIMA es la plataforma que unifica **planificación, ejecución y análisis** de la operación agrícola — [Agricultura Conectada](https://sima-landing-246709467642.southamerica-east1.run.app/es/) — y esta guía mapea su jerga interna con la terminología habitual en ERPs para evitar desalineaciones al sincronizar datos.
+
+<Warning>
+  **El caso más frecuente:** en muchos ERPs *Cultivo* es lo que SIMA llama **Campaña** (`campaigns`). Y el **Ciclo** del ERP suele ser el **Ciclo de campaña madre** de SIMA (`master_campaign_cycles`), no la campaña en sí.
+</Warning>
+
+---
+
+## Jerarquía comparada
+
+```
+ERP (típico)                    SIMA (app)                 API (recurso)
+─────────────────────────────────────────────────────────────────────────────
+Empresa / Cliente               Sociedad                   society (login)
+Productor                       Productor                  farmers
+Campo / Finca                   Establecimiento            establishments
+Lote / Parcela                  Lote                       plots
+Ciclo (2024/25)                 Ciclo campaña madre        master_campaign_cycles
+Planificación / Asignación      Campaña madre              master_campaigns
+Cultivo (instancia en lote)     Campaña                    campaigns
+Especie / Cultivo (catálogo)    Cultivo (especie)          cultivations
+Orden de laboreo / OT           Orden de Trabajo           work_orders
+```
+
+En las **líneas de una OT**, el campo `cultivation.local_id` del protocolo de integración apunta al ID de una **Campaña** (`campaigns`), no al catálogo de especies (`cultivations`). Es un nombre heredado del protocolo — ver [sección de homónimos](#homonimos-que-confunden-integradores).
+
+---
+
+## Tabla de equivalencias
+
+### Estructura y planificación
+
+| Concepto SIMA | Término habitual en ERP / sistema externo | Endpoint API | Notas |
+|---|---|---|---|
+| **Sociedad** | Empresa, cliente, cuenta, tenant | `society` (login) | Raíz de aislamiento de datos; no se crea por API |
+| **Productor** | Productor, titular, cliente agrícola | `farmers` | Agrupa establecimientos; solo lectura en API terceros |
+| **Establecimiento** | Campo, finca, unidad productiva, fundo | `establishments` | Pertenece a un productor |
+| **Lote** | Lote, parcela, chacra, potrero | `plots` | Subdivisión geográfica dentro del establecimiento |
+| **Ciclo de campaña madre** | Ciclo, campaña agrícola, año/cosecha | `master_campaign_cycles` | Ventana temporal (ej. 01/07/2024–30/06/2025) |
+| **Campaña madre** | Planificación, asignación, proyecto, plan de siembra | `master_campaigns` | Combina especie + época de siembra + ciclo + nombre |
+| **Campaña** | **Cultivo**, lote productivo, asignación lote–ciclo | `campaigns` | Instancia productiva en un lote para una planificación |
+| **Cultivo** (catálogo) | Especie, cultivo, commodity, rubro | `cultivations` | Catálogo global (Soja, Maíz, Trigo…); **no** es el cultivo del ERP |
+
+### Operaciones y maestros
+
+| Concepto SIMA | Término habitual en ERP | Endpoint API | Notas |
+|---|---|---|---|
+| **Orden de Trabajo (OT)** | OT, orden de laboreo, orden de aplicación, labor | `work_orders` / `workOrders` | Lectura v3; escritura `/integration/api/v1/` |
+| **Formulado** | Insumo, producto, agroquímico, artículo | `formulateds` | Catálogo de productos |
+| **Aplicador** | Aplicador, operador, maquinista | `applicators` | CRUD en v2; listado en v3 |
+| **Contratista** | Contratista, prestador, tercerizado | `contractors` (en labours de OT) | Dentro del payload de OT |
+| **Máquina** | Máquina, equipo, pulverizadora, tractor | `machines` | Solo lectura en API terceros |
+| **Depósito** | Depósito, acopio, silo de insumos | `warehouses` | Distinto de silobolsa de grano |
+| **Tipo de labor OT** | Tipo de labor, actividad, operación | `application_order_labour_types` | Clasifica líneas de labor en OTs |
+
+### Monitoreo y avances
+
+| Concepto SIMA | Término habitual en ERP | Endpoint API | Notas |
+|---|---|---|---|
+| **Scouting** | Monitoreo, recorrida, toma de muestra | `scouting` | Solo lectura en API terceros |
+| **Adversidad** | Plaga, enfermedad, maleza (catálogo) | `adversity` (v2) | Referencia para scouting |
+| **Avance de siembra / cosecha** | Avance, progreso, % completado | `planting_progress`, `harvest_progress` | También unificado en `progress_report` |
+| **Silobolsa** | Bolsa, silo bolsa, acopio en campo | `silobags` | Almacenamiento de grano en campo |
+
+---
+
+## Homónimos que confunden integradores
+
+### 1. «Cultivo» en el ERP ≠ «Cultivo» en SIMA
+
+| Contexto | Qué es en la práctica | ID que usás |
+|---|---|---|
+| ERP dice *«Cultivo Soja 2024/25 en Lote 3»* | **Campaña** SIMA (lote + planificación) | `campaigns.id` o `cultivation.local_id` en OT |
+| ERP dice *«Especie: Soja»* o catálogo de cultivos | **Cultivo** SIMA (catálogo de especies) | `cultivations.id` |
+| Payload de OT con `cultivation.local_id` | Referencia a **Campaña**, no al catálogo | `campaigns.id` |
+
+### 2. «Campaña» en SIMA ≠ «Campaña» en el ERP
+
+| Contexto | SIMA | ERP (habitual) |
+|---|---|---|
+| Planificación por especie y época | **Campaña madre** (`master_campaigns`) | Planificación, asignación, proyecto |
+| Instancia en un lote con fechas y rendimiento | **Campaña** (`campaigns`) | **Cultivo** |
+| Ventana temporal 2024/25 | **Ciclo** (`master_campaign_cycles`) | **Ciclo**, campaña agrícola |
+
+### 3. «Campaña madre» vs «Ciclo»
+
+Una **campaña madre** en SIMA es una planificación concreta: nombre + especie (`cultivation_id`) + época de siembra (`planting_time_id`) + **ciclo** (`cycle_id`).
+
+El **ciclo** (`master_campaign_cycles`) es el contenedor temporal compartido — lo que muchos ERPs llaman simplemente *«Ciclo 24/25»*.
+
+```
+Ciclo 2024/25 (master_campaign_cycles)
+  └── Planificación "Soja 1ra 24/25" (master_campaigns)
+        └── Cultivo en Lote Norte (campaigns)   ← ERP: "Cultivo"
+              └── OT Pulverización #123 (work_orders)
+```
+
+---
+
+## Cómo mapear IDs entre sistemas
+
+Al sincronizar, guardá una tabla de equivalencias en tu ERP con al menos estas columnas:
+
+| Tu ID (ERP) | SIMA `local_id` | SIMA `external_code` | Entidad SIMA |
+|---|---|---|---|
+| `ERP-CULT-8842` | `506362` | `ERP-CULT-8842` | Campaña (≠ cultivations) |
+| `ERP-LOTE-15` | `227056` | `ERP-LOTE-15` | Lote |
+| `ERP-PLAN-SOJA-24` | `199` | — | Campaña madre |
+
+Usá `external_code` al crear entidades en SIMA (establecimientos, lotes, campañas) para que el mapeo persista sin depender del nombre.
+
+---
+
+## Preguntas rápidas al integrar
+
+| Si tu ERP tiene… | Buscá en SIMA… | Endpoint |
+|---|---|---|
+| Un cultivo en un lote para una temporada | Campaña | `GET /api/v3/third_party/campaigns` |
+| Una planificación / asignación de siembra | Campaña madre | `GET /api/v3/third_party/master_campaigns` |
+| Un ciclo 2024/25 | Ciclo de campaña madre | `GET /api/v3/third_party/master_campaign_cycles` |
+| Una especie (Soja, Maíz) | Cultivo (catálogo) | `GET /api/v3/third_party/cultivations` |
+| Una OT con líneas por cultivo | Campaña en cada línea | `cultivation.local_id` → `campaigns.id` |
+
+---
+
+## Ecosistema de integraciones SIMA
+
+Según el [posicionamiento oficial de SIMA](https://sima-landing-246709467642.southamerica-east1.run.app/es/), la plataforma está pensada como **el sistema operativo de la producción**: unifica planificación, ejecución y análisis para que la información no quede aislada entre sistemas.
+
+### Socios y plataformas del ecosistema
+
+SIMA ya integra con múltiples ERPs y soluciones agropecuarias de la región. Si desarrollás para uno de estos entornos, validá el mapeo de términos con la tabla de equivalencias de arriba antes de implementar:
+
+| Plataforma | Tipo habitual |
+|---|---|
+| **Finnegans** | ERP agropecuario |
+| **Albor** | ERP / gestión agrícola |
+| **Synagro** | ERP agropecuario |
+| **Acronex** | Gestión agrícola |
+| **Agrobit** | Software agro |
+| **Geoagris** | Gestión agrícola |
+| **Gestor Max** | Gestión de campo |
+| **Silo Real** | Post cosecha / silos |
+| **DAT CREA** | Datos y gestión |
+| **Algoritmo** | Plataforma agro |
+| **UP** | Solución agropecuaria |
+| **SAA Software** | Software agrícola |
+| **WhatsApp** | Canal de carga colaborativa (ej. lluvias) |
+
+<Info>
+  Esta lista refleja el ecosistema publicado por SIMA. No implica que todos los flujos estén expuestos en la API de Terceros — consultá la [referencia de API](/api-reference/overview) para los endpoints disponibles en tu integración.
+</Info>
+
+### Cobertura regional
+
+SIMA opera en Argentina, Brasil, Paraguay, Bolivia, Colombia, México, Uruguay y Venezuela. Los ciclos de campaña (`master_campaign_cycles`) pueden variar por país — tenelo en cuenta al mapear temporadas desde un ERP multi-país.
+
+---
+
+## Próximos pasos
+
+<CardGroup cols={2}>
+  <Card title="Glosario técnico (ES → API)" icon="language" href="/api-reference/glossary">
+    Términos SIMA en español → nombres de endpoints en inglés
+  </Card>
+  <Card title="Configuración de Jerarquía" icon="sitemap" href="/guides/hierarchy-setup">
+    Orden de creación y sincronización de entidades
+  </Card>
+  <Card title="Órdenes de Trabajo" icon="clipboard-list" href="/guides/work-orders">
+    Uso de `cultivation.local_id` en líneas de OT
+  </Card>
+  <Card title="Versiones de la API" icon="code-branch" href="/api-reference/versions">
+    Qué versión usar para cada recurso
+  </Card>
+</CardGroup>

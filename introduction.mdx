@@ -5,16 +5,36 @@ description: "API de Terceros de SIMA — integrá tu sistema con la plataforma 
 
 ## ¿Qué es SIMA?
 
-SIMA es una plataforma de gestión agropecuaria que centraliza las operaciones de campo a través de establecimientos, campañas y cultivos. La API de Terceros permite que sistemas externos lean y escriban datos en SIMA de forma segura, habilitando la sincronización en tiempo real entre tu plataforma y las operaciones de tus clientes.
+[SIMA](https://sima.ag) — *Agricultura Conectada* — es una plataforma AgTech para gestionar toda la operación agrícola en un solo lugar: **planificación, ejecución y análisis en tiempo real**. Más de 10.000 usuarios la utilizan a diario en la región.
+
+La plataforma digitaliza la operación de campo a través de ocho módulos integrados:
+
+| Módulo SIMA | Qué cubre | Relación con la API de Terceros |
+|---|---|---|
+| **GIS** | Mapas, lotes y geometrías | `establishments`, `plots` |
+| **Siembra** | Planificación y avance de siembra | `master_campaigns`, `campaigns`, `planting_progress` |
+| **Monitoreo** | Recorridas, adversidades, NDVI, estados fenológico e hídrico | `scouting`, `adversity`, `hydric_states`, `phenological_states` |
+| **Órdenes de trabajo** | Labores y aplicaciones de campo | `work_orders` + `/integration/api/v1/workOrders` |
+| **Clima** | Registro pluviométrico y eventos por lote | `devices`, `device_events`, `climatic_factors`, `weather_anomaly` |
+| **Analytics** | Reportes e indicadores de gestión | Consumo de datos vía endpoints de lectura |
+| **Cosecha** | Avance y rendimiento de cosecha | `harvest_progress`, `progress_report` |
+| **Post cosecha** | Silobolsas y almacenamiento en campo | `silobags`, `silobag_scoutings` |
+
+La **API de Terceros** permite que ERPs, software agropecuario y plataformas externas lean y escriban datos en SIMA de forma segura — evitando la doble carga que genera tener la operación aislada en dos sistemas.
+
+<Info>
+  Más información sobre la plataforma en [sima.ag](https://sima.ag) o en la [landing de SIMA](https://sima-landing-246709467642.southamerica-east1.run.app/es/).
+</Info>
 
 ## ¿Para quién es esta API?
 
-Esta API está diseñada para:
+Esta API está diseñada para proveedores que integran con el ecosistema SIMA — el mismo que ya conecta productores con soluciones como Finnegans, Albor, Synagro, Acronex y otras plataformas de gestión:
 
-- **Proveedores de ERP / software agropecuario** que necesitan sincronizar Órdenes de Trabajo con SIMA
-- **Apps de scouting y monitoreo** que registran observaciones de campo en tiempo real
-- **Plataformas de analítica de datos** que consumen datos estructurados de campañas y productividad
-- **Cooperativas y agro-holdings** que gestionan el intercambio de datos centralizado entre múltiples productores
+- **Proveedores de ERP / software agropecuario** que necesitan sincronizar Órdenes de Trabajo, maestros y avances con SIMA
+- **Apps de scouting y monitoreo** que complementan el módulo de Monitoreo Inteligente de SIMA
+- **Plataformas de analítica** que consumen datos de campañas, clima y productividad
+- **Cooperativas y agro-holdings** que centralizan el intercambio de datos entre múltiples productores
+- **Proveedores de hardware IoT** (estaciones, pluviómetros) que alimentan el módulo de Clima
 
 ## ¿Qué podés hacer con ella?
 
@@ -23,13 +43,16 @@ Esta API está diseñada para:
     Creá, actualizá y sincronizá operaciones de campo (OTs) entre tu sistema y SIMA de forma bidireccional.
   </Card>
   <Card title="Estructura Jerárquica" icon="sitemap">
-    Consultá y gestioná la jerarquía de entidades: Sociedades → Establecimientos → Campañas → Lotes.
+    Consultá y gestioná la jerarquía: Sociedad → Establecimiento → Lote → Campaña. Ver [Glosario SIMA ↔ ERP](/api-reference/sima-erp-glossary).
   </Card>
   <Card title="Datos Maestros" icon="database">
     Accedé y sincronizá Aplicadores, Máquinas, Formulados, Unidades y más — necesario antes de crear Órdenes de Trabajo.
   </Card>
   <Card title="Scouting y Monitoreo" icon="magnifying-glass">
-    Registrá observaciones de campo y adversidades, habilitando la detección temprana de problemas desde sensores y apps de terceros.
+    Consultá observaciones de campo, adversidades y estados fenológico e hídrico — el mismo dominio del Monitoreo Inteligente de SIMA.
+  </Card>
+  <Card title="Clima e IoT" icon="cloud-sun">
+    Integrá estaciones y sensores para registrar lluvias y eventos climáticos por lote, alineado al módulo de Registro Climático.
   </Card>
 </CardGroup>
 
@@ -38,7 +61,7 @@ Esta API está diseñada para:
 - **Protocolo:** REST — verbos HTTP estándar (GET, POST, PUT, DELETE)
 - **Formato:** JSON para todas las solicitudes y respuestas
 - **Autenticación:** Basada en tokens via `POST /api/v2/login`
-- **Versionado:** Endpoints disponibles en `v1`, `v2` y `v3` — usá siempre la versión más reciente disponible
+- **Versionado:** Endpoints en `v1`, `v2` y `v3` — consultá la [guía de versiones](/api-reference/versions) para saber cuál usar
 
 ## Entornos
 
@@ -54,5 +77,6 @@ Esta API está diseñada para:
 ## Antes de empezar
 
 1. Solicitá credenciales API a [soporte@sima.ag](mailto:soporte@sima.ag) o usá la [cuenta demo](/quickstart#cuenta-demo) para probar
-2. Descargá la [colección de Postman](https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh) para explorar todos los endpoints disponibles
-3. Seguí el [Inicio Rápido](/quickstart) para hacer tu primera llamada a la API en menos de 5 minutos
+2. Seguí el [Inicio Rápido](/quickstart) para hacer tu primera llamada a la API en menos de 5 minutos
+3. Consultá la [Referencia de API](/api-reference/overview) con playground interactivo
+4. Si integrás con un ERP, revisá el [Glosario SIMA ↔ ERP](/api-reference/sima-erp-glossary) antes de mapear Campañas, Cultivos y Ciclos

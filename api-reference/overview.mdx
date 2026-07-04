@@ -1,40 +1,66 @@
 ---
 title: "Referencia de API"
-description: "Referencia completa de todos los endpoints de la API de Terceros de SIMA"
+description: "Referencia completa e interactiva de todos los endpoints de la API de Terceros de SIMA"
 ---
 
 ## Resumen
 
-La referencia interactiva de la API se genera automáticamente desde la especificación OpenAPI exportada de la colección de Postman de SIMA. Incluye los 137 endpoints agrupados por dominio, con schemas de request/response y un playground en vivo para probar llamadas directamente desde el browser.
+La referencia interactiva se genera automáticamente desde la especificación OpenAPI, sincronizada diariamente con la colección de Postman de SIMA. Incluye todos los endpoints agrupados por dominio, con schemas de request/response y un **playground en vivo** para probar llamadas directamente desde el browser.
 
 <Info>
-  La referencia de API estará disponible próximamente. Mientras tanto, usá la [colección de Postman](https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh) como referencia autorizada de endpoints.
+  Usá el playground de cada endpoint para probar con tu token. Necesitás autenticarte primero — seguí el [Inicio Rápido](/quickstart) o la guía de [Autenticación](/authentication).
 </Info>
+
+---
+
+## Antes de explorar endpoints
+
+<CardGroup cols={2}>
+  <Card title="Glosario SIMA ↔ ERP" icon="right-left" href="/api-reference/sima-erp-glossary">
+    Equivalencias Campaña / Cultivo / Ciclo con tu ERP
+  </Card>
+  <Card title="Versiones de la API" icon="code-branch" href="/api-reference/versions">
+    Qué versión usar para cada recurso (v1/v2/v3)
+  </Card>
+  <Card title="Schemas de Entidades" icon="table" href="/api-reference/entity-schemas">
+    Tablas de campos: tipo, obligatorio, editable
+  </Card>
+  <Card title="Glosario" icon="language" href="/api-reference/glossary">
+    Términos de negocio ES → endpoints EN
+  </Card>
+  <Card title="Glosario SIMA ↔ ERP" icon="right-left" href="/api-reference/sima-erp-glossary">
+    Equivalencias con jerga de ERPs (Campaña, Cultivo, Ciclo…)
+  </Card>
+  <Card title="Errores y Límites" icon="triangle-exclamation" href="/api-reference/errors-and-limits">
+    Códigos HTTP y manejo de errores
+  </Card>
+</CardGroup>
 
 ---
 
 ## Dominios de endpoints
 
-| Domain | Endpoints | Versions |
+| Dominio | Versiones | Notas |
 |---|---|---|
-| Authentication | 2 | v2, v3 |
-| Work Orders | 22 | v1, v2, v3 |
-| Hierarchy | 30 | v2, v3 |
-| Master Data | 33 | v2, v3 |
-| Scouting | 14 | v2, v3 |
-| Progress Reports | 6 | v3 |
-| Silobags | 4 | v3 |
-| IoT / Weather | 16 | v3 |
-| Campaign Import | 3 | v2 |
+| Authentication | v2 | Login y refresh token |
+| Work Orders | v1 (integración), v3 | Lectura v3; escritura `/integration/api/v1/workOrders` |
+| Hierarchy | v2, v3 | Establecimientos, lotes, campañas, cultivos; listado de lotes en v2 |
+| Master Data | v2, v3 | Formulados, aplicadores (CRUD v2), máquinas, unidades, tipos de labor |
+| Scouting | v2, v3 | Solo lectura; catálogo de adversidades en v2 |
+| Progress & Controls | v3 | Avances, controles de siembra/fertilización/stand |
+| Silobags | v3 | Solo lectura |
+| IoT / Weather | v3 | Dispositivos, eventos, factores climáticos, anomalías |
+| Campaign Import | v2 | Importación asíncrona de rendimiento objetivo |
+| Tags & Waypoints | v3 | Etiquetas, asociaciones y waypoints de campo |
 
 ---
 
 ## URLs base
 
-| Environment | URL |
+| Entorno | URL |
 |---|---|
-| Test (QA) | `https://api.qa.sima.ag` |
-| Production | `https://api.sima.ag` |
+| Pruebas (QA) | `https://api.qa.sima.ag` |
+| Producción | `https://api.sima.ag` |
 
 ---
 
@@ -51,10 +77,16 @@ Content-Type: application/json
 
 ---
 
-## Colección de Postman
+## Sincronización con Postman
 
-La colección de Postman es la referencia más completa y actualizada de todos los endpoints, incluyendo ejemplos y variables de entorno:
+La especificación OpenAPI se regenera automáticamente cada día desde la colección de Postman autorizada. Postman y esta referencia comparten la misma fuente — nunca quedan desincronizados.
 
-<Card title="Open Postman Collection" icon="arrow-up-right-from-square" href="https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh">
-  Todos los endpoints de la API de Terceros de SIMA con ejemplos
+<Card title="Colección de Postman" icon="arrow-up-right-from-square" href="https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh">
+  Explorá endpoints en Postman (alternativa al playground)
 </Card>
+
+---
+
+## Especificación OpenAPI
+
+La spec completa está disponible en el repositorio como [`openapi.yaml`](https://github.com/sima-ag/sima-third-party-doc/blob/main/openapi.yaml) y se actualiza via GitHub Actions.

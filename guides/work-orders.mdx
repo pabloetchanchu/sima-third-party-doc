@@ -11,6 +11,10 @@ Las Órdenes de Trabajo (OTs) son la entidad central de SIMA. Representan operac
   Antes de crear una OT, debés tener la **estructura jerárquica** (Establecimientos, Campañas, Lotes) y los **datos maestros** (Formulados, Máquinas, Aplicadores) ya configurados en SIMA. Si aún no los tenés, empezá con la guía de [Configuración de Jerarquía](/guides/hierarchy-setup).
 </Warning>
 
+<Info>
+  Las OTs usan **dos rutas de API**: lectura en v3 (`/api/v3/third_party/work_orders`) y escritura en v1 (`/integration/api/v1/workOrders`). Ver [Versiones de la API](/api-reference/versions) para el detalle.
+</Info>
+
 ---
 
 ## Estructura de una OT
@@ -84,6 +88,30 @@ response = requests.get(
 ```
 </CodeGroup>
 
+**Respuesta exitosa (HTTP 200):**
+
+```json
+{
+  "items": [
+    {
+      "id": 473229,
+      "name": "Aplicación Herbicida - Lote L1",
+      "date": "2024-07-04T17:03:14-03:00",
+      "state": { "pending": true, "executed": false, "confirmed": false },
+      "is_read_only": false,
+      "cultivation_id": 243405,
+      "company_id": 32,
+      "updated_at": "2024-07-04T17:03:14-03:00",
+      "created_at": "2024-07-04T17:03:14-03:00"
+    }
+  ],
+  "current_page": 1,
+  "next_page": null,
+  "total_pages": 1,
+  "total_items": 1
+}
+```
+
 ---
 
 ### Crear una Orden de Trabajo
@@ -136,7 +164,45 @@ curl -X POST https://api.qa.sima.ag/integration/api/v1/workOrders \
 ```
 </CodeGroup>
 
-Una respuesta exitosa devuelve la OT creada con el `local_id` asignado por SIMA en el header. **Guardá este ID** para vincular futuras actualizaciones o eliminaciones.
+**Respuesta exitosa (HTTP 200):**
+
+```json
+{
+  "header": {
+    "local_id": 473229,
+    "external_id": null,
+    "system_id": "third_party",
+    "name": "Aplicación Herbicida - Lote L1",
+    "date": "2024-07-04T17:03:14-03:00",
+    "voucher_date": "2024-07-04T00:00:00-03:00",
+    "state": { "pending": true, "executed": false, "confirmed": false },
+    "extra_fields": {
+      "company": { "local_id": 32 },
+      "voucher_type": { "local_id": 7 }
+    }
+  },
+  "supplies": [
+    {
+      "local_id": 891234,
+      "cultivation": { "local_id": 243405 },
+      "formulated": { "local_id": 8844 },
+      "area_applied": 37,
+      "total_applied": 59.999
+    }
+  ],
+  "labours": [
+    {
+      "local_id": 891235,
+      "cultivation": { "local_id": 243405 },
+      "area_applied": 37,
+      "contractors": [{ "local_id": 3056 }],
+      "machines": [{ "local_id": 4419 }]
+    }
+  ]
+}
+```
+
+Guardá el `local_id` del header (**473229** en este ejemplo) para vincular futuras actualizaciones o eliminaciones.
 
 ---
 
@@ -147,6 +213,12 @@ PATCH /integration/api/v1/workOrders/{localId}
 ```
 
 Enviá la estructura completa de la OT (igual que en la creación) con los campos modificados. SIMA reemplaza los supplies y labours existentes con lo que enviás.
+
+<Warning>
+  **Siempre hacé un GET antes de un PATCH.** Obtené la OT actual con `GET /api/v3/third_party/work_orders`, construí el payload a partir de esa respuesta, aplicá tus cambios y enviá la estructura completa. Ver [Schemas de Entidades](/api-reference/entity-schemas).
+</Warning>
+
+**Respuesta exitosa (HTTP 200):** devuelve la OT actualizada con la misma estructura que el POST.
 
 ---
 
@@ -175,7 +247,7 @@ DELETE /integration/api/v1/workOrdersGroup
 Usá esto para adjuntar metadata personalizada de tu sistema a una OT existente:
 
 ```
-POST /api/v3/third_party/{wo_id}/additional_info
+POST /api/v3/third_party/work_orders/{wo_id}/additional_info
 ```
 
 ```json

@@ -1,0 +1,42 @@
+# SIMA Third-Party API Documentation
+
+> API de Terceros de SIMA — integración para ERP, scouting, analítica y plataformas agropecuarias.
+
+## Empezar
+
+- [Introducción](introduction.mdx): Qué es la API, para quién es, entornos
+- [Inicio Rápido](quickstart.mdx): Primera llamada en 5 minutos con cuenta demo
+- [Autenticación](authentication.mdx): Login, tokens, refresh, headers requeridos
+
+## Referencia de API
+
+- [Overview](api-reference/overview.mdx): Referencia interactiva generada desde OpenAPI
+- [Versiones](api-reference/versions.mdx): Qué versión usar por recurso (v1/v2/v3)
+- [Errores y Límites](api-reference/errors-and-limits.mdx): Códigos HTTP y rate limiting
+- [Glosario](api-reference/glossary.mdx): Términos de negocio ES → endpoints EN
+- [Schemas de Entidades](api-reference/entity-schemas.mdx): Tablas de campos por entidad
+- [OpenAPI Spec](openapi.yaml): Especificación completa (108 endpoints)
+
+## Guías de Integración
+
+- [Órdenes de Trabajo](guides/work-orders.mdx): Crear, sincronizar y gestionar OTs
+- [Jerarquía](guides/hierarchy-setup.mdx): Establecimientos, campañas, lotes
+- [Datos Maestros](guides/master-data.mdx): Formulados, máquinas, aplicadores
+- [Scouting](guides/scouting.mdx): Monitoreos y adversidades
+- [Estrategia de Sincronización](guides/sync-strategy.mdx): Filtros de auditoría e incremental sync
+- [Productores](guides/farmers.mdx): Gestión de farmers
+- [Depósitos](guides/warehouses.mdx): Warehouses
+- [Silobolsas](guides/silobags.mdx): Silobags y monitoreo
+- [Avances](guides/progress-reports.mdx): Avances de siembra y cosecha
+- [IoT / Clima](guides/iot-weather.mdx): Dispositivos y datos climáticos
+
+## Entornos
+
+- QA: https://api.qa.sima.ag
+- Producción: https://api.sima.ag
+- Demo: demo@sima.ag / demo_sima
+
+## Soporte
+
+- Email: soporte@sima.ag
+- Postman: https://documenter.getpostman.com/view/12638281/2sA3Qy4Thh

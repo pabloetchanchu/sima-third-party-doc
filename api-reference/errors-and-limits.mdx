@@ -1,0 +1,105 @@
+---
+title: "Errores y Límites de Uso"
+description: "Códigos HTTP, manejo de errores y política de rate limiting de la API de Terceros de SIMA"
+---
+
+## Resumen
+
+Esta página documenta cómo la API responde ante errores y cuáles son los límites de uso. Incluye tanto los errores de autenticación (documentados en [Autenticación](/authentication)) como los que aplican a **todos** los endpoints.
+
+---
+
+## Códigos HTTP
+
+| Código | Significado | Acción recomendada |
+|---|---|---|
+| `200 OK` | Solicitud exitosa | Procesar la respuesta normalmente |
+| `201 Created` | Recurso creado | Guardar el `local_id` o `id` devuelto |
+| `204 No Content` | Eliminación exitosa | No hay cuerpo de respuesta |
+| `400 Bad Request` | Cuerpo mal formado o campos inválidos | Revisar el payload contra un GET previo del mismo recurso |
+| `401 Unauthorized` | Token inválido, expirado o ausente | Renovar token con `refresh_token` o re-login |
+| `403 Forbidden` | Token válido pero sin permisos | Verificar rol `api_integrated` con [soporte@sima.ag](mailto:soporte@sima.ag) |
+| `404 Not Found` | Recurso o endpoint inexistente | Verificar URL, versión y `local_id` |
+| `409 Conflict` | Conflicto de estado (ej. recurso en solo lectura) | Verificar `is_read_only` u otros flags de estado |
+| `422 Unprocessable Entity` | Validación de negocio fallida | Revisar campos obligatorios y relaciones (IDs de entidades padre) |
+| `429 Too Many Requests` | Rate limit excedido | Esperar y reintentar con backoff exponencial |
+| `500 Internal Server Error` | Error del servidor | Reintentar; si persiste, contactar soporte |
+| `503 Service Unavailable` | Mantenimiento o sobrecarga | Reintentar después de unos minutos |
+
+---
+
+## Formato de respuesta de error
+
+La mayoría de los endpoints devuelven errores en JSON:
+
+```json
+{
+  "message": "Descripción legible del error",
+  "code": "ERROR_CODE_OPCIONAL"
+}
+```
+
+En endpoints de validación compleja (especialmente escritura de OTs), el cuerpo puede incluir detalle por campo:
+
+```json
+{
+  "message": "Validation failed",
+  "errors": {
+    "header.extra_fields.company.local_id": ["The selected company is invalid."]
+  }
+}
+```
+
+<Warning>
+  **Patrón recomendado para escritura:** si recibís `400` o `422`, hacé un `GET` del recurso, construí el payload a partir de esa respuesta, aplicá tus cambios y reintentá. No copies nombres de campos desde trazas de red ni adivines campos ocultos.
+</Warning>
+
+---
+
+## Errores de autenticación
+
+Los errores `401` y `403` en el login tienen significados específicos documentados en [Autenticación](/authentication#respuestas-de-error). Para el resto de endpoints, aplican las mismas reglas:
+
+- **`401`**: el token expiró → renovar con refresh o re-login
+- **`403`**: el usuario no tiene rol `api_integrated` o no tiene acceso al recurso solicitado
+
+---
+
+## Rate limiting
+
+<Info>
+  SIMA **no publica actualmente** límites oficiales de requests por minuto en la documentación. En la práctica, las integraciones de producción deben implementar **reintentos con backoff** y evitar polling agresivo (menos de 1 request/segundo sostenido por entidad).
+</Info>
+
+### Buenas prácticas
+
+| Práctica | Detalle |
+|---|---|
+| **Backoff exponencial** | Ante `429` o `503`, esperar 1s → 2s → 4s → 8s antes de reintentar |
+| **Sincronización incremental** | Usar `updated_at_from` en lugar de re-descargar catálogos completos |
+| **Paginación** | Respetar `size` razonable (50–100) y no paralelizar páginas excesivamente |
+| **Cache local** | Datos maestros (formulados, unidades) cambian poco — sincronizar semanalmente |
+
+Si tu integración requiere volúmenes altos (más de 10.000 requests/día), contactá a [soporte@sima.ag](mailto:soporte@sima.ag) para coordinar límites.
+
+---
+
+## Headers de respuesta útiles
+
+| Header | Descripción |
+|---|---|
+| `Content-Type` | Siempre `application/json` para respuestas con cuerpo |
+| `Date` | Timestamp del servidor — útil para sincronizar relojes |
+
+---
+
+## Próximos pasos
+
+<CardGroup cols={2}>
+  <Card title="Autenticación" icon="key" href="/authentication">
+    Ciclo completo de tokens y renovación
+  </Card>
+  <Card title="Estrategia de Sincronización" icon="arrows-rotate" href="/guides/sync-strategy">
+    Reducir requests con filtros de auditoría
+  </Card>
+</CardGroup>

@@ -5,55 +5,55 @@ description: "Cómo detectar y traer cambios de SIMA usando filtros de auditorí
 
 ## Resumen
 
-SIMA's Third-Party API is designed for incremental synchronization. Every list endpoint supports audit filters (`updated_at_from`, `deleted_at_from`, `active`) that let you pull only what changed since your last sync, rather than downloading the full dataset on every run.
+La API de Terceros de SIMA está diseñada para sincronización incremental. Cada endpoint de listado soporta filtros de auditoría (`updated_at_from`, `deleted_at_from`, `active`) que te permiten traer solo lo que cambió desde tu última sincronización, en lugar de descargar el dataset completo en cada ejecución.
 
 ---
 
-## The audit filter pattern
+## Patrón de filtros de auditoría
 
-All v3 list endpoints (and most v2 endpoints) share the same set of audit parameters:
+Todos los endpoints de listado v3 (y la mayoría de v2) comparten el mismo set de parámetros de auditoría:
 
-| Parameter | Type | Description |
+| Parámetro | Tipo | Descripción |
 |---|---|---|
-| `updated_at_from` | datetime (ISO8601) | Records modified on or after this timestamp |
-| `updated_at_to` | datetime (ISO8601) | Records modified before this timestamp |
-| `created_at_from` | datetime (ISO8601) | Records created on or after this timestamp |
-| `created_at_to` | datetime (ISO8601) | Records created before this timestamp |
-| `deleted_at_from` | datetime (ISO8601) | Soft-deleted records deleted on or after this timestamp |
-| `deleted_at_to` | datetime (ISO8601) | Soft-deleted records deleted before this timestamp |
-| `active` | bool | Filter by active flag (`true` / `false`) |
+| `updated_at_from` | datetime (ISO8601) | Registros modificados en o después de este timestamp |
+| `updated_at_to` | datetime (ISO8601) | Registros modificados antes de este timestamp |
+| `created_at_from` | datetime (ISO8601) | Registros creados en o después de este timestamp |
+| `created_at_to` | datetime (ISO8601) | Registros creados antes de este timestamp |
+| `deleted_at_from` | datetime (ISO8601) | Registros eliminados lógicamente en o después de este timestamp |
+| `deleted_at_to` | datetime (ISO8601) | Registros eliminados lógicamente antes de este timestamp |
+| `active` | bool | Filtrar por flag activo (`true` / `false`) |
 
-**Datetime format:** `2024-01-01T00:00:00-03:00` (ISO8601 with timezone offset)
+**Formato de datetime:** `2024-01-01T00:00:00-03:00` (ISO8601 con offset de timezone)
 
 <Warning>
-  **v2 vs v3 parameter names differ.** v3 uses `updated_at_from`; some v2 endpoints use `updated_from`. Always check the specific endpoint docs or Postman collection for exact names.
+  **Los nombres de parámetros difieren entre v2 y v3.** v3 usa `updated_at_from`; algunos endpoints v2 usan `updated_from`. Siempre verificá el endpoint específico en la [referencia de API](/api-reference/overview) o consultá la [guía de versiones](/api-reference/versions).
 </Warning>
 
 ---
 
-## Default soft-delete behavior
+## Comportamiento por defecto de soft-delete
 
-By default, when you don't pass any `deleted_at_*` parameter, the API **automatically excludes** soft-deleted records. You get only active (non-deleted) rows.
+Por defecto, cuando no pasás ningún parámetro `deleted_at_*`, la API **excluye automáticamente** los registros eliminados lógicamente. Obtenés solo filas activas (no eliminadas).
 
 ```
-# Returns only non-deleted establishments
+# Devuelve solo establecimientos no eliminados
 GET /api/v3/third_party/establishments?page=1
 ```
 
-To **include** soft-deleted records (e.g. to detect deletions), pass a `deleted_at_from` range:
+Para **incluir** registros eliminados (ej. para detectar borrados), pasá un rango con `deleted_at_from`:
 
 ```
-# Returns establishments deleted after Jan 1, 2024
+# Devuelve establecimientos eliminados después del 1 de enero de 2024
 GET /api/v3/third_party/establishments?deleted_at_from=2024-01-01T00:00:00-03:00
 ```
 
 ---
 
-## Recommended sync flow
+## Flujo de sincronización recomendado
 
-### Initial sync (first time)
+### Sincronización inicial (primera vez)
 
-Pull the full dataset for each entity. Paginate through all pages.
+Descargá el dataset completo de cada entidad. Paginá por todas las páginas.
 
 ```python
 page = 1
@@ -73,25 +73,25 @@ while True:
 save_sync_timestamp(datetime.now())
 ```
 
-### Incremental sync (subsequent runs)
+### Sincronización incremental (ejecuciones posteriores)
 
-Use `updated_at_from` set to your last sync timestamp. Only records that changed come back.
+Usá `updated_at_from` con el timestamp de tu última sincronización. Solo vuelven los registros que cambiaron.
 
 ```python
-last_sync = load_last_sync_timestamp()  # e.g. "2024-06-01T00:00:00-03:00"
+last_sync = load_last_sync_timestamp()  # ej. "2024-06-01T00:00:00-03:00"
 
 response = requests.get(
     f"{BASE_URL}/api/v3/third_party/formulateds",
     headers=headers,
     params={"updated_at_from": last_sync, "page": 1, "size": 100},
 )
-# Process and upsert changed records
+# Procesar y hacer upsert de los registros cambiados
 save_sync_timestamp(datetime.now())
 ```
 
-### Detecting deletions
+### Detectar eliminaciones
 
-Run a separate query with `deleted_at_from` to find soft-deleted records and mark them inactive in your system:
+Ejecutá una consulta separada con `deleted_at_from` para encontrar registros eliminados lógicamente y marcarlos como inactivos en tu sistema:
 
 ```python
 response = requests.get(
@@ -107,31 +107,32 @@ for item in response.json()["items"]:
 
 ## Frecuencia por entidad
 
-Not all entities change at the same rate. Adapt your sync cadence accordingly:
+No todas las entidades cambian al mismo ritmo. Adaptá la cadencia de sincronización:
 
-| Entity | Change frequency | Recommended sync |
+| Entidad | Frecuencia de cambio | Sync recomendado |
 |---|---|---|
-| Work Orders | High — created/updated constantly | Every 15–30 min or on demand |
-| Establishments / Plots | Medium — change when client modifies structure | Daily |
-| Campaigns / Cultivations | Medium — change at season start/end | Daily |
-| Applicators / Machines | Low — added when new contractors onboard | Daily or weekly |
-| Formulateds | Very low — global catalog | Weekly |
-| Units / Labour Types | Rarely change | Weekly or on startup |
+| Órdenes de Trabajo | Alta — se crean/actualizan constantemente | Cada 15–30 min o bajo demanda |
+| Establecimientos / Lotes | Media — cambian cuando el cliente modifica la estructura | Diario |
+| Campañas / Cultivos | Media — cambian al inicio/fin de campaña | Diario |
+| Aplicadores / Máquinas | Baja — se agregan con nuevos contratistas | Diario o semanal |
+| Formulados | Muy baja — catálogo global | Semanal |
+| Unidades / Tipos de labor | Rara vez cambian | Semanal o al iniciar |
 
 ---
 
 ## Paginación
 
-All list endpoints are paginated. Use `page` and `size` parameters:
+Todos los endpoints de listado están paginados. Usá los parámetros `page` y `size`:
 
 ```
 GET /api/v3/third_party/work_orders?page=1&size=50
 ```
 
-The response includes:
+La respuesta incluye:
 
 ```json
 {
+  "items": [ ... ],
   "current_page": 1,
   "next_page": 2,
   "total_pages": 19,
@@ -139,31 +140,31 @@ The response includes:
 }
 ```
 
-When `next_page` is `null`, you've reached the last page.
+Cuando `next_page` es `null`, llegaste a la última página.
 
 <Info>
-  Default `size` is 10 for most endpoints. For bulk initial syncs, increase to 100 to reduce the number of requests.
+  El `size` por defecto es 10 en la mayoría de endpoints. Para sincronizaciones iniciales masivas, aumentá a 100 para reducir la cantidad de requests.
 </Info>
 
 ---
 
 ## Mapeo de IDs
 
-Every entity in SIMA has a `local_id` (SIMA's internal ID) and an optional `external_code` or `external_id` (your system's ID). Maintain a mapping table in your database:
+Cada entidad en SIMA tiene un `local_id` (ID interno de SIMA) y un `external_code` o `external_id` opcional (ID de tu sistema). Mantené una tabla de mapeo en tu base de datos:
 
 ```
-your_products table:
-  erp_id        → your internal product ID
-  sima_local_id → SIMA's local_id for the same product
-  last_synced   → timestamp of last sync for this record
+tu_tabla_productos:
+  erp_id         → tu ID interno de producto
+  sima_local_id  → local_id de SIMA para el mismo producto
+  last_synced    → timestamp de última sync de este registro
 ```
 
-Use `external_code` when creating or updating records in SIMA to store your ID:
+Usá `external_code` al crear o actualizar registros en SIMA para almacenar tu ID:
 
 ```json
 {
   "name": "Juan Rodríguez",
-  "external_code": "ERP-APPLICATOR-0042"
+  "external_code": "ERP-APLICADOR-0042"
 }
 ```
 
@@ -171,22 +172,22 @@ Use `external_code` when creating or updating records in SIMA to store your ID:
 
 ## Errores comunes
 
-| Mistake | Correct approach |
+| Error | Enfoque correcto |
 |---|---|
-| Passing `deleted_at_from=null` to get active records | Omit `deleted_at_*` entirely — active records are the default |
-| Using `active=true` to filter soft-deletes | `active` and `deleted_at` are separate flags — use both if needed |
-| Re-fetching the full catalog on every run | Store a `last_sync` timestamp and use `updated_at_from` |
-| Using v3 param names on v2 endpoints | Check each endpoint — v2 may use `updated_from` instead of `updated_at_from` |
+| Pasar `deleted_at_from=null` para obtener activos | Omití `deleted_at_*` por completo — los activos son el default |
+| Usar `active=true` para filtrar soft-deletes | `active` y `deleted_at` son flags separados — usá ambos si hace falta |
+| Re-descargar el catálogo completo en cada ejecución | Guardá un timestamp `last_sync` y usá `updated_at_from` |
+| Usar nombres de parámetros v3 en endpoints v2 | Verificá cada endpoint — v2 puede usar `updated_from` en lugar de `updated_at_from` |
 
 ---
 
 ## Próximos pasos
 
 <CardGroup cols={2}>
-  <Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">
-    Apply sync strategy to Work Orders
+  <Card title="Órdenes de Trabajo" icon="clipboard-list" href="/guides/work-orders">
+    Aplicá la estrategia de sync a OTs
   </Card>
   <Card title="Scouting" icon="magnifying-glass" href="/guides/scouting">
-    Sync field observations and adversities
+    Sincronizá observaciones de campo y adversidades
   </Card>
 </CardGroup>

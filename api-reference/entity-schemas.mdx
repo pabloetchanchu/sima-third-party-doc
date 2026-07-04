@@ -1,0 +1,148 @@
+---
+title: "Schemas de Entidades"
+description: "Tablas de propiedades por entidad: nombre, tipo, obligatoriedad y editabilidad"
+---
+
+## Resumen
+
+Cada tabla describe los campos principales de una entidad. Para el schema completo de cada endpoint, usá la [referencia interactiva](/api-reference/overview). Estas tablas cubren los recursos más usados en integraciones.
+
+<Info>
+  **Lectura vs escritura:** los campos marcados como *Solo lectura* vienen en las respuestas GET pero no deben enviarse (o se ignoran) en POST/PATCH.
+</Info>
+
+---
+
+## Orden de Trabajo (Work Order)
+
+Endpoint de lectura: `GET /api/v3/third_party/work_orders`  
+Endpoint de escritura: `POST /integration/api/v1/workOrders`
+
+### Header
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `local_id` | integer | No (auto) | Solo lectura | ID interno de SIMA |
+| `external_id` | string | No | Sí | ID de tu sistema |
+| `system_id` | string | Sí | Sí | Siempre `"third_party"` |
+| `name` | string | Sí | Sí | Nombre descriptivo de la OT |
+| `date` | datetime | Sí | Sí | Fecha/hora de la operación (ISO8601) |
+| `voucher_date` | datetime | Sí | Sí | Fecha del comprobante |
+| `state.pending` | boolean | Sí | Sí | OT pendiente de ejecución |
+| `state.executed` | boolean | Sí | Sí | OT ejecutada en campo |
+| `state.confirmed` | boolean | Sí | Sí | OT confirmada en SIMA |
+| `extra_fields.company.local_id` | integer | Sí | Sí | ID de la empresa/sociedad |
+| `extra_fields.voucher_type.local_id` | integer | Sí | Sí | Tipo de comprobante |
+| `is_read_only` | boolean | No | Solo lectura | Si `true`, no se puede modificar |
+
+### Supply (aplicación de agroquímico)
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `cultivation.local_id` | integer | Sí | Sí | Cultivo objetivo |
+| `formulated.local_id` | integer | Sí | Sí | Producto agroquímico |
+| `area_applied` | number | Sí | Sí | Hectáreas aplicadas |
+| `total_applied` | number | Sí | Sí | Cantidad total aplicada |
+| `date` | datetime | Sí | Sí | Fecha de aplicación |
+| `state` | object | Sí | Sí | `{ pending, executed, confirmed }` |
+
+### Labour (labor de campo)
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `cultivation.local_id` | integer | Sí | Sí | Cultivo objetivo |
+| `area_applied` | number | Sí | Sí | Hectáreas |
+| `contractors[].local_id` | integer | No | Sí | Contratista(s) |
+| `machines[].local_id` | integer | No | Sí | Máquina(s) |
+| `applicators[].local_id` | integer | No | Sí | Aplicador(es) |
+| `date` | datetime | Sí | Sí | Fecha de la labor |
+| `state` | object | Sí | Sí | `{ pending, executed, confirmed }` |
+
+---
+
+## Establecimiento (Establishment)
+
+Endpoint: `GET /api/v3/third_party/establishments`
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `id` | integer | Auto | Solo lectura | ID interno |
+| `name` | string | Sí | Sí | Nombre del establecimiento |
+| `external_code` | string | No | Sí | Código de tu ERP |
+| `active` | boolean | No | Sí | Activo/inactivo |
+| `created_at` | datetime | Auto | Solo lectura | Fecha de creación |
+| `updated_at` | datetime | Auto | Solo lectura | Última modificación |
+| `deleted_at` | datetime | Auto | Solo lectura | Eliminación lógica (`null` = activo) |
+
+---
+
+## Cultivo (Cultivation)
+
+Endpoint: `GET /api/v3/third_party/cultivations`
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `id` | integer | Auto | Solo lectura | ID interno |
+| `plot_id` | integer | Auto | Solo lectura | Lote asociado |
+| `campaign_id` | integer | Auto | Solo lectura | Campaña asociada |
+| `formulated_id` | integer | Auto | Solo lectura | Variedad/especie |
+| `area` | number | Auto | Solo lectura | Hectáreas del cultivo |
+| `active` | boolean | Auto | Solo lectura | Activo/inactivo |
+| `updated_at` | datetime | Auto | Solo lectura | Para sync incremental |
+
+---
+
+## Formulado (Formulated)
+
+Endpoint: `GET /api/v3/third_party/formulateds` (solo lectura)
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `id` | integer | Auto | Solo lectura | ID interno |
+| `name` | string | — | Solo lectura | Nombre comercial |
+| `external_code` | string | — | Solo lectura | Código de catálogo |
+| `active_ingredient` | string | — | Solo lectura | Ingrediente activo |
+| `formulation_type_id` | integer | — | Solo lectura | Tipo de formulación |
+| `unit_id` | integer | — | Solo lectura | Unidad de medida |
+| `active` | boolean | — | Solo lectura | Activo/inactivo |
+| `updated_at` | datetime | Auto | Solo lectura | Para sync incremental |
+
+---
+
+## Aplicador (Applicator)
+
+Lectura: `GET /api/v3/third_party/applicators`  
+Escritura (CRUD): `POST/PUT/DELETE /api/v2/third_party/applicators`
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `id` | integer | Auto | Solo lectura (GET) | ID interno |
+| `name` | string | Sí | Sí (v2) | Nombre del aplicador |
+| `external_code` | string | No | Sí (v2) | Código de tu ERP |
+| `active` | boolean | No | Sí (v2) | Activo/inactivo |
+| `updated_at` | datetime | Auto | Solo lectura | Para sync incremental |
+
+---
+
+## Respuesta paginada (común a todos los list endpoints)
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `items` | array | Lista de objetos del recurso |
+| `current_page` | integer | Página actual |
+| `next_page` | integer \| null | Siguiente página (`null` = última) |
+| `total_pages` | integer | Total de páginas |
+| `total_items` | integer | Total de registros |
+
+---
+
+## Próximos pasos
+
+<CardGroup cols={2}>
+  <Card title="Glosario" icon="language" href="/api-reference/glossary">
+    Términos de negocio ES → campos EN
+  </Card>
+  <Card title="Órdenes de Trabajo" icon="clipboard-list" href="/guides/work-orders">
+    Ejemplos completos con request y response
+  </Card>
+</CardGroup>

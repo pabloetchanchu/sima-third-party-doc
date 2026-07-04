@@ -30,7 +30,7 @@ Before registering observations, sync the adversity catalog (read-only, global).
 Top-level classification: Insects, Diseases, Weeds, etc.
 
 ```
-GET /api/v2/third_party/adversityKind
+GET /api/v2/third_party/adversity_kinds
 ```
 
 **Filters:** `name`, `modified_at_from`, `modified_at_to`, `deleted_at_from`
@@ -52,7 +52,7 @@ GET /api/v2/third_party/adversityKind
 Sub-classification within each kind.
 
 ```
-GET /api/v2/third_party/adversityCategories
+GET /api/v2/third_party/adversity_categories
 ```
 
 ### Adversities
@@ -88,11 +88,23 @@ GET /api/v2/third_party/adversity
 
 ---
 
-## Paso 2 — Register and retrieve scouting sessions
+## Paso 2 — Consultar sesiones de scouting
 
-A scouting session represents a field visit or monitoring event for a specific campaign. It references one or more adversity IDs observed during that visit.
+Una sesión de scouting representa una visita de campo o evento de monitoreo para una campaña específica. Referencia uno o más IDs de adversidad observados durante esa visita.
 
-### List Scouting sessions
+<Warning>
+  La API de Terceros expone scouting en **solo lectura** (GET). No hay endpoints POST/PATCH/DELETE para crear o modificar monitoreos desde integraciones externas — esos registros se cargan en SIMA vía la app web o móvil.
+</Warning>
+
+### Listar sesiones de scouting (v3 — recomendado)
+
+```
+GET /api/v3/third_party/scouting
+```
+
+Usá filtros de auditoría v3: `updated_at_from`, `deleted_at_from`, `page`, `size`.
+
+### Listar sesiones de scouting (v2 — legacy)
 
 ```
 GET /api/v2/third_party/scouting
@@ -134,23 +146,22 @@ Each `adversity_id` in the array maps to a specific pest or disease from the adv
 
 ---
 
-## Typical integration patterns
+## Patrones de integración típicos
 
-### Scouting app → SIMA
+### SIMA → plataforma externa de analítica
 
-Your app detects adversities in the field and pushes observations to SIMA:
+Extraer datos de scouting de SIMA para análisis o reportes:
 
-1. Map your app's pest/disease catalog to SIMA adversity IDs (using `name` or `scientific_name` matching)
-2. Create a scouting session via POST, including the `campaign_id` and the list of `adversity_ids` observed
-3. Store SIMA's returned `id` for future reference or deletion
+1. Listá campañas de los establecimientos de interés (`GET /api/v3/third_party/campaigns`)
+2. Consultá `GET /api/v3/third_party/scouting?campaign_id={id}&updated_at_from={last_sync}` por campaña
+3. Enriquecé con detalles de adversidad cruzando `adversity_ids` contra tu caché local del catálogo (Paso 1)
 
-### SIMA → external analytics platform
+### App de scouting → SIMA
 
-Pull scouting data from SIMA for analysis or reporting:
+La API de Terceros **no permite crear** sesiones de scouting. Si tu app registra observaciones en campo, las opciones son:
 
-1. List campaigns for the establishments of interest
-2. Query `GET /api/v2/third_party/scouting?campaign_id={id}&modified_at_from={last_sync}` for each campaign
-3. Enrich with adversity details by cross-referencing `adversity_ids` against your local adversity catalog cache
+- Cargar los monitoreos en SIMA vía la app móvil/web del productor, y luego sincronizar hacia tu sistema con GET
+- Contactar [soporte@sima.ag](mailto:soporte@sima.ag) si necesitás un flujo de escritura automatizado
 
 ---
 

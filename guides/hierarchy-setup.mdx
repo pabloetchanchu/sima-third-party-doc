@@ -8,13 +8,19 @@ description: "Cómo configurar la jerarquía de entidades en SIMA — Sociedades
 SIMA organiza los datos agropecuarios en una jerarquía estricta. Cada OT se vincula en última instancia a un **cultivo**, que es la combinación de un lote, una campaña y un cultivo. Debés configurar esta jerarquía antes de poder registrar operaciones de campo.
 
 ```
-Sociedad (Productor)
-  └── Establecimiento
-        └── Lote
-              └── Campaña Madre → Campaña
-                    └── Cultivo (Lote + Campaña + Especie)
-                          └── Orden de Trabajo
+Sociedad
+  └── Productor
+        └── Establecimiento
+              └── Lote
+                    └── Ciclo (master_campaign_cycles)
+                          └── Campaña madre / Planificación (master_campaigns)
+                                └── Campaña (campaigns)  ← en ERP suele llamarse "Cultivo"
+                                      └── Orden de Trabajo
 ```
+
+<Info>
+  ¿Tu ERP usa otros nombres (*Cultivo*, *Ciclo*, *Planificación*)? Consultá el [Glosario SIMA ↔ ERP](/api-reference/sima-erp-glossary) antes de mapear IDs.
+</Info>
 
 <Info>
   Si tu sistema ya tiene establecimientos y lotes, creálos en SIMA y vinculálos usando el campo `external_code` para mapear entre tus IDs y el `local_id` de SIMA.
@@ -37,10 +43,10 @@ El orden importa — cada nivel depende del anterior.
     Un lote es una parcela específica dentro de un establecimiento. Requiere un `establishment_id`.
   </Step>
   <Step title="Crear Campañas Madre y Campañas">
-    Una campaña madre es una temporada agrícola (ej: "2024/25"). Una campaña es el cultivo específico dentro de esa temporada en un conjunto de lotes.
+    Una **campaña madre** es la planificación (especie + época + ciclo, ej. "Soja 1ra 24/25"). Una **campaña** es la instancia en un lote — en muchos ERPs eso se llama *Cultivo*. Ver [Glosario SIMA ↔ ERP](/api-reference/sima-erp-glossary).
   </Step>
-  <Step title="Crear Cultivos">
-    Un cultivo vincula un lote a una campaña y una especie. Esta es la entidad referenciada en cada línea de OT.
+  <Step title="Usar Campañas en OTs">
+    Cada línea de supply y labour en una OT referencia una **campaña** (`campaigns.id`). En el payload de integración aparece como `cultivation.local_id`.
   </Step>
 </Steps>
 
@@ -108,7 +114,17 @@ GET /api/v3/third_party/establishments
 
 ## Lotes
 
-### Crear
+El listado está en **v2**; la creación, actualización y eliminación en **v3**.
+
+#### Listar (v2)
+
+```
+GET /api/v2/third_party/plots
+```
+
+Filtros v2: `establishment_id`, `modified_at_from`, `page`, `size`.
+
+#### Crear (v3)
 
 ```
 POST /api/v3/third_party/plots
@@ -122,13 +138,12 @@ POST /api/v3/third_party/plots
 }
 ```
 
-### Listar
+#### Actualizar / eliminar (v3)
 
 ```
-GET /api/v3/third_party/plots
+PATCH /api/v3/third_party/plots/{id}
+DELETE /api/v3/third_party/plots/{id}
 ```
-
-Los lotes se pueden filtrar por `establishment_id` y `updated_at_from` para detección de cambios.
 
 ---
 
@@ -141,6 +156,14 @@ Una **Campaña Madre** representa una temporada agrícola (ej: "2024/25 Finos").
 ```
 GET /api/v3/third_party/master_campaigns
 ```
+
+### Listar Ciclos de Campaña Madre
+
+```
+GET /api/v3/third_party/master_campaign_cycles
+```
+
+Los ciclos agrupan las campañas madre por período (ej. "2024/25"). Útil para filtrar campañas por temporada.
 
 ### Listar Campañas
 
@@ -160,20 +183,26 @@ GET /api/v3/third_party/campaigns
 
 ## Cultivos
 
-Un cultivo vincula un **lote + campaña + especie**. Cada línea de supply y labour en una OT referencia un `cultivation_id`.
+Un **cultivo** en SIMA (`cultivations`) es una **especie del catálogo** (Soja, Maíz, Trigo). No confundir con la **campaña** — que es lo que muchos ERPs llaman *Cultivo* y es lo que referencian las OTs.
 
-### Listar Cultivos
+### Listar especies (catálogo)
 
 ```
 GET /api/v3/third_party/cultivations
 ```
 
-Es el endpoint que vas a consultar con más frecuencia — devuelve los IDs que necesitás para crear OTs.
+### Listar campañas (instancia en lote — referencia de OTs)
 
-**Consulta típica para obtener cultivos de un establecimiento:**
+```
+GET /api/v3/third_party/campaigns
+```
+
+Es el endpoint que vas a consultar con más frecuencia para obtener los IDs que necesitás en OTs (`cultivation.local_id`).
+
+**Consulta típica para campañas de un establecimiento:**
 
 ```bash
-GET /api/v3/third_party/cultivations?establishment_id=118422&active=true
+GET /api/v3/third_party/campaigns?establishment_id=118422&active=true
 ```
 
 ---
