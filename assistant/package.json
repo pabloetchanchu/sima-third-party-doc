@@ -1,0 +1,17 @@
+{
+  "name": "sima-docs-assistant",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Backend del asistente de documentación SIMA (Cloudflare Worker)",
+  "scripts": {
+    "build:kb": "node scripts/build-knowledge-base.js",
+    "dev": "npm run build:kb && wrangler dev",
+    "deploy": "npm run build:kb && wrangler deploy"
+  },
+  "dependencies": {
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.14.0"
+  }
+}

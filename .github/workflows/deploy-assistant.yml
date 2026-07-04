@@ -1,0 +1,40 @@
+name: Deploy Docs Assistant
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'assistant/**'
+      - '**/*.mdx'
+      - 'openapi.yaml'
+      - 'llms.txt'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: assistant
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: assistant/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build knowledge base
+        run: npm run build:kb
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: assistant

@@ -85,5 +85,11 @@
   },
   "footerSocials": {
     "website": "https://sima.ag"
+  },
+  "settings": {
+    "customScripts": [
+      "/sima-assistant-config.js",
+      "/sima-assistant.js"
+    ]
   }
 }

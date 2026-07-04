@@ -1,0 +1,12 @@
+name = "sima-docs-assistant"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+# Variables públicas (no sensibles)
+[vars]
+DOCS_BASE_URL = "https://docs.tp.sima.ag"
+GEMINI_MODEL = "gemini-2.5-flash"
+
+# Secretos (configurar con wrangler secret put):
+#   GEMINI_API_KEY   — API key de Google AI Studio (https://aistudio.google.com/apikey)
+#   ASSISTANT_SECRET — token opcional para autenticar el widget (header X-Assistant-Key)
