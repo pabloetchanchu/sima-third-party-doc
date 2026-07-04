@@ -72,7 +72,7 @@ function buildGeminiPayload(env, messages) {
     contents: conversation,
     generationConfig: {
       temperature: 0.2,
-      maxOutputTokens: 1200,
+      maxOutputTokens: 2000,
     },
   };
 
