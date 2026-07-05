@@ -30,7 +30,7 @@
 
     var script = document.createElement('script');
     script.id = 'sima-assistant-external';
-    script.src = 'https://sima-docs-assistant.simaag.workers.dev/widget.js?v=5';
+    script.src = 'https://sima-docs-assistant.simaag.workers.dev/widget.js?v=6';
     script.async = true;
     document.head.appendChild(script);
   }
