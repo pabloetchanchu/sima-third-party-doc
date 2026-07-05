@@ -26,11 +26,30 @@ jobs:
           cache: npm
           cache-dependency-path: assistant/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Deploy to Cloudflare Workers
-        run: npm run deploy
+      - name: Verify Cloudflare secrets
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::error::Falta el secret CLOUDFLARE_API_TOKEN. Configuralo en Settings → Secrets and variables → Actions del repositorio."
+            exit 1
+          fi
+          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::error::Falta el secret CLOUDFLARE_ACCOUNT_ID. Configuralo en Settings → Secrets and variables → Actions del repositorio."
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build knowledge base and sync widget
+        run: npm run build:kb && npm run sync:widget
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: assistant
+          wranglerVersion: "4"
