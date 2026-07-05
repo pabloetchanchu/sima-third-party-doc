@@ -1,11 +1,48 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "name": "SIMA Docs para Desarrolladores",
+  "description": "Documentación de la API de Terceros de SIMA — Agricultura Conectada",
   "theme": "mint",
   "colors": {
-    "primary": "#1a6b3c",
-    "light": "#2d9c5a",
-    "dark": "#0f4a29"
+    "primary": "#00252E",
+    "light": "#DDF972",
+    "dark": "#0C505B"
+  },
+  "logo": {
+    "light": "/logo/logo_sima_wordmark.webp",
+    "dark": "/logo/logo_sima.webp",
+    "href": "https://sima.ag"
+  },
+  "favicon": "/logo/logo_sima.webp",
+  "appearance": {
+    "default": "light"
+  },
+  "fonts": {
+    "family": "PP Mori",
+    "weight": 400,
+    "source": "/fonts/PPMori-Regular.woff2",
+    "format": "woff2",
+    "heading": {
+      "family": "PP Mori",
+      "weight": 500,
+      "source": "/fonts/PPMori-Medium.woff2",
+      "format": "woff2"
+    },
+    "body": {
+      "family": "PP Mori",
+      "weight": 400,
+      "source": "/fonts/PPMori-Regular.woff2",
+      "format": "woff2"
+    }
+  },
+  "icons": {
+    "library": "lucide"
+  },
+  "background": {
+    "color": {
+      "light": "#F3F7F8",
+      "dark": "#00252E"
+    }
   },
   "topbarLinks": [
     {
@@ -14,7 +51,7 @@
     }
   ],
   "topbarCtaButton": {
-    "name": "Contact Support",
+    "name": "Contactar soporte",
     "url": "mailto:soporte@sima.ag"
   },
   "api": {
