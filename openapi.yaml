@@ -46639,142 +46639,60 @@ paths:
                     items:
                       - id: 30668
                         campaign_id: 53884
-                        observations: null
+                        type: 11
+                        date: '2019-07-25T17:12:26-03:00'
+                        status_id: 4
+                        hydric_state_id: null
+                        labour_issue_id: null
+                        humidity: null
+                        baseline_ha: '24.00000000'
                         progress_ha_daily: '24.00000000'
                         progress_tn_daily: '72.00000000'
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
+                        progress_ha_total: '24.00000000'
+                        progress_tn_total: '72.00000000'
                         remaining_ha_total: '0.00000000'
+                        yield_tn_ha_partial: '3.00000000'
+                        yield_tn_ha_final: '3.00000000'
+                        is_last: true
                         finished: false
-                        type: 11
+                        observations: null
+                        lat: null
+                        lon: null
+                        location_id: null
+                        system_id: null
+                        external_code: null
+                        machine_samples: []
                         created_at: '2019-07-25T17:12:26-03:00'
                         modified_at: '2019-07-25T17:12:26-03:00'
                         deleted_at: null
                         active: true
                       - id: 30895
                         campaign_id: 50102
-                        observations: null
+                        type: 11
+                        date: '2019-08-08T13:56:45-03:00'
+                        status_id: 4
+                        hydric_state_id: null
+                        labour_issue_id: null
+                        humidity: null
+                        baseline_ha: '49.00000000'
                         progress_ha_daily: '30.00000000'
                         progress_tn_daily: '12.00000000'
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
+                        progress_ha_total: '30.00000000'
+                        progress_tn_total: '12.00000000'
                         remaining_ha_total: '19.00000000'
+                        yield_tn_ha_partial: '0.40000000'
+                        yield_tn_ha_final: '0.40000000'
+                        is_last: true
                         finished: false
-                        type: 11
+                        observations: null
+                        lat: null
+                        lon: null
+                        location_id: null
+                        system_id: null
+                        external_code: null
+                        machine_samples: []
                         created_at: '2019-08-08T13:56:45-03:00'
                         modified_at: '2019-08-08T13:56:45-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 31037
-                        campaign_id: 50102
-                        observations: null
-                        progress_ha_daily: '50.00000000'
-                        progress_tn_daily: '250.00000000'
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '-1.00000000'
-                        finished: false
-                        type: 11
-                        created_at: '2019-08-16T15:44:41-03:00'
-                        modified_at: '2019-08-16T15:44:41-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 31179
-                        campaign_id: 50102
-                        observations: null
-                        progress_ha_daily: '50.00000000'
-                        progress_tn_daily: '150.00000000'
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '-1.00000000'
-                        finished: false
-                        type: 11
-                        created_at: '2019-08-28T06:47:31-03:00'
-                        modified_at: '2019-08-28T06:47:31-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 31313
-                        campaign_id: 50102
-                        observations: null
-                        progress_ha_daily: '45.00000000'
-                        progress_tn_daily: '135.00000000'
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '-126.00000000'
-                        finished: false
-                        type: 11
-                        created_at: '2019-10-03T15:42:59-03:00'
-                        modified_at: '2019-10-03T15:42:59-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 31314
-                        campaign_id: 50102
-                        observations: null
-                        progress_ha_daily: '45.00000000'
-                        progress_tn_daily: '135.00000000'
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '-171.00000000'
-                        finished: false
-                        type: 11
-                        created_at: '2019-10-03T16:24:16-03:00'
-                        modified_at: '2019-10-03T16:24:15-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 31378
-                        campaign_id: 50102
-                        observations: Gugugi
-                        progress_ha_daily: '45.00000000'
-                        progress_tn_daily: '200.00000000'
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '-216.00000000'
-                        finished: false
-                        type: 11
-                        created_at: '2019-10-16T14:24:38-03:00'
-                        modified_at: '2019-10-16T14:24:38-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 33052
-                        campaign_id: 76595
-                        observations: null
-                        progress_ha_daily: '10.00000000'
-                        progress_tn_daily: '20.00000000'
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '40.00000000'
-                        finished: false
-                        type: 11
-                        created_at: '2019-12-10T15:23:52-03:00'
-                        modified_at: '2019-12-10T15:23:51-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 33053
-                        campaign_id: 76595
-                        observations: null
-                        progress_ha_daily: '35.00000000'
-                        progress_tn_daily: '50.00000000'
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '5.00000000'
-                        finished: false
-                        type: 11
-                        created_at: '2019-12-10T15:23:53-03:00'
-                        modified_at: '2019-12-10T15:23:53-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 33071
-                        campaign_id: 73306
-                        observations: null
-                        progress_ha_daily: '12.00000000'
-                        progress_tn_daily: '30.00000000'
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '23.00000000'
-                        finished: false
-                        type: 11
-                        created_at: '2019-12-11T06:03:07-03:00'
-                        modified_at: '2019-12-11T06:03:07-03:00'
                         deleted_at: null
                         active: true
                     current_page: 1
@@ -46787,148 +46705,272 @@ paths:
                     items:
                       - id: 9182
                         campaign_id: 50102
-                        observations: null
+                        type: 13
+                        date: '2019-04-23T17:03:10-03:00'
+                        status_id: 4
+                        hydric_state_id: null
+                        labour_issue_id: null
+                        humidity: null
+                        baseline_ha: '59.00000000'
                         progress_ha_daily: '55.00000000'
                         progress_tn_daily: null
+                        progress_ha_total: '55.00000000'
+                        progress_tn_total: null
+                        remaining_ha_total: '4.00000000'
                         yield_tn_ha_partial: null
                         yield_tn_ha_final: null
-                        remaining_ha_total: '4.00000000'
+                        is_last: true
                         finished: false
-                        type: 13
+                        observations: null
+                        lat: null
+                        lon: null
+                        location_id: null
+                        system_id: null
+                        external_code: null
+                        machine_samples: []
                         created_at: '2019-04-23T17:03:10-03:00'
                         modified_at: '2019-04-23T17:03:10-03:00'
                         deleted_at: null
                         active: true
-                      - id: 9183
-                        campaign_id: 50102
-                        observations: null
-                        progress_ha_daily: '48.00000000'
-                        progress_tn_daily: null
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '11.00000000'
-                        finished: false
-                        type: 13
-                        created_at: '2019-04-23T17:04:57-03:00'
-                        modified_at: '2019-04-23T17:04:57-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 10513
-                        campaign_id: 50102
-                        observations: null
-                        progress_ha_daily: '56.00000000'
-                        progress_tn_daily: null
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '3.00000000'
-                        finished: false
-                        type: 13
-                        created_at: '2019-06-28T16:20:15-03:00'
-                        modified_at: '2019-06-28T16:20:15-03:00'
-                        deleted_at: null
-                        active: true
                       - id: 10619
                         campaign_id: 53884
-                        observations: null
+                        type: 13
+                        date: '2019-07-03T17:33:31-03:00'
+                        status_id: 4
+                        hydric_state_id: null
+                        labour_issue_id: null
+                        humidity: null
+                        baseline_ha: '37.19000000'
                         progress_ha_daily: '25.00000000'
                         progress_tn_daily: null
+                        progress_ha_total: '25.00000000'
+                        progress_tn_total: null
+                        remaining_ha_total: '12.19000000'
                         yield_tn_ha_partial: null
                         yield_tn_ha_final: null
-                        remaining_ha_total: '12.19000000'
+                        is_last: true
                         finished: false
-                        type: 13
+                        observations: null
+                        lat: null
+                        lon: null
+                        location_id: null
+                        system_id: null
+                        external_code: null
+                        machine_samples: []
                         created_at: '2019-07-03T17:33:31-03:00'
                         modified_at: '2019-07-03T17:33:31-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 10983
-                        campaign_id: 61146
-                        observations: null
-                        progress_ha_daily: '80.00000000'
-                        progress_tn_daily: null
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '0.00000000'
-                        finished: false
-                        type: 13
-                        created_at: '2019-07-15T20:37:45-03:00'
-                        modified_at: '2019-07-15T20:37:45-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 11039
-                        campaign_id: 50102
-                        observations: null
-                        progress_ha_daily: '59.00000000'
-                        progress_tn_daily: null
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '0.00000000'
-                        finished: false
-                        type: 13
-                        created_at: '2019-07-22T15:25:23-03:00'
-                        modified_at: '2019-07-22T15:25:23-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 11558
-                        campaign_id: 50102
-                        observations: null
-                        progress_ha_daily: '55.00000000'
-                        progress_tn_daily: null
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '4.00000000'
-                        finished: false
-                        type: 13
-                        created_at: '2019-08-16T16:32:57-03:00'
-                        modified_at: '2019-08-16T16:32:56-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 11783
-                        campaign_id: 50102
-                        observations: null
-                        progress_ha_daily: '55.00000000'
-                        progress_tn_daily: null
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '4.00000000'
-                        finished: false
-                        type: 13
-                        created_at: '2019-08-26T11:46:36-03:00'
-                        modified_at: '2019-08-26T11:46:36-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 12712
-                        campaign_id: 65788
-                        observations: null
-                        progress_ha_daily: '51.00000000'
-                        progress_tn_daily: null
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '27.00000000'
-                        finished: false
-                        type: 13
-                        created_at: '2019-09-23T08:49:34-03:00'
-                        modified_at: '2019-09-23T08:49:34-03:00'
-                        deleted_at: null
-                        active: true
-                      - id: 323357
-                        campaign_id: 439487
-                        observations: null
-                        progress_ha_daily: '10.00000000'
-                        progress_tn_daily: null
-                        yield_tn_ha_partial: null
-                        yield_tn_ha_final: null
-                        remaining_ha_total: '8.00000000'
-                        finished: false
-                        type: 13
-                        created_at: '2024-12-19T10:14:28-03:00'
-                        modified_at: '2025-05-31T09:02:15-03:00'
                         deleted_at: null
                         active: true
                     current_page: 1
                     next_page: 2
                     total_pages: 8
                     total_items: 79
+    post:
+      tags:
+        - Version 3 > Progress Report
+      summary: Create
+      description: >-
+        Create progress report for Third Party v3 (SNWP-11415). Types: 11
+        harvest / 13 planting.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: |-
+                {
+                    "progress_type": 11,
+                    "campaign_id": {{campaign_id}},
+                    "date": "2026-07-21T12:00:00-03:00",
+                    "progress_ha_daily": 5.17,
+                    "progress_tn_daily": 0.17,
+                    "finished": false,
+                    "observations": "SNWP-11415-create"
+                }
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '201':
+          description: Created
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 414682
+                campaign_id: 552034
+                type: 11
+                date: '2026-07-21T12:00:00-03:00'
+                status_id: 4
+                hydric_state_id: 3
+                labour_issue_id: 3
+                humidity: null
+                baseline_ha: '26.00000000'
+                progress_ha_daily: '5.17000000'
+                progress_tn_daily: '0.17000000'
+                progress_ha_total: '5.17000000'
+                progress_tn_total: '0.17000000'
+                remaining_ha_total: '20.83000000'
+                yield_tn_ha_partial: '0.03288201'
+                yield_tn_ha_final: '0.03288201'
+                is_last: true
+                finished: false
+                observations: SNWP-11415-create
+                lat: null
+                lon: null
+                location_id: null
+                system_id: 8
+                external_code: null
+                machine_samples: []
+                created_at: '2026-07-21T12:05:00-03:00'
+                modified_at: '2026-07-21T12:05:00-03:00'
+                deleted_at: null
+                active: true
+  /api/v3/third_party/progress_report/{progress_report_id}:
+    get:
+      tags:
+        - Version 3 > Progress Report
+      summary: Detail
+      description: Get progress report by id for Third Party v3 (SNWP-11415).
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: progress_report_id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 414682
+                campaign_id: 552034
+                type: 11
+                date: '2026-07-21T12:00:00-03:00'
+                status_id: 4
+                hydric_state_id: 3
+                labour_issue_id: 3
+                humidity: null
+                baseline_ha: '26.00000000'
+                progress_ha_daily: '5.17000000'
+                progress_tn_daily: '0.17000000'
+                progress_ha_total: '5.17000000'
+                progress_tn_total: '0.17000000'
+                remaining_ha_total: '20.83000000'
+                yield_tn_ha_partial: '0.03288201'
+                yield_tn_ha_final: '0.03288201'
+                is_last: true
+                finished: false
+                observations: SNWP-11415-create
+                lat: null
+                lon: null
+                location_id: null
+                system_id: 8
+                external_code: null
+                machine_samples: []
+                created_at: '2026-07-21T12:05:00-03:00'
+                modified_at: '2026-07-21T12:05:00-03:00'
+                deleted_at: null
+                active: true
+    delete:
+      tags:
+        - Version 3 > Progress Report
+      summary: Delete
+      description: >-
+        Soft-delete progress report by id for Third Party v3 (SNWP-11415).
+        Response: {"data": true}.
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: progress_report_id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data: true
   /api/v3/third_party/harvest_progress:
     get:
       tags:
