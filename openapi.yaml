@@ -118,6 +118,34 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/v2/refresh:
+    post:
+      tags:
+        - Security
+      summary: Login Refresh
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                refresh_token: '{{refresh_token}}'
+      parameters:
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/v2/third_party/active_ingredients/1:
     get:
       tags:
