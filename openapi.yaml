@@ -18113,6 +18113,16 @@ paths:
                 next_page: 1
                 total_pages: 1
                 total_items: 100
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error:
+                  code: 400
+                  message: El parámetro size no puede ser mayor a 500.
         '500':
           description: Internal Server Error
           headers:
@@ -18750,8 +18760,8 @@ paths:
       summary: List
       description: >-
         Retorna la lista de sistemas externos disponibles para integración Third
-        Party. Parámetros soportados: page (página actual, default 1), size
-        (ítems por página, default 10). Requiere permiso LIST sobre System.
+        Party. Parámetros: page (default 1), size (default 10, máximo 500). Si
+        size > 500 la API responde HTTP 400. Requiere permiso LIST sobre System.
       parameters:
         - name: Content-Type
           in: header
@@ -18841,10 +18851,19 @@ paths:
             application/json:
               schema:
                 type: object
-              example:
-                error:
-                  code: validation.invalid_page
-                  message: El parámetro page es inválido
+              examples:
+                example-0:
+                  summary: 'Error: Validación - page inválido'
+                  value:
+                    error:
+                      code: validation.invalid_page
+                      message: El parámetro page es inválido
+                example-1:
+                  summary: 'Error: Validación - size mayor a 500'
+                  value:
+                    error:
+                      code: 400
+                      message: El parámetro size no puede ser mayor a 500.
         '401':
           description: Unauthorized
           content:
@@ -59223,6 +59242,16 @@ paths:
                 next_page: 1
                 total_pages: 1
                 total_items: 61
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error:
+                  code: 400
+                  message: El parámetro size no puede ser mayor a 500.
   /api/v3/third_party/work_order_labour_type_categories:
     get:
       tags:
