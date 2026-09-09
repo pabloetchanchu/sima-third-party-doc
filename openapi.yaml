@@ -54,6 +54,7 @@ tags:
   - name: Version 3 > External Plot Association
   - name: Version 3 > External Systems
   - name: Version 3 > Fertilization Control
+  - name: Version 3 > Farmers
   - name: Version 3 > Formulated
   - name: Version 3 > Hydric States
   - name: Version 3 > IOT
@@ -19298,6 +19299,259 @@ paths:
                     "total_pages": 1,
                     "total_items": 9
                 }
+  /api/v3/third_party/farmers:
+    get:
+      tags:
+        - Version 3 > Farmers
+      summary: List
+      description: Lista productores TP v3. Paginación page/size. email y area correctos.
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: 'Default: 1'
+          example: '1'
+        - name: size
+          in: query
+          schema:
+            type: integer
+          example: '10'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Version 3 > Farmers
+      summary: Create
+      description: Alta productor TP v3. society_id del token. 201 recurso completo.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Carlos
+                lastname: García
+                cuit: '20123456789'
+                email: carlos@example.com
+                phone_number: '+5491112345678'
+                area: 120.5
+                observations: null
+                external_code: ERP-001
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v3/third_party/farmers/{new_farmer}:
+    get:
+      tags:
+        - Version 3 > Farmers
+      summary: Detail
+      description: Detalle productor TP v3. email real, area numérico o null.
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_farmer
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - Version 3 > Farmers
+      summary: Edit
+      description: Edición productor TP v3. name obligatorio. 200 recurso.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Carlos Updated
+                lastname: García
+                email: nuevo@example.com
+                area: 130
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_farmer
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Version 3 > Farmers
+      summary: Delete
+      description: >-
+        Baja productor TP v3. 204 si no tiene establecimientos; 409 si los
+        tiene.
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_farmer
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v3/third_party/farmers/{new_farmer}/active:
+    patch:
+      tags:
+        - Version 3 > Farmers
+      summary: Set Active
+      description: 'Activa o desactiva el productor TP v3. Respuesta { active: bool }.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                active: false
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_farmer
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/v3/third_party/formulateds:
     get:
       tags:
