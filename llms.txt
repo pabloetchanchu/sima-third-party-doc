@@ -34,7 +34,8 @@
 
 - QA: https://api.qa.sima.ag
 - Producción: https://api.sima.ag
-- Demo: demo@sima.ag / demo_sima
+- Demo API: demo@sima.ag / ecbf9edef9dc73af8f496c2cc90eaca6 (ID usuario: 79213)
+- Demo Web: https://env.qa.sima.ag — demo-web@sima.ag / demo-web-pt@sima.ag / 45V0yxDejlamwWwG
 
 ## Soporte
 

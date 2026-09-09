@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-05T11:22:41.678Z",
+  "generatedAt": "2026-09-09T15:17:17.063Z",
   "docsBaseUrl": "https://docs.tp.sima.ag",
   "chunkCount": 256,
   "chunks": [
@@ -929,7 +929,7 @@
       "title": "Inicio Rápido",
       "heading": "Paso 1 — Autenticarte",
       "url": "https://docs.tp.sima.ag/quickstart#paso-1-autenticarte",
-      "content": "Todas las llamadas a la API requieren un access_token válido. Obtenelo llamando al endpoint de login.\n\n curl\ncurl -X POST https://api.qa.sima.ag/api/v2/login \\\n -H \"Accept: application/json\" \\\n -H \"Content-Type: application/json\" \\\n -H \"X-SIMA-SYSTEM-ID: 8\" \\\n -d '{\n \"email\": \"demo@sima.ag\",\n \"password\": \"demo_sima\"\n }'\n\n PHP\n$response = $client->post('/api/v2/login', [\n 'headers' => [\n 'Accept' => 'application/json',\n 'Content-Type' => 'application/json',\n 'X-SIMA-SYSTEM-ID' => '8',\n ],\n 'json' => [\n 'email' => 'demo@sima.ag',\n 'password' => 'demo_sima',\n ],\n]);\n$token = json_decode($response->getBody())->access_token;\n\n Python\nimport requests\n\nresponse = requests.post(\n \"https://api.qa.sima.ag/api/v2/login\",\n headers={\n \"Accept\": \"application/json\",\n \"Content-Type\": \"application/json\",\n \"X-SIMA-SYSTEM-ID\": \"8\",\n },\n json={\"email\": \"demo@sima.ag\", \"password\": \"demo_sima\"},\n)\ntoken = response.json()[\"access_token\"]\n\n**Respuesta exitosa (HTTP 200):**\n\n``json\n{\n \"access_token\": \"aff6ac1d-b48c-4ea4-aba2-a2753bf2abf5\",\n \"refresh_token\": \"20626ffd-1288-4106-ac10-dc5a5f3487bc\",\n \"expiration_datetime\": \"2024-06-16T17:38:58-03:00\",\n \"society\": {\n \"id\": 34,\n \"legalName\": \"Sociedad Demo\"\n }\n}\n`\n\n \n\n---"
+      "content": "Todas las llamadas a la API requieren un access_token válido. Obtenelo llamando al endpoint de login.\n\n curl\ncurl -X POST https://api.qa.sima.ag/api/v2/login \\\n -H \"Accept: application/json\" \\\n -H \"Content-Type: application/json\" \\\n -H \"X-SIMA-SYSTEM-ID: 8\" \\\n -d '{\n \"email\": \"demo@sima.ag\",\n \"password\": \"ecbf9edef9dc73af8f496c2cc90eaca6\"\n }'\n\n PHP\n$response = $client->post('/api/v2/login', [\n 'headers' => [\n 'Accept' => 'application/json',\n 'Content-Type' => 'application/json',\n 'X-SIMA-SYSTEM-ID' => '8',\n ],\n 'json' => [\n 'email' => 'demo@sima.ag',\n 'password' => 'ecbf9edef9dc73af8f496c2cc90eaca6',\n ],\n]);\n$token = json_decode($response->getBody())->access_token;\n\n Python\nimport requests\n\nresponse = requests.post(\n \"https://api.qa.sima.ag/api/v2/login\",\n headers={\n \"Accept\": \"application/json\",\n \"Content-Type\": \"application/json\",\n \"X-SIMA-SYSTEM-ID\": \"8\",\n },\n json={\"email\": \"demo@sima.ag\", \"password\": \"ecbf9edef9dc73af8f496c2cc90eaca6\"},\n)\ntoken = response.json()[\"access_token\"]\n\n**Respuesta exitosa (HTTP 200):**\n\n``json\n{\n \"access_token\": \"aff6ac1d-b48c-4ea4-aba2-a2753bf2abf5\",\n \"refresh_token\": \"20626ffd-1288-4106-ac10-dc5a5f3487bc\",\n \"expiration_datetime\": \"2024-06-16T17:38:58-03:00\",\n \"society\": {\n \"id\": 34,\n \"legalName\": \"Sociedad Demo\"\n }\n}\n`\n\n \n\n---"
     },
     {
       "id": "quickstart.mdx#2",
@@ -953,7 +953,7 @@
       "title": "Inicio Rápido",
       "heading": "Cuenta demo",
       "url": "https://docs.tp.sima.ag/quickstart#cuenta-demo",
-      "content": "Usá estas credenciales para probar contra el entorno de QA sin costo:\n\n| | Valor |\n|---|---|\n| **Email API** | demo@sima.ag |\n| **Contraseña API** | demo_sima |\n| **URL Web** | https://env.qa.sima.ag |\n| **Usuario web (ES)** | demo-web@sima.ag |\n| **Usuario web (PT)** | demo-web-pt@sima.ag` |\n\n \n\n---"
+      "content": "Usá estas credenciales para probar contra el entorno de QA sin costo:\n\n| | Valor |\n|---|---|\n| **Email API** | demo@sima.ag |\n| **Contraseña API** | ecbf9edef9dc73af8f496c2cc90eaca6 |\n| **ID usuario** | 79213 |\n| **URL Web** | https://env.qa.sima.ag |\n| **Usuario web (ES)** | demo-web@sima.ag |\n| **Usuario web (PT)** | demo-web-pt@sima.ag |\n| **Contraseña web** | 45V0yxDejlamwWwG` |\n\n \n\n---"
     },
     {
       "id": "quickstart.mdx#5",
