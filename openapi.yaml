@@ -47071,8 +47071,8 @@ paths:
         - Version 3 > Progress Report
       summary: Create
       description: >-
-        Create progress report for Third Party v3 (SNWP-11415). Types: 11
-        harvest / 13 planting.
+        Create progress report for Third Party v3. Types: 11 harvest / 13
+        planting.
       requestBody:
         content:
           application/json:
@@ -47156,7 +47156,7 @@ paths:
       tags:
         - Version 3 > Progress Report
       summary: Detail
-      description: Get progress report by id for Third Party v3 (SNWP-11415).
+      description: Get progress report by id for Third Party v3
       parameters:
         - name: X-SIMA-APIKEY
           in: header
@@ -47446,6 +47446,172 @@ paths:
           description: Successful response
           content:
             application/json: {}
+    post:
+      tags:
+        - Version 3 > SIlo Bag > Silobag Campaigns
+      summary: Create
+      description: >-
+        Create silobag campaign row Third Party v3 (SNWP-11578). quantity_tn in
+        tons.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: |-
+                {
+                    "silobag_id": {{new_silobags}},
+                    "campaign_id": {{campaign_id}},
+                    "quantity_tn": 8.5,
+                    "grain_humidity_percent": 14.0,
+                    "grain_quality_semaphore": 2,
+                    "observations": "SNWP-11578 campaign row"
+                }
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v3/third_party/silobag_campaigns/{new_silobag_campaigns}:
+    get:
+      tags:
+        - Version 3 > SIlo Bag > Silobag Campaigns
+      summary: Detail
+      description: Get silobag campaign row detail Third Party v3 (SNWP-11578).
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_silobag_campaigns
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - Version 3 > SIlo Bag > Silobag Campaigns
+      summary: Update
+      description: Update silobag campaign row Third Party v3 (SNWP-11578).
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                quantity_tn: 9
+                observations: Updated campaign row
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_silobag_campaigns
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Version 3 > SIlo Bag > Silobag Campaigns
+      summary: Delete
+      description: >-
+        Soft-delete silobag campaign row only Third Party v3 (SNWP-11578).
+        Response: {"data": true}.
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_silobag_campaigns
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/v3/third_party/silobags:
     get:
       tags:
@@ -47662,6 +47828,66 @@ paths:
                 next_page: 2
                 total_pages: 5
                 total_items: 44
+    post:
+      tags:
+        - Version 3 > SIlo Bag
+      summary: Create
+      description: >-
+        Create silobag Third Party v3 (SNWP-11578). Requires silobag_campaigns
+        with campaign_id and quantity_tn (tons). Idempotent by external_code
+        (200 on retry).
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: |-
+                {
+                    "code": "SNWP-11578",
+                    "external_code": "snwp-11578-{{$timestamp}}",
+                    "date": "2026-09-25",
+                    "latitude": "-34.6037",
+                    "longitude": "-58.3816",
+                    "silobag_longitude": 120.5,
+                    "semaphore": 1,
+                    "rebagged": false,
+                    "observations": "SNWP-11578 Postman create",
+                    "silobag_campaigns": [
+                        {
+                            "campaign_id": {{campaign_id}},
+                            "quantity_tn": 12.5,
+                            "grain_humidity_percent": 13.5,
+                            "grain_quality_semaphore": 1,
+                            "observations": "Campaign row"
+                        }
+                    ]
+                }
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/v3/third_party/silobags/{new_silobag_id}:
     get:
       tags:
@@ -47751,6 +47977,91 @@ paths:
                 modified_at: '2019-05-06T15:56:08-03:00'
                 deleted_at: null
                 active: true
+  /api/v3/third_party/silobags/{new_silobags}:
+    patch:
+      tags:
+        - Version 3 > SIlo Bag
+      summary: Update
+      description: >-
+        Update silobag own fields only Third Party v3 (SNWP-11578).
+        silobag_campaigns is rejected (422).
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                code: SNWP-11578-PATCH
+                observations: Updated from Postman
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_silobags
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Version 3 > SIlo Bag
+      summary: Delete
+      description: >-
+        Soft-delete silobag, scoutings and campaigns Third Party v3
+        (SNWP-11578). Response: {"data": true}.
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_silobags
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/v3/third_party/scouting:
     get:
       tags:
