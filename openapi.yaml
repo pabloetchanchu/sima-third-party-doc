@@ -47360,10 +47360,11 @@ paths:
     get:
       tags:
         - Version 3 > SIlo Bag > Silobag Scoutings & Extractions
-      summary: Filter by semaphore status
+      summary: List
       description: >-
-        Get scoutings with critical status (red semaphore) in both silo and
-        cereal.
+        List silobag scoutings (monitoring) and extractions. Filter by silobag,
+        scouting type, and silo/cereal semaphore status. Paginated; supports v3
+        audit filters (updated_at_from, active, deleted_at_from, etc.).
       parameters:
         - name: X-SIMA-APIKEY
           in: header
@@ -47385,6 +47386,33 @@ paths:
           schema:
             type: string
           example: application/json
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page number
+          example: '1'
+        - name: size
+          in: query
+          schema:
+            type: integer
+          description: Records per page
+          example: '20'
+        - name: id
+          in: query
+          schema:
+            type: integer
+          description: Silobag scouting ID
+        - name: silobag_id
+          in: query
+          schema:
+            type: integer
+          description: Parent silobag ID
+        - name: scouting_type
+          in: query
+          schema:
+            type: integer
+          description: '1=monitoring, 2=extraction'
         - name: semaphore_silo
           in: query
           schema:
@@ -47397,6 +47425,16 @@ paths:
             type: integer
           description: 'Cereal status: 1=Green, 2=Yellow, 3=Red'
           example: '1'
+        - name: updated_at_from
+          in: query
+          schema:
+            type: string
+          description: Audit filter (ISO8601)
+        - name: active
+          in: query
+          schema:
+            type: integer
+          description: '1=active only, 0=deleted'
       responses:
         '200':
           description: Successful response
@@ -47435,12 +47473,42 @@ paths:
             type: integer
           description: Page number
           example: '1'
-        - name: per_page
+        - name: size
           in: query
           schema:
             type: integer
           description: Records per page
           example: '20'
+        - name: id
+          in: query
+          schema:
+            type: integer
+          description: Silobag campaign link ID
+        - name: silobag_id
+          in: query
+          schema:
+            type: integer
+          description: Parent silobag ID
+        - name: campaign_id
+          in: query
+          schema:
+            type: integer
+          description: SIMA campaign ID
+        - name: grain_quality_semaphore
+          in: query
+          schema:
+            type: integer
+          description: 'Grain quality: 1=Green, 2=Yellow, 3=Red'
+        - name: updated_at_from
+          in: query
+          schema:
+            type: string
+          description: Audit filter (ISO8601)
+        - name: active
+          in: query
+          schema:
+            type: integer
+          description: '1=active only, 0=deleted'
       responses:
         '200':
           description: Successful response
@@ -47482,6 +47550,46 @@ paths:
           schema:
             type: integer
           example: '10'
+        - name: id
+          in: query
+          schema:
+            type: integer
+          description: Silobag ID
+        - name: code
+          in: query
+          schema:
+            type: string
+          description: Silobag code
+        - name: semaphore
+          in: query
+          schema:
+            type: integer
+          description: '1=Green, 2=Yellow, 3=Red'
+        - name: rebagged
+          in: query
+          schema:
+            type: integer
+          description: '1=yes, 0=no'
+        - name: dateExtractedFrom
+          in: query
+          schema:
+            type: string
+          description: Extraction date from (camelCase query param)
+        - name: dateExtractedTo
+          in: query
+          schema:
+            type: string
+          description: Extraction date to (camelCase query param)
+        - name: updated_at_from
+          in: query
+          schema:
+            type: string
+          description: Audit filter (ISO8601)
+        - name: active
+          in: query
+          schema:
+            type: integer
+          description: '1=active only, 0=deleted'
       responses:
         '200':
           description: OK
@@ -47662,7 +47770,7 @@ paths:
                 next_page: 2
                 total_pages: 5
                 total_items: 44
-  /api/v3/third_party/silobags/{new_silobag_id}:
+  /api/v3/third_party/silobags/{id}:
     get:
       tags:
         - Version 3 > SIlo Bag
@@ -47688,11 +47796,12 @@ paths:
           schema:
             type: string
           example: application/json
-        - name: new_silobag_id
+        - name: id
           in: path
           schema:
-            type: string
+            type: integer
           required: true
+          description: Silobag ID
       responses:
         '200':
           description: OK

@@ -1,25 +1,58 @@
 ---
 title: "Silobolsas"
-description: "Cómo consultar Silobolsas — bolsas de almacenamiento de grano con coordenadas GPS y monitoreo de estado"
+description: "Cómo consultar silobolsas, monitoreos y cultivos almacenados vía la API de Terceros de SIMA"
 ---
 
 ## Resumen
 
-Silobags (silobolsas) are grain storage bags used widely in South American agriculture. SIMA tracks their location, status, and monitoring history. Third-party systems — particularly grain management platforms and logistics systems — can query silobag data to integrate with SIMA's storage tracking.
+Las silobolsas son bolsas de almacenamiento de grano en campo. SIMA registra su ubicación, estado (semáforo), cultivos asociados y el historial de **monitoreos** e **extracciones**. Sistemas de acopio, logística o ERP pueden sincronizar estos datos en solo lectura.
+
+<Warning>
+  **Monitoreo de campo** (`scouting`) y **monitoreo de silobolsa** (`silobag_scoutings`) son dominios distintos con endpoints separados. No uses `scouting` para inspecciones de silobolsa.
+</Warning>
 
 ---
 
-## Endpoints
+## Mapa de entidades
 
-### Detalle de silobolsa
+```
+Silobag (silobolsa)
+  ├── SilobagCampaign (cultivo / campaña almacenada en la bolsa)
+  │     └── quantity_tn, humedad, semáforo de calidad de grano
+  └── SilobagScouting (monitoreo o extracción)
+        └── semáforo silo, semáforo cereal, toneladas extraídas (si aplica)
+```
+
+| Recurso API | Qué representa |
+|---|---|
+| `silobags` | La bolsa: código, GPS, semáforo global, fecha de extracción |
+| `silobag_campaigns` | Qué **campaña** (cultivo en SIMA) y cuántas tn hay en esa bolsa |
+| `silobag_scoutings` | Cada **recorrida** de control o registro de **extracción** de grano |
+
+---
+
+## Endpoints (v3 — solo lectura)
+
+| Operación | Método y ruta |
+|---|---|
+| Listar silobolsas | `GET /api/v3/third_party/silobags` |
+| Detalle de silobolsa | `GET /api/v3/third_party/silobags/{id}` |
+| Listar cultivos en silobolsa | `GET /api/v3/third_party/silobag_campaigns` |
+| Listar monitoreos / extracciones | `GET /api/v3/third_party/silobag_scoutings` |
+
+Filtros de auditoría v3 (listados): `updated_at_from`, `updated_at_to`, `created_at_from`, `created_at_to`, `deleted_at_from`, `deleted_at_to`, `active`, más `page` y `size`. Ver [Estrategia de sincronización](/guides/sync-strategy).
+
+---
+
+## Silobolsas
+
+### Detalle
 
 ```
 GET /api/v3/third_party/silobags/{id}
 ```
 
-Devuelve una silobolsa por ID, incluyendo coordenadas GPS y estado actual.
-
-**Response:**
+**Response (ejemplo):**
 
 ```json
 {
@@ -39,38 +72,124 @@ Devuelve una silobolsa por ID, incluyendo coordenadas GPS y estado actual.
 }
 ```
 
-### Listar silobolsas
+### Listar
 
 ```
 GET /api/v3/third_party/silobags
 ```
 
-**Filters:**
+**Filtros propios:**
 
-| Parameter | Type | Description |
+| Parámetro | Tipo | Descripción |
 |---|---|---|
-| `code` | string | Search by silobag code |
-| `semaphore` | int | Filter by status: `1` (green), `2` (yellow), `3` (red) |
-| `rebagged` | int | Filter re-bagged silobags: `1` (yes), `0` (no) |
-| `active` | int | Filter active: `1` (active), `0` (inactive) |
-| `date_extracted_from` / `date_extracted_to` | datetime | Filter by extraction date |
-| `updated_at_from` / `updated_at_to` | datetime | Change detection |
-| `deleted_at_from` | datetime | Detect deleted silobags |
-| `page` / `size` | int | Pagination |
+| `id` | int | Filtrar por ID de silobolsa |
+| `code` | string | Código de la bolsa |
+| `semaphore` | int | `1` verde, `2` amarillo, `3` rojo |
+| `rebagged` | int | `1` reembolsada, `0` no |
+| `dateExtractedFrom` | datetime | Extracción desde (inclusive) |
+| `dateExtractedTo` | datetime | Extracción hasta (inclusive) |
+
+<Info>
+  Los filtros por rango de **fecha de extracción** usan nombres en **camelCase** (`dateExtractedFrom` / `dateExtractedTo`), no `date_extracted_from`. El resto de filtros de auditoría v3 siguen el patrón `updated_at_from`, etc.
+</Info>
+
+**Paginación:** `page`, `size`. La respuesta incluye `items`, `current_page`, `next_page`, `total_pages`, `total_items`.
+
+---
+
+## Monitoreos y extracciones (`silobag_scoutings`)
+
+Cada registro es una inspección de la bolsa o una **extracción** de grano. El semáforo del silo y del cereal se evalúan por separado.
+
+```
+GET /api/v3/third_party/silobag_scoutings
+```
+
+**Filtros propios:**
+
+| Parámetro | Tipo | Descripción |
+|---|---|---|
+| `id` | int | ID del monitoreo |
+| `silobag_id` | int | Silobolsa asociada |
+| `scouting_type` | int | `1` = monitoreo, `2` = extracción |
+| `semaphore_silo` | int | Estado del silo: `1` / `2` / `3` |
+| `semaphore_cereal` | int | Estado del cereal: `1` / `2` / `3` |
+
+**Response (ítem de ejemplo):**
+
+```json
+{
+  "id": 120,
+  "silobag_id": 8,
+  "extracted_tn": 12.5,
+  "semaphore_silo": 2,
+  "semaphore_cereal": 3,
+  "scouting_type": 1,
+  "created_at": "2024-05-10T09:00:00-03:00",
+  "modified_at": "2024-05-10T09:00:00-03:00",
+  "deleted_at": null,
+  "active": true
+}
+```
+
+Para alertas de estado crítico en ambos semáforos:
+
+```bash
+GET /api/v3/third_party/silobag_scoutings?semaphore_silo=3&semaphore_cereal=3&active=1
+```
+
+---
+
+## Cultivos en silobolsa (`silobag_campaigns`)
+
+Relaciona una silobolsa con una **campaña** SIMA (cultivo en lote) y las toneladas almacenadas.
+
+```
+GET /api/v3/third_party/silobag_campaigns
+```
+
+**Filtros propios:**
+
+| Parámetro | Tipo | Descripción |
+|---|---|---|
+| `id` | int | ID del vínculo silobolsa–campaña |
+| `silobag_id` | int | Silobolsa |
+| `campaign_id` | int | Campaña SIMA (`campaigns`) |
+| `grain_quality_semaphore` | int | Semáforo de calidad del grano: `1` / `2` / `3` |
+
+**Response (ítem de ejemplo):**
+
+```json
+{
+  "id": 45,
+  "silobag_id": 8,
+  "campaign_id": 506362,
+  "quantity_tn": 180.0,
+  "grain_humidity_percent": 13.5,
+  "grain_quality_semaphore": 2,
+  "observations": null,
+  "created_at": "2024-05-06T15:56:09-03:00",
+  "modified_at": "2024-05-06T15:56:08-03:00",
+  "deleted_at": null,
+  "active": true
+}
+```
+
+Para el detalle de la campaña (cultivo, lote, ciclo), combiná con `GET /api/v3/third_party/campaigns` filtrando por `campaign_id`.
 
 ---
 
 ## Valores del semáforo
 
-The `semaphore` field represents the monitoring status of the silobag:
+El campo `semaphore` en **silobags** resume el estado actual de la bolsa. En **scoutings**, `semaphore_silo` y `semaphore_cereal` pueden diferir.
 
-| Value | Meaning |
+| Valor | Significado |
 |---|---|
-| `1` | 🟢 Green — OK, no issues detected |
-| `2` | 🟡 Yellow — attention required |
-| `3` | 🔴 Red — critical issue, immediate action needed |
+| `1` | Verde — sin problemas relevantes |
+| `2` | Amarillo — requiere atención |
+| `3` | Rojo — situación crítica |
 
-Use `semaphore=3` to pull only bags in critical state:
+Ejemplo: silobolsas en estado crítico:
 
 ```bash
 GET /api/v3/third_party/silobags?semaphore=3&active=1
@@ -78,33 +197,46 @@ GET /api/v3/third_party/silobags?semaphore=3&active=1
 
 ---
 
-## Campos principales
+## Campos principales (silobolsa)
 
-| Field | Description |
+| Campo | Descripción |
 |---|---|
-| `code` | Your reference code for the silobag |
-| `silobag_longitude` | Length of the bag in meters |
-| `latitude` / `longitude` | GPS coordinates of the bag's location |
-| `date_extracted` | Date the grain was extracted (null if still in use) |
-| `rebagged` | Whether the grain was transferred to a new bag |
-| `semaphore` | Current monitoring status (1/2/3) |
+| `code` | Código de referencia de la bolsa |
+| `silobag_longitude` | Longitud de la bolsa en metros (no confundir con `longitude` GPS) |
+| `latitude` / `longitude` | Coordenadas GPS del punto de la bolsa |
+| `date_extracted` | Fecha de extracción del grano (`null` si sigue en uso) |
+| `rebagged` | Si el grano se transfirió a otra bolsa |
+| `semaphore` | Estado de monitoreo resumido (`1` / `2` / `3`) |
 
 ---
 
 ## Frecuencia de sincronización recomendada
 
-For active integrations monitoring storage status:
-
-- **During harvest / storage season**: query every few hours filtering by `updated_at_from`
-- **Off-season**: daily sync is sufficient
-- Always use `semaphore=3` alerts for priority notifications
+- **Cosecha / acopio activo:** cada pocas horas con `updated_at_from` en `silobags` y `silobag_scoutings`.
+- **Fuera de temporada:** sincronización diaria suele alcanzar.
+- **Alertas:** priorizá `semaphore=3` en silobolsas y combinaciones críticas en `silobag_scoutings`.
 
 ---
 
 ## Limitaciones
 
-The current Third-Party API provides **read access only** for silobags. Creating or updating silobags must be done via the SIMA web app or mobile app. If your use case requires write access, contact [soporte@sima.ag](mailto:soporte@sima.ag).
+La API de Terceros expone **solo lectura** para silobolsas, monitoreos y cultivos en bolsa. Alta y edición se hacen en la app web o móvil de SIMA. Si necesitás escritura por API, contactá [soporte@sima.ag](mailto:soporte@sima.ag).
 
-<Info>
-  Silobag monitoring data (temperature sensors, CO2 readings) is available via the IoT endpoints. Contact support for access details.
-</Info>
+---
+
+## Próximos pasos
+
+<CardGroup cols={2}>
+  <Card title="Scouting de campo" icon="magnifying-glass" href="/guides/scouting">
+    Monitoreo en lote (adversidades) — no silobolsa
+  </Card>
+  <Card title="Jerarquía y campañas" icon="sitemap" href="/guides/hierarchy-setup">
+    Campañas y cultivos referenciados por `silobag_campaigns`
+  </Card>
+  <Card title="Estrategia de sincronización" icon="arrows-rotate" href="/guides/sync-strategy">
+    Filtros `updated_at_from` y detección de bajas
+  </Card>
+  <Card title="Glosario" icon="language" href="/api-reference/glossary">
+    Términos SIMA ↔ endpoints
+  </Card>
+</CardGroup>

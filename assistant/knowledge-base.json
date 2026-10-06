@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-09-09T15:17:17.063Z",
+  "generatedAt": "2026-10-06T01:37:28.456Z",
   "docsBaseUrl": "https://docs.tp.sima.ag",
-  "chunkCount": 256,
+  "chunkCount": 270,
   "chunks": [
     {
       "id": "api-reference/entity-schemas.mdx#0",
@@ -161,7 +161,7 @@
       "title": "Referencia de API",
       "heading": "Dominios de endpoints",
       "url": "https://docs.tp.sima.ag/api-reference/overview#dominios-de-endpoints",
-      "content": "| Dominio | Versiones | Notas |\n|---|---|---|\n| Authentication | v2 | Login y refresh token |\n| Work Orders | v1 (integración), v3 | Lectura v3; escritura /integration/api/v1/workOrders |\n| Hierarchy | v2, v3 | Establecimientos, lotes, campañas, cultivos; listado de lotes en v2 |\n| Master Data | v2, v3 | Formulados, aplicadores (CRUD v2), máquinas, unidades, tipos de labor |\n| Scouting | v2, v3 | Solo lectura; catálogo de adversidades en v2 |\n| Progress & Controls | v3 | Avances, controles de siembra/fertilización/stand |\n| Silobags | v3 | Solo lectura |\n| IoT / Weather | v3 | Dispositivos, eventos, factores climáticos, anomalías |\n| Campaign Import | v2 | Importación asíncrona de rendimiento objetivo |\n| Tags & Waypoints | v3 | Etiquetas, asociaciones y waypoints de campo |\n\n---"
+      "content": "| Dominio | Versiones | Notas |\n|---|---|---|\n| Authentication | v2 | Login y refresh token |\n| Work Orders | v1 (integración), v3 | Lectura v3; escritura /integration/api/v1/workOrders |\n| Hierarchy | v2, v3 | Establecimientos, lotes, campañas, cultivos; listado de lotes en v2 |\n| Master Data | v2, v3 | Formulados, aplicadores (CRUD v2), máquinas, unidades, tipos de labor |\n| Scouting | v2, v3 | Solo lectura; catálogo de adversidades en v2 |\n| Progress & Controls | v3 | Avances, controles de siembra/fertilización/stand |\n| Silobags (silobags, silobag_scoutings, silobag_campaigns) | v3 | Solo lectura |\n| IoT / Weather | v3 | Dispositivos, eventos, factores climáticos, anomalías |\n| Campaign Import | v2 | Importación asíncrona de rendimiento objetivo |\n| Tags & Waypoints | v3 | Etiquetas, asociaciones y waypoints de campo |\n\n---"
     },
     {
       "id": "api-reference/overview.mdx#3",
@@ -273,7 +273,7 @@
       "title": "Versiones de la API",
       "heading": "Rutas recomendadas por dominio",
       "url": "https://docs.tp.sima.ag/api-reference/versions#rutas-recomendadas-por-dominio",
-      "content": "| Dominio | Leer (GET) | Crear / actualizar (POST/PATCH) | Eliminar (DELETE) |\n|---|---|---|---|\n| **Autenticación** | — | POST /api/v2/login | — |\n| **Órdenes de Trabajo** | GET /api/v3/third_party/work_orders | POST /integration/api/v1/workOrders | DELETE /integration/api/v1/workOrders/{localId} |\n| **Establecimientos** | GET /api/v3/third_party/establishments | POST /api/v3/third_party/establishments | DELETE /api/v3/third_party/establishments/{id} |\n| **Lotes (Plots)** | GET /api/v2/third_party/plots | POST /api/v3/third_party/plots | DELETE /api/v3/third_party/plots/{id} |\n| **Cultivos** | GET /api/v3/third_party/cultivations | — | — |\n| **Formulados** | GET /api/v3/third_party/formulateds | — | — |\n| **Aplicadores** | GET /api/v3/third_party/applicators | POST /api/v2/third_party/applicators | DELETE /api/v2/third_party/applicators/{id} |\n| **Máquinas** | GET /api/v3/third_party/machines | — | — |\n| **Scouting** | GET /api/v3/third_party/scouting | — | — |\n| **Avances (Progress)** | GET /api/v3/third_party/progress_report | — | — |\n| **Silobolsas** | GET /api/v3/third_party/silobags | — | — |\n| **IoT / Clima** | GET /api/v3/third_party/devices, device_events, … | POST /api/v3/third_party/devices, device_events | — |\n\n---"
+      "content": "| Dominio | Leer (GET) | Crear / actualizar (POST/PATCH) | Eliminar (DELETE) |\n|---|---|---|---|\n| **Autenticación** | — | POST /api/v2/login | — |\n| **Órdenes de Trabajo** | GET /api/v3/third_party/work_orders | POST /integration/api/v1/workOrders | DELETE /integration/api/v1/workOrders/{localId} |\n| **Establecimientos** | GET /api/v3/third_party/establishments | POST /api/v3/third_party/establishments | DELETE /api/v3/third_party/establishments/{id} |\n| **Lotes (Plots)** | GET /api/v2/third_party/plots | POST /api/v3/third_party/plots | DELETE /api/v3/third_party/plots/{id} |\n| **Cultivos** | GET /api/v3/third_party/cultivations | — | — |\n| **Formulados** | GET /api/v3/third_party/formulateds | — | — |\n| **Aplicadores** | GET /api/v3/third_party/applicators | POST /api/v2/third_party/applicators | DELETE /api/v2/third_party/applicators/{id} |\n| **Máquinas** | GET /api/v3/third_party/machines | — | — |\n| **Scouting** | GET /api/v3/third_party/scouting | — | — |\n| **Avances (Progress)** | GET /api/v3/third_party/progress_report | — | — |\n| **Silobolsas** | GET /api/v3/third_party/silobags, silobag_scoutings, silobag_campaigns | — | — |\n| **IoT / Clima** | GET /api/v3/third_party/devices, device_events, … | POST /api/v3/third_party/devices, device_events | — |\n\n---"
     },
     {
       "id": "api-reference/versions.mdx#3",
@@ -689,47 +689,79 @@
       "title": "Silobolsas",
       "heading": "Resumen",
       "url": "https://docs.tp.sima.ag/guides/silobags",
-      "content": "Silobags (silobolsas) are grain storage bags used widely in South American agriculture. SIMA tracks their location, status, and monitoring history. Third-party systems — particularly grain management platforms and logistics systems — can query silobag data to integrate with SIMA's storage tracking.\n\n---"
+      "content": "Las silobolsas son bolsas de almacenamiento de grano en campo. SIMA registra su ubicación, estado (semáforo), cultivos asociados y el historial de **monitoreos** e **extracciones**. Sistemas de acopio, logística o ERP pueden sincronizar estos datos en solo lectura.\n\n \n\n---"
     },
     {
       "id": "guides/silobags.mdx#1",
       "source": "guides/silobags.mdx",
       "title": "Silobolsas",
-      "heading": "Endpoints",
-      "url": "https://docs.tp.sima.ag/guides/silobags#endpoints",
-      "content": "### Detalle de silobolsa\n\n``\nGET /api/v3/third_party/silobags/{id}\n`\n\nDevuelve una silobolsa por ID, incluyendo coordenadas GPS y estado actual.\n\n**Response:**\n\n`json\n{\n \"id\": 8,\n \"code\": \"766code\",\n \"date_extracted\": \"2024-05-13T12:18:41-03:00\",\n \"silobag_longitude\": \"55.000\",\n \"rebagged\": false,\n \"semaphore\": 3,\n \"latitude\": \"-32.93489339\",\n \"longitude\": \"-60.65658509\",\n \"observations\": null,\n \"created_at\": \"2024-05-06T15:56:09-03:00\",\n \"modified_at\": \"2024-05-06T15:56:08-03:00\",\n \"deleted_at\": null,\n \"active\": true\n}\n`\n\n### Listar silobolsas\n\n`\nGET /api/v3/third_party/silobags\n`\n\n**Filters:**\n\n| Parameter | Type | Description |\n|---|---|---|\n| code | string | Search by silobag code |\n| semaphore | int | Filter by status: 1 (green), 2 (yellow), 3 (red) |\n| rebagged | int | Filter re-bagged silobags: 1 (yes), 0 (no) |\n| active | int | Filter active: 1 (active), 0 (inactive) |\n| date_extracted_from / date_extracted_to | datetime | Filter by extraction date |\n| updated_at_from / updated_at_to | datetime | Change detection |\n| deleted_at_from | datetime | Detect deleted silobags |\n| page / size | int | Pagination |\n\n---"
+      "heading": "Mapa de entidades",
+      "url": "https://docs.tp.sima.ag/guides/silobags#mapa-de-entidades",
+      "content": "``\nSilobag (silobolsa)\n ├── SilobagCampaign (cultivo / campaña almacenada en la bolsa)\n │ └── quantity_tn, humedad, semáforo de calidad de grano\n └── SilobagScouting (monitoreo o extracción)\n └── semáforo silo, semáforo cereal, toneladas extraídas (si aplica)\n`\n\n| Recurso API | Qué representa |\n|---|---|\n| silobags | La bolsa: código, GPS, semáforo global, fecha de extracción |\n| silobag_campaigns | Qué **campaña** (cultivo en SIMA) y cuántas tn hay en esa bolsa |\n| silobag_scoutings | Cada **recorrida** de control o registro de **extracción** de grano |\n\n---"
     },
     {
       "id": "guides/silobags.mdx#2",
       "source": "guides/silobags.mdx",
       "title": "Silobolsas",
-      "heading": "Valores del semáforo",
-      "url": "https://docs.tp.sima.ag/guides/silobags#valores-del-semaforo",
-      "content": "The semaphore field represents the monitoring status of the silobag:\n\n| Value | Meaning |\n|---|---|\n| 1 | 🟢 Green — OK, no issues detected |\n| 2 | 🟡 Yellow — attention required |\n| 3 | 🔴 Red — critical issue, immediate action needed |\n\nUse semaphore=3 to pull only bags in critical state:\n\n`bash\nGET /api/v3/third_party/silobags?semaphore=3&active=1\n`\n\n---"
+      "heading": "Endpoints (v3 — solo lectura)",
+      "url": "https://docs.tp.sima.ag/guides/silobags#endpoints-v3-solo-lectura",
+      "content": "| Operación | Método y ruta |\n|---|---|\n| Listar silobolsas | GET /api/v3/third_party/silobags |\n| Detalle de silobolsa | GET /api/v3/third_party/silobags/{id} |\n| Listar cultivos en silobolsa | GET /api/v3/third_party/silobag_campaigns |\n| Listar monitoreos / extracciones | GET /api/v3/third_party/silobag_scoutings |\n\nFiltros de auditoría v3 (listados): updated_at_from, updated_at_to, created_at_from, created_at_to, deleted_at_from, deleted_at_to, active, más page y size. Ver Estrategia de sincronización.\n\n---"
     },
     {
       "id": "guides/silobags.mdx#3",
       "source": "guides/silobags.mdx",
       "title": "Silobolsas",
-      "heading": "Campos principales",
-      "url": "https://docs.tp.sima.ag/guides/silobags#campos-principales",
-      "content": "| Field | Description |\n|---|---|\n| code | Your reference code for the silobag |\n| silobag_longitude | Length of the bag in meters |\n| latitude / longitude | GPS coordinates of the bag's location |\n| date_extracted | Date the grain was extracted (null if still in use) |\n| rebagged | Whether the grain was transferred to a new bag |\n| semaphore | Current monitoring status (1/2/3) |\n\n---"
+      "heading": "Silobolsas",
+      "url": "https://docs.tp.sima.ag/guides/silobags#silobolsas",
+      "content": "### Detalle\n\n`\nGET /api/v3/third_party/silobags/{id}\n`\n\n**Response (ejemplo):**\n\n`json\n{\n \"id\": 8,\n \"code\": \"766code\",\n \"date_extracted\": \"2024-05-13T12:18:41-03:00\",\n \"silobag_longitude\": \"55.000\",\n \"rebagged\": false,\n \"semaphore\": 3,\n \"latitude\": \"-32.93489339\",\n \"longitude\": \"-60.65658509\",\n \"observations\": null,\n \"created_at\": \"2024-05-06T15:56:09-03:00\",\n \"modified_at\": \"2024-05-06T15:56:08-03:00\",\n \"deleted_at\": null,\n \"active\": true\n}\n`\n\n### Listar\n\n`\nGET /api/v3/third_party/silobags\n`\n\n**Filtros propios:**\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| id | int | Filtrar por ID de silobolsa |\n| code | string | Código de la bolsa |\n| semaphore | int | 1 verde, 2 amarillo, 3 rojo |\n| rebagged | int | 1 reembolsada, 0 no |\n| dateExtractedFrom | datetime | Extracción desde (inclusive) |\n| dateExtractedTo | datetime | Extracción hasta (inclusive) |\n\n \n\n**Paginación:** page, size. La respuesta incluye items, current_page, next_page, total_pages, total_items.\n\n---"
     },
     {
       "id": "guides/silobags.mdx#4",
       "source": "guides/silobags.mdx",
       "title": "Silobolsas",
-      "heading": "Frecuencia de sincronización recomendada",
-      "url": "https://docs.tp.sima.ag/guides/silobags#frecuencia-de-sincronizacion-recomendada",
-      "content": "For active integrations monitoring storage status:\n\n- **During harvest / storage season**: query every few hours filtering by updated_at_from\n- **Off-season**: daily sync is sufficient\n- Always use semaphore=3` alerts for priority notifications\n\n---"
+      "heading": "Monitoreos y extracciones (silobag_scoutings)",
+      "url": "https://docs.tp.sima.ag/guides/silobags#monitoreos-y-extracciones-silobag-scoutings",
+      "content": "Cada registro es una inspección de la bolsa o una **extracción** de grano. El semáforo del silo y del cereal se evalúan por separado.\n\n`\nGET /api/v3/third_party/silobag_scoutings\n`\n\n**Filtros propios:**\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| id | int | ID del monitoreo |\n| silobag_id | int | Silobolsa asociada |\n| scouting_type | int | 1 = monitoreo, 2 = extracción |\n| semaphore_silo | int | Estado del silo: 1 / 2 / 3 |\n| semaphore_cereal | int | Estado del cereal: 1 / 2 / 3 |\n\n**Response (ítem de ejemplo):**\n\n`json\n{\n \"id\": 120,\n \"silobag_id\": 8,\n \"extracted_tn\": 12.5,\n \"semaphore_silo\": 2,\n \"semaphore_cereal\": 3,\n \"scouting_type\": 1,\n \"created_at\": \"2024-05-10T09:00:00-03:00\",\n \"modified_at\": \"2024-05-10T09:00:00-03:00\",\n \"deleted_at\": null,\n \"active\": true\n}\n`\n\nPara alertas de estado crítico en ambos semáforos:\n\n`bash\nGET /api/v3/third_party/silobag_scoutings?semaphore_silo=3&semaphore_cereal=3&active=1\n`\n\n---"
     },
     {
       "id": "guides/silobags.mdx#5",
       "source": "guides/silobags.mdx",
       "title": "Silobolsas",
+      "heading": "Cultivos en silobolsa (silobag_campaigns)",
+      "url": "https://docs.tp.sima.ag/guides/silobags#cultivos-en-silobolsa-silobag-campaigns",
+      "content": "Relaciona una silobolsa con una **campaña** SIMA (cultivo en lote) y las toneladas almacenadas.\n\n`\nGET /api/v3/third_party/silobag_campaigns\n`\n\n**Filtros propios:**\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| id | int | ID del vínculo silobolsa–campaña |\n| silobag_id | int | Silobolsa |\n| campaign_id | int | Campaña SIMA (campaigns) |\n| grain_quality_semaphore | int | Semáforo de calidad del grano: 1 / 2 / 3 |\n\n**Response (ítem de ejemplo):**\n\n`json\n{\n \"id\": 45,\n \"silobag_id\": 8,\n \"campaign_id\": 506362,\n \"quantity_tn\": 180.0,\n \"grain_humidity_percent\": 13.5,\n \"grain_quality_semaphore\": 2,\n \"observations\": null,\n \"created_at\": \"2024-05-06T15:56:09-03:00\",\n \"modified_at\": \"2024-05-06T15:56:08-03:00\",\n \"deleted_at\": null,\n \"active\": true\n}\n`\n\nPara el detalle de la campaña (cultivo, lote, ciclo), combiná con GET /api/v3/third_party/campaigns filtrando por campaign_id.\n\n---"
+    },
+    {
+      "id": "guides/silobags.mdx#6",
+      "source": "guides/silobags.mdx",
+      "title": "Silobolsas",
+      "heading": "Valores del semáforo",
+      "url": "https://docs.tp.sima.ag/guides/silobags#valores-del-semaforo",
+      "content": "El campo semaphore en **silobags** resume el estado actual de la bolsa. En **scoutings**, semaphore_silo y semaphore_cereal pueden diferir.\n\n| Valor | Significado |\n|---|---|\n| 1 | Verde — sin problemas relevantes |\n| 2 | Amarillo — requiere atención |\n| 3 | Rojo — situación crítica |\n\nEjemplo: silobolsas en estado crítico:\n\n`bash\nGET /api/v3/third_party/silobags?semaphore=3&active=1\n`\n\n---"
+    },
+    {
+      "id": "guides/silobags.mdx#7",
+      "source": "guides/silobags.mdx",
+      "title": "Silobolsas",
+      "heading": "Campos principales (silobolsa)",
+      "url": "https://docs.tp.sima.ag/guides/silobags#campos-principales-silobolsa",
+      "content": "| Campo | Descripción |\n|---|---|\n| code | Código de referencia de la bolsa |\n| silobag_longitude | Longitud de la bolsa en metros (no confundir con longitude GPS) |\n| latitude / longitude | Coordenadas GPS del punto de la bolsa |\n| date_extracted | Fecha de extracción del grano (null si sigue en uso) |\n| rebagged | Si el grano se transfirió a otra bolsa |\n| semaphore | Estado de monitoreo resumido (1 / 2 / 3) |\n\n---"
+    },
+    {
+      "id": "guides/silobags.mdx#8",
+      "source": "guides/silobags.mdx",
+      "title": "Silobolsas",
+      "heading": "Frecuencia de sincronización recomendada",
+      "url": "https://docs.tp.sima.ag/guides/silobags#frecuencia-de-sincronizacion-recomendada",
+      "content": "- **Cosecha / acopio activo:** cada pocas horas con updated_at_from en silobags y silobag_scoutings.\n- **Fuera de temporada:** sincronización diaria suele alcanzar.\n- **Alertas:** priorizá semaphore=3 en silobolsas y combinaciones críticas en silobag_scoutings`.\n\n---"
+    },
+    {
+      "id": "guides/silobags.mdx#9",
+      "source": "guides/silobags.mdx",
+      "title": "Silobolsas",
       "heading": "Limitaciones",
       "url": "https://docs.tp.sima.ag/guides/silobags#limitaciones",
-      "content": "The current Third-Party API provides **read access only** for silobags. Creating or updating silobags must be done via the SIMA web app or mobile app. If your use case requires write access, contact soporte@sima.ag."
+      "content": "La API de Terceros expone **solo lectura** para silobolsas, monitoreos y cultivos en bolsa. Alta y edición se hacen en la app web o móvil de SIMA. Si necesitás escritura por API, contactá soporte@sima.ag.\n\n---"
     },
     {
       "id": "guides/sync-strategy.mdx#0",
@@ -970,6 +1002,14 @@
       "heading": "POST /api/v2/login",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
       "content": "Endpoint: POST /api/v2/login\nResumen: Login\nTags: Security"
+    },
+    {
+      "id": "openapi:post:/api/v2/refresh",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "POST /api/v2/refresh",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: POST /api/v2/refresh\nResumen: Login Refresh\nTags: Security"
     },
     {
       "id": "openapi:get:/api/v2/third_party/active_ingredients/1",
@@ -1609,7 +1649,7 @@
       "title": "API Reference",
       "heading": "GET /api/v3/third_party/external_systems",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/external_systems\nResumen: List\nTags: Version 3 > External Systems\nDescripción: Retorna la lista de sistemas externos disponibles para integración Third Party. Parámetros soportados: page (página actual, default 1), size (ítems por página, default 10). Requiere permiso LIST sobre System."
+      "content": "Endpoint: GET /api/v3/third_party/external_systems\nResumen: List\nTags: Version 3 > External Systems\nDescripción: Retorna la lista de sistemas externos disponibles para integración Third Party. Parámetros: page (default 1), size (default 10, máximo 500). Si size > 500 la API responde HTTP 400. Requiere permiso LIST sobre System."
     },
     {
       "id": "openapi:get:/api/v3/third_party/fertilization_control",
@@ -1618,6 +1658,54 @@
       "heading": "GET /api/v3/third_party/fertilization_control",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
       "content": "Endpoint: GET /api/v3/third_party/fertilization_control\nResumen: List\nTags: Version 3 > Fertilization Control"
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/farmers",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/farmers",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/farmers\nResumen: List\nTags: Version 3 > Farmers\nDescripción: Lista productores TP v3. Paginación page/size. email y area correctos."
+    },
+    {
+      "id": "openapi:post:/api/v3/third_party/farmers",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "POST /api/v3/third_party/farmers",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: POST /api/v3/third_party/farmers\nResumen: Create\nTags: Version 3 > Farmers\nDescripción: Alta productor TP v3. society_id del token. 201 recurso completo."
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/farmers/{new_farmer}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/farmers/{new_farmer}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/farmers/{new_farmer}\nResumen: Detail\nTags: Version 3 > Farmers\nDescripción: Detalle productor TP v3. email real, area numérico o null."
+    },
+    {
+      "id": "openapi:patch:/api/v3/third_party/farmers/{new_farmer}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "PATCH /api/v3/third_party/farmers/{new_farmer}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: PATCH /api/v3/third_party/farmers/{new_farmer}\nResumen: Edit\nTags: Version 3 > Farmers\nDescripción: Edición productor TP v3. name obligatorio. 200 recurso."
+    },
+    {
+      "id": "openapi:delete:/api/v3/third_party/farmers/{new_farmer}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "DELETE /api/v3/third_party/farmers/{new_farmer}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: DELETE /api/v3/third_party/farmers/{new_farmer}\nResumen: Delete\nTags: Version 3 > Farmers\nDescripción: Baja productor TP v3. 204 si no tiene establecimientos; 409 si los tiene."
+    },
+    {
+      "id": "openapi:patch:/api/v3/third_party/farmers/{new_farmer}/active",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "PATCH /api/v3/third_party/farmers/{new_farmer}/active",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: PATCH /api/v3/third_party/farmers/{new_farmer}/active\nResumen: Set Active\nTags: Version 3 > Farmers\nDescripción: Activa o desactiva el productor TP v3. Respuesta { active: bool }."
     },
     {
       "id": "openapi:get:/api/v3/third_party/formulateds",
@@ -1892,6 +1980,30 @@
       "content": "Endpoint: GET /api/v3/third_party/progress_report\nResumen: List\nTags: Version 3 > Progress Report"
     },
     {
+      "id": "openapi:post:/api/v3/third_party/progress_report",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "POST /api/v3/third_party/progress_report",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: POST /api/v3/third_party/progress_report\nResumen: Create\nTags: Version 3 > Progress Report\nDescripción: Create progress report for Third Party v3 (SNWP-11415). Types: 11 harvest / 13 planting."
+    },
+    {
+      "id": "openapi:get:/api/v3/third_party/progress_report/{progress_report_id}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "GET /api/v3/third_party/progress_report/{progress_report_id}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: GET /api/v3/third_party/progress_report/{progress_report_id}\nResumen: Detail\nTags: Version 3 > Progress Report\nDescripción: Get progress report by id for Third Party v3 (SNWP-11415)."
+    },
+    {
+      "id": "openapi:delete:/api/v3/third_party/progress_report/{progress_report_id}",
+      "source": "openapi.yaml",
+      "title": "API Reference",
+      "heading": "DELETE /api/v3/third_party/progress_report/{progress_report_id}",
+      "url": "https://docs.tp.sima.ag/api-reference/overview",
+      "content": "Endpoint: DELETE /api/v3/third_party/progress_report/{progress_report_id}\nResumen: Delete\nTags: Version 3 > Progress Report\nDescripción: Soft-delete progress report by id for Third Party v3 (SNWP-11415). Response: {\"data\": true}."
+    },
+    {
       "id": "openapi:get:/api/v3/third_party/harvest_progress",
       "source": "openapi.yaml",
       "title": "API Reference",
@@ -1913,7 +2025,7 @@
       "title": "API Reference",
       "heading": "GET /api/v3/third_party/silobag_scoutings",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/silobag_scoutings\nResumen: Filter by semaphore status\nTags: Version 3 > SIlo Bag > Silobag Scoutings & Extractions\nDescripción: Get scoutings with critical status (red semaphore) in both silo and cereal."
+      "content": "Endpoint: GET /api/v3/third_party/silobag_scoutings\nResumen: List\nTags: Version 3 > SIlo Bag > Silobag Scoutings & Extractions\nDescripción: List silobag scoutings (monitoring) and extractions. Filter by silobag, scouting type, and silo/cereal semaphore status. Paginated; supports v3 audit filters (updated_at_from, active, deleted_at_from, etc.)."
     },
     {
       "id": "openapi:get:/api/v3/third_party/silobag_campaigns",
@@ -1932,12 +2044,12 @@
       "content": "Endpoint: GET /api/v3/third_party/silobags\nResumen: List\nTags: Version 3 > SIlo Bag"
     },
     {
-      "id": "openapi:get:/api/v3/third_party/silobags/{new_silobag_id}",
+      "id": "openapi:get:/api/v3/third_party/silobags/{id}",
       "source": "openapi.yaml",
       "title": "API Reference",
-      "heading": "GET /api/v3/third_party/silobags/{new_silobag_id}",
+      "heading": "GET /api/v3/third_party/silobags/{id}",
       "url": "https://docs.tp.sima.ag/api-reference/overview",
-      "content": "Endpoint: GET /api/v3/third_party/silobags/{new_silobag_id}\nResumen: Detail\nTags: Version 3 > SIlo Bag"
+      "content": "Endpoint: GET /api/v3/third_party/silobags/{id}\nResumen: Detail\nTags: Version 3 > SIlo Bag"
     },
     {
       "id": "openapi:get:/api/v3/third_party/scouting",
