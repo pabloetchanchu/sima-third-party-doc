@@ -1,0 +1,139 @@
+---
+title: "Lotes externos"
+description: "Cómo consultar sistemas externos y el mapeo parcela ERP ↔ lote SIMA"
+---
+
+## Resumen
+
+Cuando un ERP o GIS ya tiene parcelas propias, SIMA guarda el vínculo entre un **lote** (`plots`) y el identificador de esa parcela en el sistema de origen. Eso permite sincronizar geometría, campañas y OTs sin duplicar el maestro de lotes.
+
+```
+Sistema externo (external_systems)
+  └── Asociación (external_plots_associations)
+        ├── plot_id          → lote SIMA
+        ├── system_id        → sistema (Finnegans, Albor, …)
+        ├── external_code
+        └── external_reference
+```
+
+<Info>
+  La API de Terceros v3 expone estos recursos en **solo lectura**. El alta de asociaciones suele ocurrir en el flujo de integración (Auravant, Finnegans, etc.) o en SIMA. Si tu caso requiere escritura por API, contactá [soporte@sima.ag](mailto:soporte@sima.ag).
+</Info>
+
+---
+
+## Endpoints
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/v3/third_party/external_systems` | Catálogo de sistemas de integración |
+| GET | `/api/v3/third_party/external_plots_associations` | Vínculos lote SIMA ↔ parcela externa |
+
+Paginación: `page` y `size` (máx. `size` 500 en sistemas externos; si se supera, la API responde **400**).
+
+---
+
+## Sistemas externos
+
+```
+GET /api/v3/third_party/external_systems
+```
+
+**Response (ítem de ejemplo):**
+
+```json
+{
+  "id": 12,
+  "name": "Finnegans"
+}
+```
+
+Usá `id` como `system_id` al filtrar asociaciones. La lista es el universo de integraciones habilitadas; no todos los IDs aplican a tu sociedad.
+
+---
+
+## Asociaciones lote ↔ parcela
+
+```
+GET /api/v3/third_party/external_plots_associations
+```
+
+**Filtros propios:**
+
+| Parámetro | Tipo | Descripción |
+|---|---|---|
+| `id` | int | ID de la asociación |
+| `plot_id` | int | Lote SIMA |
+| `system_id` | int | Sistema (`external_systems.id`) |
+| `external_code` | string | Código de la parcela en el sistema externo |
+| `external_reference` | string | Referencia adicional (según el conector) |
+
+Filtros de auditoría v3: `updated_at_from`, `updated_at_to`, `created_at_from`, `created_at_to`, `deleted_at_from`, `deleted_at_to`, `active`.
+
+**Response (ítem de ejemplo):**
+
+```json
+{
+  "id": 901,
+  "plot_id": 44821,
+  "system_id": 12,
+  "external_code": "CAMPO-A-LOTE-03",
+  "external_reference": "fg-plot-9981",
+  "created_at": "2025-03-12T11:20:00-03:00",
+  "modified_at": "2025-03-12T11:20:00-03:00",
+  "deleted_at": null,
+  "active": true
+}
+```
+
+Para el detalle del lote (nombre, establecimiento, geometría), combiná con `GET /api/v2/third_party/plots/{id}` o el alta/edición v3 de plots. Ver [Configuración de jerarquía](/guides/hierarchy-setup).
+
+---
+
+## Flujo típico ERP
+
+1. Listá sistemas: `GET /api/v3/third_party/external_systems` y guardá el `system_id` de tu conector.
+2. Sincronizá asociaciones con `updated_at_from` para detectar vínculos nuevos o dados de baja.
+3. Por cada `plot_id`, resolvé el lote SIMA y las campañas (`GET /api/v3/third_party/campaigns?…`).
+4. Escribí OTs usando `cultivation.local_id` = `campaigns.id` (en jerga ERP, el *cultivo* del lote).
+
+Consulta por parcela de tu sistema:
+
+```bash
+GET /api/v3/third_party/external_plots_associations?system_id=12&external_code=CAMPO-A-LOTE-03
+```
+
+Consulta inversa (lote SIMA → código externo):
+
+```bash
+GET /api/v3/third_party/external_plots_associations?plot_id=44821&active=1
+```
+
+---
+
+## Relación con `external_code` en plots
+
+Los **establecimientos** y **lotes** también pueden llevar `external_code` propio de SIMA (campo en el recurso `plots` / `establishments`). Eso es un código que vos asignás al crear el lote.
+
+`external_plots_associations` es el mapa **por sistema de integración**: un mismo lote SIMA puede tener un código Finnegans y otro Auravant. No los mezcles.
+
+---
+
+## Limitaciones
+
+- Solo **GET** en Third Party v3.
+- Requiere permiso de listado sobre `Plot` (asociaciones) y `System` (sistemas).
+- Si no hay filas, el conector puede no estar habilitado para esa sociedad.
+
+---
+
+## Próximos pasos
+
+<CardGroup cols={2}>
+  <Card title="Jerarquía" icon="sitemap" href="/guides/hierarchy-setup">
+    Establecimientos, lotes y campañas
+  </Card>
+  <Card title="Glosario SIMA ↔ ERP" icon="right-left" href="/api-reference/sima-erp-glossary">
+    Campaña vs cultivo vs ciclo
+  </Card>
+</CardGroup>

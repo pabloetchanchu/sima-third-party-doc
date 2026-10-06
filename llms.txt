@@ -24,7 +24,8 @@
 - [Datos Maestros](guides/master-data.mdx): Formulados, máquinas, aplicadores
 - [Scouting](guides/scouting.mdx): Monitoreos y adversidades
 - [Estrategia de Sincronización](guides/sync-strategy.mdx): Filtros de auditoría e incremental sync
-- [Productores](guides/farmers.mdx): Gestión de farmers
+- [Productores](guides/farmers.mdx): CRUD v3 de farmers
+- [Lotes externos](guides/external-plots.mdx): Sistemas y asociaciones parcela ERP ↔ lote SIMA
 - [Depósitos](guides/warehouses.mdx): Warehouses
 - [Silobolsas](guides/silobags.mdx): Silobags y monitoreo
 - [Avances](guides/progress-reports.mdx): Avances de siembra y cosecha

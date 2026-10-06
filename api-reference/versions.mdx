@@ -31,13 +31,15 @@ La API de Terceros de SIMA expone endpoints en **tres generaciones** (`v1`, `v2`
 |---|---|---|---|
 | **Autenticación** | — | `POST /api/v2/login` | — |
 | **Órdenes de Trabajo** | `GET /api/v3/third_party/work_orders` | `POST /integration/api/v1/workOrders` | `DELETE /integration/api/v1/workOrders/{localId}` |
+| **Productores** | `GET /api/v3/third_party/farmers` | `POST/PATCH /api/v3/third_party/farmers` | `DELETE /api/v3/third_party/farmers/{id}` |
 | **Establecimientos** | `GET /api/v3/third_party/establishments` | `POST /api/v3/third_party/establishments` | `DELETE /api/v3/third_party/establishments/{id}` |
 | **Lotes (Plots)** | `GET /api/v2/third_party/plots` | `POST /api/v3/third_party/plots` | `DELETE /api/v3/third_party/plots/{id}` |
 | **Cultivos** | `GET /api/v3/third_party/cultivations` | — | — |
 | **Formulados** | `GET /api/v3/third_party/formulateds` | — | — |
 | **Aplicadores** | `GET /api/v3/third_party/applicators` | `POST /api/v2/third_party/applicators` | `DELETE /api/v2/third_party/applicators/{id}` |
 | **Máquinas** | `GET /api/v3/third_party/machines` | — | — |
-| **Scouting** | `GET /api/v3/third_party/scouting` | — | — |
+| **Scouting** | `GET /api/v3/third_party/scouting`, `scouting_measures`, `hydric_states`, `phenological_states`, `plot_states` | — | — |
+| **Lotes externos** | `GET /api/v3/third_party/external_systems`, `external_plots_associations` | — | — |
 | **Avances (Progress)** | `GET /api/v3/third_party/progress_report` | — | — |
 | **Silobolsas** | `GET /api/v3/third_party/silobags`, `silobag_scoutings`, `silobag_campaigns` | — | — |
 | **IoT / Clima** | `GET /api/v3/third_party/devices`, `device_events`, … | `POST /api/v3/third_party/devices`, `device_events` | — |

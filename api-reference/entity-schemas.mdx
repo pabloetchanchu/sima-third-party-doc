@@ -76,19 +76,186 @@ Endpoint: `GET /api/v3/third_party/establishments`
 
 ---
 
-## Cultivo (Cultivation)
+## Cultivo / especie (Cultivation)
 
-Endpoint: `GET /api/v3/third_party/cultivations`
+Endpoint: `GET /api/v3/third_party/cultivations` (catálogo, solo lectura)
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `id` | integer | Auto | Solo lectura | ID interno de la especie |
+| `name` | string | — | Solo lectura | Nombre traducido (Soja, Maíz, …) |
+| `created_at` / `modified_at` / `deleted_at` | datetime | Auto | Solo lectura | Auditoría |
+| `active` | boolean | Auto | Solo lectura | Activo/inactivo |
+
+No confundir con **campaña** (`campaigns`), que es la instancia en un lote y lo que referencian las OTs.
+
+---
+
+## Campaña (Campaign)
+
+Endpoint: `GET /api/v3/third_party/campaigns`
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `id` | integer | Auto | Solo lectura | ID interno; es el `cultivation.local_id` de las OTs |
+| `plot_id` | integer | — | Solo lectura | Lote |
+| `master_campaign_id` | integer | — | Solo lectura | Planificación (especie + época + ciclo) |
+| `formulated_id` | integer | — | Solo lectura | Variedad / semilla del catálogo de formulados |
+| `planting_date` | datetime | — | Solo lectura | Fecha de siembra real |
+| `schedule_planting_date` | datetime | — | Solo lectura | Siembra planificada |
+| `planting_objective_area_ha` | number | — | Solo lectura | Hectáreas objetivo |
+| `objective_yield_kg_ha` | number | — | Ver import v2 | Rendimiento objetivo (escritura async en [avances](/guides/progress-reports)) |
+| `harvest_final_yield` | number | — | Solo lectura | Rendimiento final |
+| `planting_finished` / `harvest_finished` | boolean | — | Solo lectura | Cierre de siembra / cosecha |
+| `external_code` | string | — | Sí (si hay escritura) | Código de tu ERP |
+| `created_at` / `modified_at` / `deleted_at` | datetime | Auto | Solo lectura | Auditoría |
+| `active` | boolean | Auto | Solo lectura | Activo/inactivo |
+
+---
+
+## Productor (Farmer)
+
+Lectura y escritura: `/api/v3/third_party/farmers` — ver [Productores](/guides/farmers)
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `id` | integer | Auto | Solo lectura | ID interno (`farmer_id` en establecimientos) |
+| `name` | string | Sí | Sí | Nombre (máx. 100) |
+| `lastname` | string | No | Sí | Apellido |
+| `cuit` | string | No | Sí | CUIT / identificador fiscal |
+| `email` | string | No | Sí | Email |
+| `phone_number` | string | No | Sí | Teléfono |
+| `area` | number | No | Sí | Superficie (ha) |
+| `observations` | string | No | Sí | Notas |
+| `external_code` | string | No | Sí | ID de tu ERP |
+| `active` | boolean | Auto | `PATCH …/active` | Activo/inactivo |
+| `created_at` / `modified_at` / `deleted_at` | datetime | Auto | Solo lectura | Auditoría |
+
+---
+
+## Scouting (sesión de campo)
+
+Endpoint: `GET /api/v3/third_party/scouting` (solo lectura)
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `id` | integer | Auto | Solo lectura | ID de la sesión |
+| `campaign_id` | integer | — | Solo lectura | Campaña monitoreada |
+| `phenological_state_id` | integer | — | Solo lectura | Etapa del cultivo |
+| `hydric_state_id` | integer | — | Solo lectura | Estado hídrico |
+| `plot_state_id` | integer | — | Solo lectura | Estado del lote |
+| `semaphore` | integer | — | Solo lectura | `1` verde / `2` amarillo / `3` rojo |
+| `samples_taken` | integer | — | Solo lectura | Muestras tomadas |
+| `scouting_protocol_results` | array | — | Solo lectura | `adversity_id`, `measure_id`, `agg_result_value`, `semaphore` |
+| `created_at` / `modified_at` / `deleted_at` | datetime | Auto | Solo lectura | Auditoría |
+
+Catálogos asociados (solo lectura): `hydric_states`, `phenological_states`, `plot_states`, `scouting_measures`.
+
+---
+
+## Silobolsa
+
+Lectura: `GET /api/v3/third_party/silobags` — ver [Silobolsas](/guides/silobags)
 
 | Campo | Tipo | Obligatorio | Editable | Descripción |
 |---|---|---|---|---|
 | `id` | integer | Auto | Solo lectura | ID interno |
-| `plot_id` | integer | Auto | Solo lectura | Lote asociado |
-| `campaign_id` | integer | Auto | Solo lectura | Campaña asociada |
-| `formulated_id` | integer | Auto | Solo lectura | Variedad/especie |
-| `area` | number | Auto | Solo lectura | Hectáreas del cultivo |
-| `active` | boolean | Auto | Solo lectura | Activo/inactivo |
-| `updated_at` | datetime | Auto | Solo lectura | Para sync incremental |
+| `code` | string | — | Solo lectura | Código de la bolsa |
+| `silobag_longitude` | string/number | — | Solo lectura | Largo de la bolsa (m), no el GPS |
+| `latitude` / `longitude` | string | — | Solo lectura | GPS |
+| `date_extracted` | datetime | — | Solo lectura | Extracción (`null` = en uso) |
+| `rebagged` | boolean | — | Solo lectura | Reembolsada |
+| `semaphore` | integer | — | Solo lectura | `1` / `2` / `3` |
+
+### Silobag scouting
+
+`GET /api/v3/third_party/silobag_scoutings` — `silobag_id`, `scouting_type` (`1` monitoreo, `2` extracción), `semaphore_silo`, `semaphore_cereal`, `extracted_tn`.
+
+### Silobag campaign
+
+`GET /api/v3/third_party/silobag_campaigns` — `silobag_id`, `campaign_id`, `quantity_tn`, `grain_humidity_percent`, `grain_quality_semaphore`.
+
+---
+
+## Dispositivo IoT y evento
+
+Lectura/escritura: ver [IoT y clima](/guides/iot-weather)
+
+### Device
+
+`GET/POST /api/v3/third_party/devices`
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `id` | integer | Auto | Solo lectura | ID interno |
+| `name` | string | Sí (POST) | Sí | Nombre de la estación / sensor |
+| `external_code` | string | No | Sí | Código de tu red |
+| `is_automatic` | boolean | No | Sí | Lectura automática |
+| `suitable_for_scouting` | boolean | No | Sí | Apto para asociar a monitoreo |
+
+### Device event
+
+`GET/POST /api/v3/third_party/device_events`
+
+| Campo | Tipo | Obligatorio | Editable | Descripción |
+|---|---|---|---|---|
+| `id` | integer | Auto | Solo lectura | ID del evento |
+| `device_id` | integer | Sí | Sí | Dispositivo |
+| `date` | datetime | Sí | Sí | Fecha de la lectura |
+| `semaphore` | integer | — | Sí | Estado `1` / `2` / `3` |
+| `device_event_protocol_result_ids` | array | — | Solo lectura (GET) | Resultados de protocolo |
+| `observations` | string | No | Sí | Notas |
+
+---
+
+## Etiqueta, asociación y waypoint
+
+Solo lectura de tags; waypoints permiten **POST** de alta. Endpoints: `/api/v3/third_party/tags`, `tag_associations`, `waypoints`.
+
+### Tag
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `id` | integer | ID interno |
+| `name` / `full_name` | string | Nombre y ruta jerárquica |
+| `table_code_id` | integer | Tipo de entidad etiquetable |
+| `parent_id` | integer \| null | Tag padre |
+| `leaf` | boolean | Si es hoja del árbol |
+
+### Tag association
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `id` | integer | ID interno |
+| `entity_id` | integer | Recurso etiquetado |
+| `table_code_id` | integer | Tipo de recurso |
+| `tag_id` | integer | Etiqueta |
+
+### Waypoint
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `id` | integer | ID interno |
+| `parent_id` / `parent_type` | integer / string | Entidad dueña (scouting, silobolsa, etc.) |
+| `latitude` / `longitude` | number | GPS |
+| `sample_number` | integer | Número de muestra |
+| `waypoint_kind` | integer | Tipo de punto |
+| `acurracy` | number | Precisión (el nombre del campo en API es `acurracy`) |
+| `firebase_storage_url` | string | Foto / adjunto |
+
+---
+
+## Asociación lote externo
+
+`GET /api/v3/third_party/external_plots_associations` — ver [Lotes externos](/guides/external-plots)
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `id` | integer | ID de la asociación |
+| `plot_id` | integer | Lote SIMA |
+| `system_id` | integer | `external_systems.id` |
+| `external_code` | string | Código de la parcela en el ERP |
+| `external_reference` | string | Referencia adicional del conector |
 
 ---
 
@@ -144,5 +311,11 @@ Escritura (CRUD): `POST/PUT/DELETE /api/v2/third_party/applicators`
   </Card>
   <Card title="Órdenes de Trabajo" icon="clipboard-list" href="/guides/work-orders">
     Ejemplos completos con request y response
+  </Card>
+  <Card title="Scouting" icon="magnifying-glass" href="/guides/scouting">
+    Sesiones, medidas y estados
+  </Card>
+  <Card title="Silobolsas" icon="box" href="/guides/silobags">
+    Bolsas, cultivos y extracciones
   </Card>
 </CardGroup>

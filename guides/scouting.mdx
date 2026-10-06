@@ -1,39 +1,52 @@
 ---
 title: "Scouting y Monitoreo"
-description: "Cómo sincronizar observaciones de campo, adversidades e informes de scouting via la API de Terceros de SIMA"
+description: "Cómo sincronizar observaciones de campo, adversidades, medidas y estados vía la API de Terceros de SIMA"
 ---
 
 ## Resumen
 
-SIMA's scouting module lets third-party apps register and retrieve field observations — pests, diseases, weeds, and other adversities detected during crop monitoring. The data flows from external scouting tools (sensors, mobile apps, drones) into SIMA, where agronomists can review and act on it.
+El módulo de **Monitoreo** de SIMA registra recorridas de campo: plagas, enfermedades, malezas, estados fenológico e hídrico, y medidas asociadas. Las integraciones de terceros **leen** esas sesiones; el alta se hace en la app web o móvil.
+
+<Warning>
+  **Monitoreo de campo** (`scouting`) y **monitoreo de silobolsa** (`silobag_scoutings`) son dominios distintos. Esta guía cubre solo scouting de lote/campaña. Para silobolsas ver [Silobolsas](/guides/silobags).
+</Warning>
 
 ---
 
 ## Mapa de entidades
 
 ```
-Adversity Kind (Insectos, Enfermedades, Malezas...)
-  └── Adversity Category
-        └── Adversity (specific pest or disease)
-              └── Scouting (field observation session)
-                    └── linked to a Campaign
+Catálogos globales (v2)
+  Adversity Kind → Adversity Category → Adversity
+
+Catálogos de estado (v3, solo lectura)
+  hydric_states
+  phenological_states  (por especie: cultivation_id)
+  plot_states
+  scouting_measures    (unidad de muestreo por tipo de adversidad)
+
+Sesión de campo (v3)
+  Scouting  →  campaign_id
+            →  phenological_state_id, hydric_state_id, plot_state_id
+            →  scouting_protocol_results (adversity_id, measure_id, valor, semáforo)
+            →  scouting_sample_values / scouting_sample_alerts
 ```
 
 ---
 
-## Paso 1 — Sync the adversity catalog
+## Paso 1 — Catálogo de adversidades (v2)
 
-Before registering observations, sync the adversity catalog (read-only, global). These are the reference entities your observations will point to.
+Antes de interpretar resultados de protocolo, sincronizá el catálogo de adversidades (solo lectura, global).
 
-### Adversity Kinds
+### Tipos (`adversity_kinds`)
 
-Top-level classification: Insects, Diseases, Weeds, etc.
+Clasificación de primer nivel: Insectos, Enfermedades, Malezas, Medidas, etc.
 
 ```
 GET /api/v2/third_party/adversity_kinds
 ```
 
-**Filters:** `name`, `modified_at_from`, `modified_at_to`, `deleted_at_from`
+**Filtros:** `name`, `modified_at_from`, `modified_at_to`, `deleted_at_from`
 
 **Response:**
 
@@ -47,25 +60,16 @@ GET /api/v2/third_party/adversity_kinds
 }
 ```
 
-### Adversity Categories
-
-Sub-classification within each kind.
+### Categorías y adversidades
 
 ```
 GET /api/v2/third_party/adversity_categories
-```
-
-### Adversities
-
-Specific pests, diseases, or weeds with scientific names and descriptions.
-
-```
 GET /api/v2/third_party/adversity
 ```
 
-**Filters:** `name`, `scientific_name`, `adv_category_id`, `modified_at_from`
+**Filtros de adversidad:** `name`, `scientific_name`, `adv_category_id`, `modified_at_from`
 
-**Response:**
+**Response (adversidad):**
 
 ```json
 {
@@ -82,107 +86,180 @@ GET /api/v2/third_party/adversity
 }
 ```
 
-<Info>
-  The adversity catalog changes infrequently. Sync it weekly or on startup, using `modified_at_from` for incremental updates.
-</Info>
+El catálogo cambia poco: sincronizalo al arranque o semanalmente con `modified_at_from`.
 
 ---
 
-## Paso 2 — Consultar sesiones de scouting
+## Paso 1b — Catálogos de monitoreo (v3)
 
-Una sesión de scouting representa una visita de campo o evento de monitoreo para una campaña específica. Referencia uno o más IDs de adversidad observados durante esa visita.
+Estos IDs aparecen en cada sesión de scouting v3. Todos son **GET**, paginados con `page` / `size` y filtros de auditoría (`updated_at_from`, `active`, `deleted_at_from`, …).
+
+### Estado hídrico
+
+```
+GET /api/v3/third_party/hydric_states
+```
+
+Campos: `id`, `name` (traducido), auditoría.
+
+### Estado fenológico
+
+```
+GET /api/v3/third_party/phenological_states
+```
+
+Campos: `id`, `name`, `description`, `cultivation_id` (especie del catálogo), auditoría.
+
+**Filtros propios:** `id`, `name`, `cultivation_id`.
+
+Filtrá por especie para no mezclar etapas de soja con maíz:
+
+```bash
+GET /api/v3/third_party/phenological_states?cultivation_id=3&active=1
+```
+
+### Estado del lote
+
+```
+GET /api/v3/third_party/plot_states
+```
+
+Campos: `id`, `name`, auditoría.
+
+### Medidas de scouting
+
+Unidad y tipo de muestreo asociados a un `adversity_kind_id`. Los resultados de protocolo apuntan a `measure_id`.
+
+```
+GET /api/v3/third_party/scouting_measures
+GET /api/v3/third_party/scouting_measures/{id}
+```
+
+**Filtros propios:** `id`, `adversity_kind_id`, `type`.
+
+**Response (ítem de ejemplo):**
+
+```json
+{
+  "id": 8,
+  "adversity_kind_id": 2,
+  "unit_sample": "individuos / m²",
+  "type": "count",
+  "created_at": "2023-12-07T19:36:31-03:00",
+  "modified_at": "2023-12-07T19:36:31-03:00",
+  "deleted_at": null,
+  "active": true
+}
+```
+
+---
+
+## Paso 2 — Sesiones de scouting (v3)
+
+Una sesión es una visita de campo sobre una **campaña**. Incluye estados, semáforo, muestras y resultados de protocolo (adversidades observadas).
 
 <Warning>
-  La API de Terceros expone scouting en **solo lectura** (GET). No hay endpoints POST/PATCH/DELETE para crear o modificar monitoreos desde integraciones externas — esos registros se cargan en SIMA vía la app web o móvil.
+  La API de Terceros expone scouting en **solo lectura** (GET). No hay POST/PATCH/DELETE para crear monitoreos desde integraciones externas.
 </Warning>
-
-### Listar sesiones de scouting (v3 — recomendado)
 
 ```
 GET /api/v3/third_party/scouting
 ```
 
-Usá filtros de auditoría v3: `updated_at_from`, `deleted_at_from`, `page`, `size`.
+**Filtros propios:** `id`, `campaign_id`.
 
-### Listar sesiones de scouting (v2 — legacy)
+**Filtros de auditoría:** `updated_at_from`, `deleted_at_from`, `active`, `page`, `size`.
+
+**Response (campos principales de un ítem):**
+
+```json
+{
+  "id": 293087,
+  "observations": "Alta presión de áfidos en el sector NE",
+  "campaign_id": 85973,
+  "objective_yield_kg_ha": 4200,
+  "phenological_state_id": 14,
+  "hydric_state_id": 5,
+  "plot_state_id": 2,
+  "semaphore": 2,
+  "samples_taken": 8,
+  "knots": null,
+  "estimated_yield": null,
+  "plant_height": null,
+  "scouting_protocol_results": [
+    {
+      "id": 55102,
+      "adversity_id": 12,
+      "protocol_id": 3,
+      "measure_id": 8,
+      "agg_result_value": 4.5,
+      "semaphore": 2
+    }
+  ],
+  "scouting_sample_values": [],
+  "scouting_sample_alerts": [],
+  "created_at": "2024-04-01T11:02:34-03:00",
+  "modified_at": "2024-04-01T11:02:34-03:00",
+  "deleted_at": null,
+  "active": true
+}
+```
+
+Cada `adversity_id` en `scouting_protocol_results` se cruza con el catálogo v2 (`GET /api/v2/third_party/adversity`). `measure_id` se cruza con `scouting_measures`.
+
+### v2 (legacy)
 
 ```
 GET /api/v2/third_party/scouting
 ```
 
-**Filters:**
+Filtros: `campaign_id`, `modified_at_from`, `modified_at_to`, `deleted_at_from`, `page` / `size`.
 
-| Parameter | Type | Description |
-|---|---|---|
-| `campaign_id` | int | Filter by campaign |
-| `modified_at_from` | datetime | Change detection |
-| `modified_at_to` | datetime | Upper bound |
-| `deleted_at_from` | datetime | Detect deletions |
-| `page` / `size` | int | Pagination |
-
-**Response:**
-
-```json
-{
-  "items": [
-    {
-      "id": 293087,
-      "campaign_id": 85973,
-      "date_created": "2024-04-01T11:02:34-03:00",
-      "date_modified": "2024-04-01T11:02:34-03:00",
-      "deleted_at": null,
-      "observations": "High aphid pressure detected in NE sector",
-      "adversity_ids": [9, 24, 26, 84, 119, 135, 258, 491]
-    }
-  ],
-  "current_page": 1,
-  "next_page": null,
-  "total_pages": 1,
-  "total_items": 1
-}
-```
-
-Each `adversity_id` in the array maps to a specific pest or disease from the adversity catalog. An ID can appear multiple times if multiple occurrences were recorded at different locations in the same session.
+La respuesta v2 es más plana (`adversity_ids[]`, `date_created`). Preferí **v3** para estados, protocolos y semáforo.
 
 ---
 
 ## Patrones de integración típicos
 
-### SIMA → plataforma externa de analítica
+### SIMA → plataforma de analítica
 
-Extraer datos de scouting de SIMA para análisis o reportes:
-
-1. Listá campañas de los establecimientos de interés (`GET /api/v3/third_party/campaigns`)
-2. Consultá `GET /api/v3/third_party/scouting?campaign_id={id}&updated_at_from={last_sync}` por campaña
-3. Enriquecé con detalles de adversidad cruzando `adversity_ids` contra tu caché local del catálogo (Paso 1)
+1. Listá campañas (`GET /api/v3/third_party/campaigns`).
+2. Consultá `GET /api/v3/third_party/scouting?campaign_id={id}&updated_at_from={last_sync}`.
+3. Cacheá adversidades (v2), medidas y estados (v3) y resolvé los IDs en cliente.
 
 ### App de scouting → SIMA
 
-La API de Terceros **no permite crear** sesiones de scouting. Si tu app registra observaciones en campo, las opciones son:
+La API de Terceros **no permite crear** sesiones. Opciones:
 
-- Cargar los monitoreos en SIMA vía la app móvil/web del productor, y luego sincronizar hacia tu sistema con GET
-- Contactar [soporte@sima.ag](mailto:soporte@sima.ag) si necesitás un flujo de escritura automatizado
+- Cargar el monitoreo en la app SIMA y sincronizar hacia tu sistema con GET
+- Contactar [soporte@sima.ag](mailto:soporte@sima.ag) si necesitás escritura automatizada
 
 ---
 
 ## Frecuencia de sincronización
 
-| Entity | Recommended sync |
+| Recurso | Frecuencia sugerida |
 |---|---|
-| Adversity Kinds | Weekly or on startup |
-| Adversity Categories | Weekly or on startup |
-| Adversities | Weekly or on startup |
-| Scouting sessions | Every 30–60 min during active crop season |
+| Adversity kinds / categories / adversities | Semanal o al arranque |
+| hydric_states, plot_states, scouting_measures | Semanal o al arranque |
+| phenological_states | Semanal; filtrá por `cultivation_id` |
+| Sesiones `scouting` | Cada 30–60 min en temporada activa, con `updated_at_from` |
 
 ---
 
 ## Próximos pasos
 
 <CardGroup cols={2}>
-  <Card title="Sync Strategy" icon="arrows-rotate" href="/guides/sync-strategy">
-    Apply audit filters to keep scouting data current
+  <Card title="Sincronización" icon="arrows-rotate" href="/guides/sync-strategy">
+    Filtros de auditoría incrementales
   </Card>
-  <Card title="Work Orders" icon="clipboard-list" href="/guides/work-orders">
-    Create treatment orders based on scouting findings
+  <Card title="Órdenes de Trabajo" icon="clipboard-list" href="/guides/work-orders">
+    Tratamientos a partir del monitoreo
+  </Card>
+  <Card title="Silobolsas" icon="box" href="/guides/silobags">
+    Monitoreo de almacenamiento (otro dominio)
+  </Card>
+  <Card title="Schemas" icon="table" href="/api-reference/entity-schemas">
+    Campos de scouting y campañas
   </Card>
 </CardGroup>

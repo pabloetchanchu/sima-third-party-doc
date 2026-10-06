@@ -33,8 +33,8 @@ Sociedad
 El orden importa — cada nivel depende del anterior.
 
 <Steps>
-  <Step title="Verificar tu Sociedad (Productor)">
-    El contexto de tu sociedad se devuelve en la respuesta del login como `society.id`. Es la raíz de todos tus datos. Las sociedades no se crean via API — son aprovisionadas por SIMA durante el onboarding.
+  <Step title="Verificar tu Sociedad y Productor">
+    El contexto de tu sociedad se devuelve en la respuesta del login como `society.id`. Las sociedades no se crean via API. Los **productores** sí: CRUD en v3 (`GET/POST/PATCH/DELETE /api/v3/third_party/farmers`). Ver [Productores](/guides/farmers).
   </Step>
   <Step title="Crear Establecimientos">
     Un establecimiento es un campo o grupo de campos perteneciente a un productor. Requiere un `farmer_id`.

@@ -1,107 +1,187 @@
 ---
 title: "Productores"
-description: "Cómo consultar Productores — la entidad raíz de la jerarquía de SIMA"
+description: "Cómo listar, crear y actualizar Productores — la entidad raíz de la jerarquía de SIMA"
 ---
 
 ## Resumen
 
-A **Farmer** (Productor) is the top-level entity in SIMA's hierarchy. Every Establishment belongs to a Farmer, and every Farmer belongs to a Society. When setting up a new client integration, you start here to get the `farmer_id` required to create Establishments.
+Un **Farmer** (Productor) es la entidad de primer nivel en la jerarquía de SIMA. Cada establecimiento pertenece a un productor, y cada productor a una sociedad. Necesitás el `farmer_id` para crear establecimientos.
 
 ```
 Society
   └── Farmer (Productor)
         └── Establishment
-              └── Plot → Campaign → Cultivation → Work Order
+              └── Plot → Campaign → Work Order
 ```
 
 <Info>
-  Farmers are **read-only** from the Third-Party API. They are created and managed in SIMA directly. Use these endpoints to list existing farmers and retrieve their IDs.
+  En **v3** los productores tienen **CRUD** (listar, detalle, alta, edición, activar/desactivar y baja). v2 queda solo como lectura legacy. Para integraciones nuevas usá `/api/v3/third_party/farmers`.
 </Info>
 
 ---
 
-## Endpoints
+## Endpoints (v3 — recomendado)
 
-### List Farmers
-
-```
-GET /api/v2/third_party/farmers
-```
-
-**Filters:**
-
-| Parameter | Type | Description |
+| Método | Ruta | Descripción |
 |---|---|---|
-| `name` | string | Filter by first name |
-| `last_name` | string | Filter by last name |
-| `area_from` / `area_to` | int | Filter by total area (hectares) |
-| `modified_at_from` | datetime | Change detection |
-| `deleted_at_from` | datetime | Detect deleted farmers |
-| `page` / `size` | int | Pagination |
+| GET | `/api/v3/third_party/farmers` | Listado paginado |
+| GET | `/api/v3/third_party/farmers/{id}` | Detalle |
+| POST | `/api/v3/third_party/farmers` | Alta (`201`) |
+| PATCH | `/api/v3/third_party/farmers/{id}` | Edición |
+| PATCH | `/api/v3/third_party/farmers/{id}/active` | Activar / desactivar |
+| DELETE | `/api/v3/third_party/farmers/{id}` | Baja (`204`) |
 
-**Response:**
+---
+
+## Listar
+
+```
+GET /api/v3/third_party/farmers
+```
+
+**Filtros:**
+
+| Parámetro | Tipo | Descripción |
+|---|---|---|
+| `id` | int | ID de productor |
+| `name` | string | Nombre |
+| `last_name` | string | Apellido |
+| `area_from` / `area_to` | int | Superficie en hectáreas |
+| `modified_at_from` / `modified_at_to` | datetime | Detección de cambios (ISO8601) |
+| `created_at_from` / `created_at_to` | datetime | Fecha de alta |
+| `deleted_at_from` / `deleted_at_to` | datetime | Bajas lógicas |
+| `page` / `size` | int | Paginación |
+
+<Warning>
+  El listado v3 de productores usa **`modified_at_from`**, no `updated_at_from`. El campo de respuesta de última modificación es `modified_at`.
+</Warning>
+
+**Response (ítem de ejemplo):**
 
 ```json
 {
-  "items": [
-    {
-      "id": 40,
-      "name": "Juan",
-      "lastname": "Rodríguez",
-      "cuit": "20-12345678-9",
-      "observations": null,
-      "email": "juan@example.com",
-      "phone_number": "011-1234-5678",
-      "area": 850,
-      "external_code": null,
-      "date_created": "2015-06-20T16:45:46-03:00",
-      "date_modified": "2024-01-15T10:30:00-03:00",
-      "deleted_at": null
-    }
-  ],
-  "current_page": 1,
-  "next_page": null,
-  "total_pages": 1,
-  "total_items": 1
+  "id": 40,
+  "name": "Juan",
+  "lastname": "Rodríguez",
+  "cuit": "20123456789",
+  "email": "juan@example.com",
+  "phone_number": "011-1234-5678",
+  "area": 850,
+  "observations": null,
+  "external_code": "ERP-PROD-001",
+  "created_at": "2015-06-20T16:45:46-03:00",
+  "modified_at": "2024-01-15T10:30:00-03:00",
+  "deleted_at": null,
+  "active": true
 }
 ```
 
-### Get Farmer detail
+La lista viene envuelta en `items` + metadatos de paginación (`current_page`, `next_page`, `total_pages`, `total_items`).
+
+### Detalle
 
 ```
+GET /api/v3/third_party/farmers/{id}
+```
+
+Mismos campos que un ítem del listado.
+
+---
+
+## Crear
+
+```
+POST /api/v3/third_party/farmers
+```
+
+```json
+{
+  "name": "Juan",
+  "lastname": "Rodríguez",
+  "cuit": "20123456789",
+  "email": "juan@example.com",
+  "phone_number": "011-1234-5678",
+  "area": 850,
+  "observations": null,
+  "external_code": "ERP-PROD-001"
+}
+```
+
+`name` es obligatorio (máx. 100 caracteres). El resto es opcional. La sociedad se toma del token; no envíes `society_id`. Respuesta **201** con el recurso completo.
+
+---
+
+## Actualizar
+
+```
+PATCH /api/v3/third_party/farmers/{id}
+```
+
+El body usa los mismos campos que el alta. `name` sigue siendo obligatorio en el PATCH.
+
+### Activar o desactivar
+
+```
+PATCH /api/v3/third_party/farmers/{id}/active
+```
+
+```json
+{ "active": false }
+```
+
+Respuesta: `{ "active": false }`.
+
+---
+
+## Eliminar
+
+```
+DELETE /api/v3/third_party/farmers/{id}
+```
+
+- **204** si el productor no tiene establecimientos asociados.
+- **409** si todavía tiene establecimientos: primero hay que dar de baja o reasignar esos establecimientos.
+
+---
+
+## Cómo obtener el farmer_id
+
+Al onboarding de un cliente:
+
+1. Listá productores: `GET /api/v3/third_party/farmers`
+2. Matcheá por `name` + `lastname`, `cuit` o `external_code`
+3. Guardá el `id` para usarlo como `farmer_id` al crear establecimientos
+
+Si el productor no existe, crealo con `POST` o pedí que lo den de alta en SIMA.
+
+---
+
+## Mapeo con tu ERP
+
+Guardá el ID de tu sistema en `external_code` al crear o editar. Después podés resolver el productor sin depender del nombre.
+
+v3 no filtra el listado por `external_code` como query param; filtrá en cliente o usá `id` / nombre / CUIT. Si necesitás setear códigos en masa sobre productores ya existentes, contactá [soporte@sima.ag](mailto:soporte@sima.ag).
+
+---
+
+## v2 (legacy)
+
+```
+GET /api/v2/third_party/farmers
 GET /api/v2/third_party/farmers/{id}
 ```
 
-Returns a single farmer by ID. Same fields as the list response.
-
----
-
-## Finding the right farmer_id
-
-When setting up a new client:
-
-1. List all farmers: `GET /api/v2/third_party/farmers`
-2. Match by `name` + `lastname` or `cuit` to identify the producer
-3. Store the `id` — you'll use it as `farmer_id` when creating Establishments
-
-If the farmer doesn't exist yet, they need to be created in SIMA by the client or a SIMA admin before the integration can proceed.
-
----
-
-## External code mapping
-
-Use `external_code` to store your system's producer ID on the SIMA farmer record. This allows reliable lookups without depending on name matching:
-
-```
-GET /api/v2/third_party/farmers?external_code=YOUR-ERP-PRODUCER-001
-```
-
-Contact [soporte@sima.ag](mailto:soporte@sima.ag) to set `external_code` on existing farmers if needed.
+Solo lectura. Los timestamps salen como `date_created` / `date_modified`. No uses v2 en integraciones nuevas.
 
 ---
 
 ## Próximos pasos
 
-<Card title="Hierarchy Setup" icon="sitemap" href="/guides/hierarchy-setup">
-  Use farmer_id to create Establishments and complete the hierarchy
-</Card>
+<CardGroup cols={2}>
+  <Card title="Jerarquía" icon="sitemap" href="/guides/hierarchy-setup">
+    Usá `farmer_id` para crear establecimientos y lotes
+  </Card>
+  <Card title="Lotes externos" icon="link" href="/guides/external-plots">
+    Asociá parcelas de tu ERP con lotes SIMA
+  </Card>
+</CardGroup>
