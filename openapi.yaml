@@ -51,6 +51,7 @@ tags:
   - name: Version 3 > Campaign
   - name: Version 3 > Cultivations
   - name: Version 3 > Establishments
+  - name: Version 3 > Establishment Contours
   - name: Version 3 > External Plot Association
   - name: Version 3 > External Systems
   - name: Version 3 > Fertilization Control
@@ -18610,6 +18611,486 @@ paths:
                 modified_at: '2024-09-12T11:26:13-03:00'
                 deleted_at: null
                 active: true
+  /api/v3/third_party/establishment_contours:
+    get:
+      tags:
+        - Version 3 > Establishment Contours
+      summary: List establishment contours
+      description: >-
+        Índice paginado de contornos de la sociedad del integrador (SNWP-11594).
+        Requiere rol api_integrated y permiso LIST. No incluye geometría ni
+        polígonos.
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: size
+          in: query
+          schema:
+            type: integer
+          example: '10'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                items:
+                  - establishment_id: 34
+                    name: Los Molles
+                    farmer_id: 41
+                    fraction_count: 1
+                    total_area_ha: 12.45
+                    modified_at: '2026-03-01T10:15:00-03:00'
+                current_page: 1
+                next_page: null
+                total_pages: 1
+                total_items: 1
+        '403':
+          description: Forbidden
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                title: An error occurred
+                detail: Access Denied.
+                status: 403
+  /api/v3/third_party/establishments/{new_establishment}/contour:
+    get:
+      tags:
+        - Version 3 > Establishment Contours
+      summary: GET contour
+      description: >-
+        Obtiene el contorno de un establecimiento. Mismo shape que contorno
+        transaccional v2. Requiere VIEW.
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_establishment
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                fractions: []
+                area_ha: 0
+                area_in_plots_ha: 0
+                area_unassigned_ha: 0
+                has_plots: false
+                plots: []
+                overlaps: []
+                reference_point:
+                  lat: '-31.0'
+                  lon: '-64.0'
+                  outside: false
+                suggested_reference_point: null
+        '404':
+          description: Not Found
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                title: An error occurred
+                detail: Not Found
+                status: 404
+    put:
+      tags:
+        - Version 3 > Establishment Contours
+      summary: PUT contour
+      description: >-
+        Guarda el contorno del establecimiento. Requiere EDIT. Una fracción
+        inválida responde 422 e identifica key.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                fractions:
+                  - key: postman-1
+                    name: Fracción 1
+                    geometry:
+                      type: Polygon
+                      coordinates:
+                        - - - -64
+                            - -31
+                          - - -63.99
+                            - -31
+                          - - -63.99
+                            - -30.99
+                          - - -64
+                            - -30.99
+                          - - -64
+                            - -31
+                reference_point:
+                  lat: '-31.0'
+                  lon: '-64.0'
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_establishment
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                fractions:
+                  - id: 1001
+                    key: postman-1
+                    name: Fracción 1
+                    geometry:
+                      type: Polygon
+                      coordinates:
+                        - - - -64
+                            - -31
+                          - - -63.99
+                            - -31
+                          - - -63.99
+                            - -30.99
+                          - - -64
+                            - -30.99
+                          - - -64
+                            - -31
+                    area_ha: 12.45
+                    holes_count: 0
+                    invalid: false
+                    invalid_reason: null
+                area_ha: 12.45
+                area_in_plots_ha: 0
+                area_unassigned_ha: 12.45
+                has_plots: false
+                plots: []
+                overlaps: []
+                reference_point:
+                  lat: '-31.0'
+                  lon: '-64.0'
+                  outside: false
+                suggested_reference_point: null
+        '422':
+          description: Unprocessable Entity
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                key: bad-1
+                title: An error occurred
+                detail: establishment_contour.fraction_invalid
+                status: 422
+  /api/v3/third_party/establishments/{new_establishment}/contour/import:
+    post:
+      tags:
+        - Version 3 > Establishment Contours
+      summary: POST contour import
+      description: 'Parsea KML/KMZ y no persiste. Campo multipart: files. Requiere EDIT.'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: string
+                  description: Archivo KML o KMZ
+                  format: binary
+                existing_names:
+                  type: string
+                  description: JSON array de nombres ya usados (opcional)
+                  example: '[]'
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_establishment
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                fractions:
+                  - key: postman-1
+                    id: null
+                    name: Fracción 1
+                    geometry:
+                      type: Polygon
+                      coordinates:
+                        - - - -64
+                            - -31
+                          - - -63.99
+                            - -31
+                          - - -63.99
+                            - -30.99
+                          - - -64
+                            - -30.99
+                          - - -64
+                            - -31
+                    area_ha: 12.45
+                    holes_count: 0
+                    invalid: false
+                    invalid_reason: null
+                imported_count: 1
+                imported_area_ha: 12.45
+                unreadable_files: []
+                invalid_keys: []
+  /api/v3/third_party/establishments/{new_establishment}/contour/export/geojson:
+    get:
+      tags:
+        - Version 3 > Establishment Contours
+      summary: GET contour export geojson
+      description: >-
+        Exporta contorno en GeoJSON con establecimiento, productor, fracción y
+        superficie_ha. Requiere VIEW.
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_establishment
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                type: FeatureCollection
+                features:
+                  - type: Feature
+                    geometry:
+                      type: Polygon
+                      coordinates:
+                        - - - -64
+                            - -31
+                          - - -63.99
+                            - -31
+                          - - -63.99
+                            - -30.99
+                          - - -64
+                            - -30.99
+                          - - -64
+                            - -31
+                    properties:
+                      establecimiento: Los Molles
+                      productor: CAYTIBA
+                      fraccion: Fracción 1
+                      superficie_ha: 12.45
+  /api/v3/third_party/establishments/{new_establishment}/contour/export/kml:
+    get:
+      tags:
+        - Version 3 > Establishment Contours
+      summary: GET contour export kml
+      description: Exporta contorno en KML. Requiere VIEW.
+      parameters:
+        - name: X-SIMA-APIKEY
+          in: header
+          schema:
+            type: string
+          example: '{{new_api_key}}'
+        - name: X-SIMA-SYSTEM-ID
+          in: header
+          schema:
+            type: string
+          example: '{{system_id}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/vnd.google-earth.kml+xml
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: new_establishment
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/vnd.google-earth.kml+xml
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                <?xml version="1.0" encoding="UTF-8"?>
+                <kml xmlns="http://www.opengis.net/kml/2.2">
+                  <Document>
+                    <name>Los Molles</name>
+                    <Placemark>
+                      <name>Fracción 1</name>
+                      <Polygon>
+                        <outerBoundaryIs>
+                          <LinearRing>
+                            <coordinates>-64.0,-31.0 -63.99,-31.0 -63.99,-30.99 -64.0,-30.99 -64.0,-31.0</coordinates>
+                          </LinearRing>
+                        </outerBoundaryIs>
+                      </Polygon>
+                    </Placemark>
+                  </Document>
+                </kml>
   /api/v3/third_party/external_plots_associations:
     get:
       tags:
@@ -47360,11 +47841,10 @@ paths:
     get:
       tags:
         - Version 3 > SIlo Bag > Silobag Scoutings & Extractions
-      summary: List
+      summary: Filter by semaphore status
       description: >-
-        List silobag scoutings (monitoring) and extractions. Filter by silobag,
-        scouting type, and silo/cereal semaphore status. Paginated; supports v3
-        audit filters (updated_at_from, active, deleted_at_from, etc.).
+        Get scoutings with critical status (red semaphore) in both silo and
+        cereal.
       parameters:
         - name: X-SIMA-APIKEY
           in: header
@@ -47386,33 +47866,6 @@ paths:
           schema:
             type: string
           example: application/json
-        - name: page
-          in: query
-          schema:
-            type: integer
-          description: Page number
-          example: '1'
-        - name: size
-          in: query
-          schema:
-            type: integer
-          description: Records per page
-          example: '20'
-        - name: id
-          in: query
-          schema:
-            type: integer
-          description: Silobag scouting ID
-        - name: silobag_id
-          in: query
-          schema:
-            type: integer
-          description: Parent silobag ID
-        - name: scouting_type
-          in: query
-          schema:
-            type: integer
-          description: '1=monitoring, 2=extraction'
         - name: semaphore_silo
           in: query
           schema:
@@ -47425,16 +47878,6 @@ paths:
             type: integer
           description: 'Cereal status: 1=Green, 2=Yellow, 3=Red'
           example: '1'
-        - name: updated_at_from
-          in: query
-          schema:
-            type: string
-          description: Audit filter (ISO8601)
-        - name: active
-          in: query
-          schema:
-            type: integer
-          description: '1=active only, 0=deleted'
       responses:
         '200':
           description: Successful response
@@ -47473,42 +47916,12 @@ paths:
             type: integer
           description: Page number
           example: '1'
-        - name: size
+        - name: per_page
           in: query
           schema:
             type: integer
           description: Records per page
           example: '20'
-        - name: id
-          in: query
-          schema:
-            type: integer
-          description: Silobag campaign link ID
-        - name: silobag_id
-          in: query
-          schema:
-            type: integer
-          description: Parent silobag ID
-        - name: campaign_id
-          in: query
-          schema:
-            type: integer
-          description: SIMA campaign ID
-        - name: grain_quality_semaphore
-          in: query
-          schema:
-            type: integer
-          description: 'Grain quality: 1=Green, 2=Yellow, 3=Red'
-        - name: updated_at_from
-          in: query
-          schema:
-            type: string
-          description: Audit filter (ISO8601)
-        - name: active
-          in: query
-          schema:
-            type: integer
-          description: '1=active only, 0=deleted'
       responses:
         '200':
           description: Successful response
@@ -47716,46 +48129,6 @@ paths:
           schema:
             type: integer
           example: '10'
-        - name: id
-          in: query
-          schema:
-            type: integer
-          description: Silobag ID
-        - name: code
-          in: query
-          schema:
-            type: string
-          description: Silobag code
-        - name: semaphore
-          in: query
-          schema:
-            type: integer
-          description: '1=Green, 2=Yellow, 3=Red'
-        - name: rebagged
-          in: query
-          schema:
-            type: integer
-          description: '1=yes, 0=no'
-        - name: dateExtractedFrom
-          in: query
-          schema:
-            type: string
-          description: Extraction date from (camelCase query param)
-        - name: dateExtractedTo
-          in: query
-          schema:
-            type: string
-          description: Extraction date to (camelCase query param)
-        - name: updated_at_from
-          in: query
-          schema:
-            type: string
-          description: Audit filter (ISO8601)
-        - name: active
-          in: query
-          schema:
-            type: integer
-          description: '1=active only, 0=deleted'
       responses:
         '200':
           description: OK
@@ -47996,7 +48369,7 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/v3/third_party/silobags/{id}:
+  /api/v3/third_party/silobags/{new_silobag_id}:
     get:
       tags:
         - Version 3 > SIlo Bag
@@ -48022,12 +48395,11 @@ paths:
           schema:
             type: string
           example: application/json
-        - name: id
+        - name: new_silobag_id
           in: path
           schema:
-            type: integer
+            type: string
           required: true
-          description: Silobag ID
       responses:
         '200':
           description: OK
