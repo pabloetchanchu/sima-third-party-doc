@@ -18968,7 +18968,7 @@ paths:
         - Version 3 > Establishment Contours
       summary: GET contour export geojson
       description: >-
-        Exporta contorno en GeoJSON con establecimiento, productor, fracción y
+        GeoJSON con establecimiento_id, establecimiento, productor, fraccion y
         superficie_ha. Requiere VIEW.
       parameters:
         - name: X-SIMA-APIKEY
@@ -19026,6 +19026,7 @@ paths:
                           - - -64
                             - -31
                     properties:
+                      establecimiento_id: 10
                       establecimiento: Los Molles
                       productor: CAYTIBA
                       fraccion: Fracción 1
@@ -19035,7 +19036,10 @@ paths:
       tags:
         - Version 3 > Establishment Contours
       summary: GET contour export kml
-      description: Exporta contorno en KML. Requiere VIEW.
+      description: >-
+        KML del contorno guardado. Cada Placemark incluye ExtendedData con
+        establecimiento_id, establecimiento, productor y superficie_ha. Requiere
+        VIEW.
       parameters:
         - name: X-SIMA-APIKEY
           in: header
@@ -19074,23 +19078,17 @@ paths:
             text/plain:
               schema:
                 type: string
-              example: |-
-                <?xml version="1.0" encoding="UTF-8"?>
-                <kml xmlns="http://www.opengis.net/kml/2.2">
-                  <Document>
-                    <name>Los Molles</name>
-                    <Placemark>
-                      <name>Fracción 1</name>
-                      <Polygon>
-                        <outerBoundaryIs>
-                          <LinearRing>
-                            <coordinates>-64.0,-31.0 -63.99,-31.0 -63.99,-30.99 -64.0,-30.99 -64.0,-31.0</coordinates>
-                          </LinearRing>
-                        </outerBoundaryIs>
-                      </Polygon>
-                    </Placemark>
-                  </Document>
-                </kml>
+              example: >-
+                <?xml version="1.0" encoding="UTF-8"?><kml
+                xmlns="http://www.opengis.net/kml/2.2"><Document><name>Los
+                Molles</name><Placemark><name>Fracción
+                1</name><ExtendedData><Data
+                name="establecimiento_id"><value>10</value></Data><Data
+                name="establecimiento"><value>Los Molles</value></Data><Data
+                name="productor"><value>CAYTIBA</value></Data><Data
+                name="superficie_ha"><value>12.45</value></Data></ExtendedData><Polygon><outerBoundaryIs><LinearRing><coordinates>-64.0,-31.0
+                -63.99,-31.0 -63.99,-30.99 -64.0,-30.99
+                -64.0,-31.0</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark></Document></kml>
   /api/v3/third_party/external_plots_associations:
     get:
       tags:
